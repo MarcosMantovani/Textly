@@ -4,8 +4,9 @@ import { Sidebar } from '../Sidebar/styles'
 import {
   Name as NamePost,
   ProfilePhoto as ProfilePhotoPost,
-  Userame as UsernamePost
+  Username as UsernamePost
 } from '../Post/styles'
+import { colors } from '../../styles'
 
 export const Profilebar = styled(Sidebar)`
   right: 0;
@@ -60,4 +61,25 @@ export const UserName = styled(UsernamePost)`
 export const UserEmail = styled(UsernamePost)`
   font-size: 12px;
   cursor: default;
+`
+
+export const FollowListButtons = styled.div`
+  display: flex;
+  column-gap: 20px;
+  margin-top: 8px;
+  justify-content: center;
+
+  button {
+    font-size: 12px;
+    border: none;
+    background-color: transparent;
+    color: ${colors.white};
+    opacity: 0.75;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      transform: translateY(-10%);
+    }
+  }
 `

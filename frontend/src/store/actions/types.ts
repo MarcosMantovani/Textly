@@ -13,12 +13,19 @@ export const PASSWORD_RESET_FAIL = 'PASSWORD_RESET_FAIL'
 export const PASSWORD_RESET_CONFIRM_SUCCESS = 'PASSWORD_RESET_CONFIRM_SUCCESS'
 export const PASSWORD_RESET_CONFIRM_FAIL = 'PASSWORD_RESET_CONFIRM_FAIL'
 export const LOGOUT = 'LOGOUT'
+export const IS_LOADING = 'IS_LOADING'
 
 export interface User {
   id: number
   name: string
   username: string
   email: string
+}
+
+export interface Profile extends User {
+  follows: User[]
+  followed_by: User[]
+  date_modified: string
 }
 
 export interface Error {
@@ -43,10 +50,7 @@ export interface LoginFailAction {
 
 export interface UserLoadedSuccessAction {
   type: typeof USER_LOADED_SUCCESS
-  payload: User
-  // payload: {
-  //   user: User
-  // }
+  payload: Profile
 }
 
 export interface UserLoadedFailAction {
@@ -98,6 +102,10 @@ export interface ActivationFailAction {
   type: typeof ACTIVATION_FAIL
 }
 
+export interface IsLoadingAction {
+  type: typeof IS_LOADING
+}
+
 export type AuthActionTypes =
   | LoginSuccessAction
   | LoginFailAction
@@ -114,3 +122,4 @@ export type AuthActionTypes =
   | SignupFailAction
   | ActivationSuccessAction
   | ActivationFailAction
+  | IsLoadingAction

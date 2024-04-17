@@ -59,7 +59,7 @@ export const Container = styled.div<ConatainerProps>`
     transform: ${({ $signup }) => ($signup ? 'translateX(-100%)' : '')};
     border-radius: ${({ $signup }) =>
       $signup ? '25px 150px 100px 25px' : '150px 25px 25px 100px'};
-    z-index: 1000;
+    z-index: 6;
   }
 
   .toggle {

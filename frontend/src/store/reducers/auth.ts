@@ -1,5 +1,4 @@
 import {
-  User,
   Error,
   AuthActionTypes,
   LOGIN_SUCCESS,
@@ -16,14 +15,16 @@ import {
   SIGNUP_FAIL,
   ACTIVATION_SUCCESS,
   ACTIVATION_FAIL,
-  LOGOUT
+  LOGOUT,
+  Profile,
+  IS_LOADING
 } from '../actions/types'
 
 interface AuthState {
   access: string | null
   refresh: string | null
   isAuthenticated: boolean | null
-  user: User | null
+  profile: Profile | null
   type: string | null
   error: Error | null
 }
@@ -32,7 +33,7 @@ const initialState: AuthState = {
   access: localStorage.getItem('access'),
   refresh: localStorage.getItem('refresh'),
   isAuthenticated: null,
-  user: null,
+  profile: null,
   type: null,
   error: null
 }
@@ -65,7 +66,7 @@ export default function (state = initialState, action: AuthActionTypes) {
     case USER_LOADED_SUCCESS:
       return {
         ...state,
-        user: action.payload,
+        profile: action.payload,
         type: action.type
       }
     case AUTHENTICATED_FAIL:
@@ -77,7 +78,7 @@ export default function (state = initialState, action: AuthActionTypes) {
     case USER_LOADED_FAIL:
       return {
         ...state,
-        user: null,
+        profile: null,
         type: action.type
       }
     case LOGIN_FAIL:
@@ -89,7 +90,7 @@ export default function (state = initialState, action: AuthActionTypes) {
         access: null,
         refresh: null,
         isAuthenticated: false,
-        user: null,
+        profile: null,
         type: action.type,
         error: action.payload
       }
@@ -101,7 +102,7 @@ export default function (state = initialState, action: AuthActionTypes) {
         access: null,
         refresh: null,
         isAuthenticated: false,
-        user: null,
+        profile: null,
         type: action.type
       }
     case PASSWORD_RESET_FAIL:
@@ -115,6 +116,7 @@ export default function (state = initialState, action: AuthActionTypes) {
     case PASSWORD_RESET_CONFIRM_FAIL:
     case ACTIVATION_SUCCESS:
     case ACTIVATION_FAIL:
+    case IS_LOADING:
       return {
         ...state,
         type: action.type

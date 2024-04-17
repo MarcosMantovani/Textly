@@ -4,6 +4,7 @@ import axios, { AxiosError } from 'axios'
 import RootReducer from '../reducers'
 import {
   AuthActionTypes,
+  Error,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   USER_LOADED_SUCCESS,
@@ -19,11 +20,17 @@ import {
   ACTIVATION_SUCCESS,
   ACTIVATION_FAIL,
   LOGOUT,
-  Error
+  IS_LOADING
 } from './types'
 
 type AppDispatch = ThunkDispatch<typeof RootReducer, void, AuthActionTypes>
 type AppAction = ThunkAction<void, typeof RootReducer, void, AuthActionTypes>
+
+export const isLoading = (): AppAction => async (dispatch: AppDispatch) => {
+  dispatch({
+    type: IS_LOADING
+  })
+}
 
 export const checkAuthenticated =
   (): AppAction => async (dispatch: AppDispatch) => {
@@ -66,6 +73,10 @@ export const checkAuthenticated =
   }
 
 export const load_user = (): AppAction => async (dispatch: AppDispatch) => {
+  dispatch({
+    type: IS_LOADING
+  })
+
   if (localStorage.getItem('access')) {
     const config = {
       headers: {
@@ -80,6 +91,8 @@ export const load_user = (): AppAction => async (dispatch: AppDispatch) => {
         `${process.env.REACT_APP_API_URL}/auth/users/me/`,
         config
       )
+
+      console.log(res.data)
 
       dispatch({
         type: USER_LOADED_SUCCESS,
@@ -100,6 +113,10 @@ export const load_user = (): AppAction => async (dispatch: AppDispatch) => {
 export const login =
   (username: string, password: string): AppAction =>
   async (dispatch: AppDispatch) => {
+    dispatch({
+      type: IS_LOADING
+    })
+
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -145,6 +162,10 @@ export const signup =
     re_password: string
   ): AppAction =>
   async (dispatch: AppDispatch) => {
+    dispatch({
+      type: IS_LOADING
+    })
+
     const config = {
       headers: {
         'Content-Type': 'application/json'
@@ -215,6 +236,10 @@ export const verify =
 
 export const reset_password =
   (email: string) => async (dispatch: AppDispatch) => {
+    dispatch({
+      type: IS_LOADING
+    })
+
     const config = {
       headers: {
         'Content-Type': 'application/json'

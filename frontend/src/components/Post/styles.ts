@@ -25,7 +25,6 @@ export const ProfilePhoto = styled.img`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid ${colors.blue};
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 
@@ -44,7 +43,7 @@ export const Name = styled.p`
   }
 `
 
-export const Userame = styled.p`
+export const Username = styled.p`
   font-size: 12px;
   opacity: 0.75;
   cursor: pointer;
