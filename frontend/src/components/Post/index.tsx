@@ -19,7 +19,7 @@ const Post = () => (
         <div className="postHeader">
           <div>
             <S.Name className="name">Marcos Mantovani</S.Name>
-            <S.Userame>@Marcospider</S.Userame>
+            <S.Username>@Marcospider</S.Username>
           </div>
           <p className="time">10 h</p>
         </div>

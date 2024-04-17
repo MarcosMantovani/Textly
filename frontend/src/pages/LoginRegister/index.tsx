@@ -11,6 +11,7 @@ import { login } from '../../store/actions/auth'
 import { RootState } from '../../store/reducers'
 
 import * as S from './styles'
+import Loader from '../../components/Loader'
 
 const connector = connect(
   (state: RootState) => ({
@@ -94,6 +95,7 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
 
   return (
     <S.Body>
+      <Loader active={type === 'IS_LOADING'} />
       <TextlyTitle position="middle-top" />
       <S.Container $signup={signUp}>
         <S.SignUp>
@@ -102,7 +104,6 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
         <S.SignIn>
           <S.Form onSubmit={(e) => LoginOnSubmit(e)}>
             <S.Title>Entrar</S.Title>
-            <S.Title>{type}</S.Title>
             <S.SocialIcons>
               <div>
                 <a>
@@ -151,7 +152,11 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
               Esqueceu a senha?
             </S.ForgotPasswordButton>
             {errorMsg && <span>{errorMsg}</span>}
-            <Button title="Sign In" type="submit">
+            <Button
+              disabled={type === 'IS_LOADING'}
+              title="Sign In"
+              type="submit"
+            >
               Entrar
             </Button>
           </S.Form>

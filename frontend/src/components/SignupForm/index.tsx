@@ -143,7 +143,11 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
         <span>Confirme a criação da sua conta em seu e-mail</span>
       )}
       {errorMsg && <span>{errorMsg}</span>}
-      <Button disabled={accountCreated} title="Sign Up" type="submit">
+      <Button
+        disabled={accountCreated || type === 'IS_LOADING'}
+        title="Sign Up"
+        type="submit"
+      >
         {accountCreated ? 'Verifique seu e-mail' : 'Registrar-se'}
       </Button>
     </Form>
