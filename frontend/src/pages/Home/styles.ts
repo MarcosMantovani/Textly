@@ -2,18 +2,14 @@ import styled from 'styled-components'
 
 import { colors } from '../../styles'
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-
 export const Title = styled.h2`
   text-align: center;
   font-size: 24px;
   width: 648px;
-  margin: 32px 0 20px;
+  margin-bottom: 20px;
   color: ${colors.white};
+  padding-bottom: 24px;
+  border-bottom: 1px solid ${colors.white};
 `
 
 export const Profile = styled.div`

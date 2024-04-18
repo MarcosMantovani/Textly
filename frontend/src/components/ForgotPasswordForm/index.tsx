@@ -2,12 +2,12 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
 
 import { reset_password } from '../../store/actions/auth'
+import { RootState } from '../../store/reducers'
 
 import Button from '../Button'
-
 import { Input, Title } from '../../pages/LoginRegister/styles'
+
 import { ForgotPasswordForm as Form } from './styles'
-import { RootState } from '../../store/reducers'
 
 const connector = connect(
   (state: RootState) => ({

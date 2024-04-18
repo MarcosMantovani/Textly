@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
-import { Sidebar } from '../Sidebar/styles'
 import {
   Name as NamePost,
   ProfilePhoto as ProfilePhotoPost,
   Username as UsernamePost
 } from '../Post/styles'
+import { Sidebar } from '../Sidebar/styles'
 import { colors } from '../../styles'
 
 export const Profilebar = styled(Sidebar)`
@@ -50,17 +50,17 @@ export const Photo = styled(ProfilePhotoPost)`
 
 export const Name = styled(NamePost)`
   font-size: 20px;
-  cursor: default;
+  cursor: auto;
 `
 
 export const UserName = styled(UsernamePost)`
   font-size: 16px;
-  cursor: default;
+  cursor: auto;
 `
 
 export const UserEmail = styled(UsernamePost)`
   font-size: 12px;
-  cursor: default;
+  cursor: auto;
 `
 
 export const FollowListButtons = styled.div`

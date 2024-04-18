@@ -1,8 +1,8 @@
+import Button from '../Button'
+
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
 import tempImg from '../../assets/media/Foto LinkedIn.jpg'
-
-import Button from '../Button'
 
 import * as S from './styles'
 
@@ -15,7 +15,7 @@ const NewPost = () => (
     </div>
     <div className="postContent">
       <S.TextPost>
-        <textarea placeholder="Digite algo" />
+        <textarea className="newPostContainer" placeholder="Digite algo" />
       </S.TextPost>
     </div>
   </S.Container>

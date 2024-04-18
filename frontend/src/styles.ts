@@ -29,9 +29,11 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .container {
-    max-width: 1280px;
-    width: 100%;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 648px;
+    margin: 40px auto 0 auto;
 
     @media (max-width: ${breakpoints.desktop}) {
       max-width: 80%;

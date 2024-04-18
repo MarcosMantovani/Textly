@@ -101,6 +101,8 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
         onChange={(e) => OnChange(e)}
         type="text"
         placeholder="Nome"
+        maxLength={18}
+        minLength={3}
         required
       />
       <Input
@@ -109,6 +111,8 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
         onChange={(e) => OnChange(e)}
         type="text"
         placeholder="Username"
+        maxLength={18}
+        minLength={3}
         required
       />
       <Input

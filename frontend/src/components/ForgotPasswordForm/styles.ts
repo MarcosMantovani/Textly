@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { Form } from '../../pages/LoginRegister/styles'
 
 export const ForgotPasswordForm = styled(Form)`
