@@ -6,12 +6,12 @@ import Button from '../../components/Button'
 import TextlyTitle from '../../components/TextlyTitle'
 import SignupForm from '../../components/SignupForm'
 import ForgotPasswordForm from '../../components/ForgotPasswordForm'
+import Loader from '../../components/Loader'
 
 import { login } from '../../store/actions/auth'
 import { RootState } from '../../store/reducers'
 
 import * as S from './styles'
-import Loader from '../../components/Loader'
 
 const connector = connect(
   (state: RootState) => ({
@@ -95,7 +95,7 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
 
   return (
     <S.Body>
-      <Loader active={type === 'IS_LOADING'} />
+      <Loader withBackground active={type === 'IS_LOADING'} />
       <TextlyTitle position="middle-top" />
       <S.Container $signup={signUp}>
         <S.SignUp>

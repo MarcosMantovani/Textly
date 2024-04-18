@@ -7,6 +7,7 @@ import { checkAuthenticated, load_user } from './store/actions/auth'
 import Home from './pages/Home'
 import LoginRegister from './pages/LoginRegister'
 import ConfirmForm from './pages/ConfirmForm'
+import Profile from './pages/Profile'
 
 const connector = connect(null, {
   checkAuthenticated: checkAuthenticated,
@@ -28,6 +29,7 @@ const PageRoutes: React.FC<PropsFromRedux> = ({
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/profile/:id" element={<Profile />} />
       <Route path="/login" element={<LoginRegister />} />
       <Route path="/register" element={<LoginRegister />} />
       <Route path="/forgot-password" element={<LoginRegister />} />

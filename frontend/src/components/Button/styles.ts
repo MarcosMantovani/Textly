@@ -1,8 +1,9 @@
 import styled from 'styled-components'
+
 import { colors } from '../../styles'
 
 type StandardButtonProps = {
-  $styled?: 'standard' | 'minimalist' | 'sidebar' | 'post'
+  $styled?: 'standard' | 'minimalist' | 'sidebar' | 'post' | 'follow'
 }
 
 export const StandardButton = styled.button<StandardButtonProps>`
@@ -36,6 +37,12 @@ export const StandardButton = styled.button<StandardButtonProps>`
       $styled === 'minimalist' ? 'transparent' : `${colors.blue}`};
     cursor: not-allowed;
   }
+
+  &:active {
+    background-color: ${colors.black};
+    color: ${colors.white};
+    transition: none;
+  }
 `
 
 export const PostButton = styled.button`
@@ -66,6 +73,11 @@ export const PostButton = styled.button`
     * {
       fill: ${colors.white};
     }
+  }
+
+  &:active {
+    background-color: ${colors.black};
+    transition: none;
   }
 `
 
@@ -105,5 +117,34 @@ export const SideBarButton = styled.button`
     * {
       fill: ${colors.white};
     }
+  }
+
+  &:active {
+    background-color: ${colors.black};
+    color: ${colors.white};
+    transition: none;
+  }
+`
+
+export const FollowButton = styled.button<StandardButtonProps>`
+  background-color: rgba(0, 0, 0, 0.3);
+  color: ${colors.white};
+  font-size: 20px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px 8px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: ${colors.black};
+    color: ${colors.white};
+  }
+
+  &:active {
+    background-color: ${colors.white};
+    color: ${colors.black};
+    transition: none;
   }
 `

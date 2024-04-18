@@ -14,6 +14,11 @@ export const Title = styled.h1<TitleProps>`
   height: 40px;
   text-align: ${({ $position }) =>
     $position === 'middle-top' ? '' : 'center'};
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: translate(-50%, -10%);
+  }
 
   img {
     max-height: 100%;

@@ -1,22 +1,25 @@
 import styled from 'styled-components'
+
 import { colors } from '../../styles'
 
 type LoaderProps = {
   $active: boolean
+  $withBackground: boolean
 }
 
 export const Loader = styled.div<LoaderProps>`
   position: absolute;
   z-index: 10;
-  height: 100vh;
   height: 100svh;
+  height: 100vh;
   width: 100%;
   display: ${({ $active }) => ($active ? 'flex' : 'none')};
   justify-content: center;
   align-items: center;
   --color: ${colors.white};
   --animation: 1s ease-in-out infinite;
-  background-color: rgba(0, 0, 0, 0.73);
+  background-color: ${({ $withBackground }) =>
+    $withBackground ? 'rgba(0, 0, 0, 0.73)' : ''};
 
   .circle {
     display: flex;

@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { ProfilePhoto as PostProfilePhoto } from '../Post/styles'
 
 type ContainerProps = {

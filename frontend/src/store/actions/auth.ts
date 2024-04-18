@@ -92,8 +92,6 @@ export const load_user = (): AppAction => async (dispatch: AppDispatch) => {
         config
       )
 
-      console.log(res.data)
-
       dispatch({
         type: USER_LOADED_SUCCESS,
         payload: res.data

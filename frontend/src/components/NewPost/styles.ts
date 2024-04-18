@@ -7,7 +7,7 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: 40px 600px;
   column-gap: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 
   .sideIcons {
     display: flex;
@@ -28,7 +28,7 @@ export const TextPost = styled.div`
   min-height: 142px;
   height: 100%;
 
-  textarea {
+  .newPostContainer {
     background-color: transparent;
     border: 1px solid ${colors.white};
     border-radius: 8px;
@@ -39,5 +39,6 @@ export const TextPost = styled.div`
     width: 100%;
     height: 100%;
     padding: 8px;
+    outline: none;
   }
 `

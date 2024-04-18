@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Profile } from '../../store/actions/types'
 
-import { ReactComponent as Icon } from '../../assets/media/email-outline.svg'
 import perfilBanner from '../../assets/media/rl_evergreen_16x9.jpg'
 import tempImg from '../../assets/media/Foto LinkedIn.jpg'
+import { ReactComponent as ProfileIcon } from '../../assets/media/person-outline.svg'
+import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
 
 import Button from '../Button'
 import FollowersList from '../FollowersList'
@@ -19,6 +21,13 @@ type Props = {
 
 const Profilebar: React.FC<Props> = ({ user }) => {
   const [listDisplay, setListDisplay] = useState<ListDisplayType>('none')
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const redirectToProfilePage = (id: number) =>
+    navigate(`/profile/${id}`, { replace: true })
+
+  const redirectToHomePage = () => navigate(`/home`, { replace: true })
 
   const handleFolowersList = () => {
     if (listDisplay === 'followers') {
@@ -27,6 +36,7 @@ const Profilebar: React.FC<Props> = ({ user }) => {
       setListDisplay('followers')
     }
   }
+
   const handleFolowingList = () => {
     if (listDisplay === 'following') {
       setListDisplay('none')
@@ -34,7 +44,8 @@ const Profilebar: React.FC<Props> = ({ user }) => {
       setListDisplay('following')
     }
   }
-  const handleNoneList = () => setListDisplay('none')
+
+  const isInProfile = location.pathname.includes('profile')
 
   return (
     <S.Profilebar>
@@ -64,9 +75,27 @@ const Profilebar: React.FC<Props> = ({ user }) => {
           />
         </S.MainInfo>
       </div>
-      <Button title="Perfil" type="button" styled="sidebar" icon={<Icon />}>
-        PERFIL
-      </Button>
+      {isInProfile ? (
+        <Button
+          title="Perfil"
+          type="button"
+          styled="sidebar"
+          icon={<HomeIcon />}
+          onClick={() => redirectToHomePage()}
+        >
+          HOME
+        </Button>
+      ) : (
+        <Button
+          title="Perfil"
+          type="button"
+          styled="sidebar"
+          icon={<ProfileIcon />}
+          onClick={() => redirectToProfilePage(user.id)}
+        >
+          PERFIL
+        </Button>
+      )}
     </S.Profilebar>
   )
 }

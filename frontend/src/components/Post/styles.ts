@@ -6,22 +6,17 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: 40px 600px;
   column-gap: 8px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 
   .sideIcons {
     display: flex;
     flex-direction: column;
     row-gap: 8px;
   }
-
-  .postContent {
-    border-top: 1px solid ${colors.white};
-    padding-top: 32px;
-  }
 `
 
 export const ProfilePhoto = styled.img`
-  margin-top: 38px;
+  margin-top: 8px;
   width: 40px;
   height: 40px;
   border-radius: 50%;

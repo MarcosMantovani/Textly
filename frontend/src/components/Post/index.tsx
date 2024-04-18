@@ -14,11 +14,11 @@ const Post = () => (
       <Button title="" type="button" styled="post" icon={<LikeIcon />} />
       <Button title="" type="button" styled="post" icon={<MessageIcon />} />
     </div>
-    <div className="postContent">
+    <div>
       <S.TextPost>
         <div className="postHeader">
           <div>
-            <S.Name className="name">Marcos Mantovani</S.Name>
+            <S.Name>Marcos Mantovani</S.Name>
             <S.Username>@Marcospider</S.Username>
           </div>
           <p className="time">10 h</p>

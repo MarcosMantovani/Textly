@@ -2,10 +2,10 @@ import { ChangeEvent, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
+import { reset_password_confirm, verify } from '../../store/actions/auth'
+
 import Button from '../../components/Button'
 import TextlyTitle from '../../components/TextlyTitle'
-
-import { reset_password_confirm, verify } from '../../store/actions/auth'
 
 import { Body, Input } from '../LoginRegister/styles'
 import * as S from './styles'
