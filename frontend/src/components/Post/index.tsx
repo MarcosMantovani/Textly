@@ -6,36 +6,66 @@ import tempImg2 from '../../assets/media/rl_evergreen_16x9.jpg'
 import Button from '../Button'
 
 import * as S from './styles'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const Post = () => (
-  <S.Container>
-    <div className="sideIcons">
-      <S.ProfilePhoto src={tempImg} alt="Profile Photo" />
-      <Button title="" type="button" styled="post" icon={<LikeIcon />} />
-      <Button title="" type="button" styled="post" icon={<MessageIcon />} />
-    </div>
-    <div>
-      <S.TextPost>
-        <div className="postHeader">
-          <div>
-            <S.Name>Marcos Mantovani</S.Name>
-            <S.Username>@Marcospider</S.Username>
+export type PostType = {
+  id: number
+  body: string
+  created_at: string
+  user: {
+    id: number
+    name: string
+    username: string
+  }
+}
+
+type Props = {
+  postContent: PostType
+}
+
+const Post = ({ postContent }: Props) => {
+  const navigate = useNavigate()
+
+  const redirectToProfilePage = (id: number) =>
+    navigate(`/profile/${id}`, { replace: true })
+
+  return (
+    <S.Container>
+      <div className="sideIcons">
+        <S.ProfilePhoto
+          src={tempImg}
+          alt="Profile Photo"
+          onClick={() => redirectToProfilePage(postContent.user.id)}
+        />
+        <Button title="" type="button" styled="post" icon={<LikeIcon />} />
+        <Button title="" type="button" styled="post" icon={<MessageIcon />} />
+      </div>
+      <div>
+        <S.TextPost>
+          <div className="postHeader">
+            <div>
+              <S.Name
+                onClick={() => redirectToProfilePage(postContent.user.id)}
+              >
+                {postContent.user.name}
+              </S.Name>
+              <S.Username
+                onClick={() => redirectToProfilePage(postContent.user.id)}
+              >
+                @{postContent.user.username}
+              </S.Username>
+            </div>
+            <p className="time">{postContent.created_at}</p>
           </div>
-          <p className="time">10 h</p>
-        </div>
-        <div className="content">
-          <p>
-            Texto comprido de tweet bla bla bla aksjdakdna salkfmdskd
-            sldmdalkdma dmsodalkdma dolsmadl dlsmdmsda dasaldmaldm dsaldalsdmad
-            asas a sasas asasas asaasasasa sasas asasasas asasasa saasas as
-            asasas asasasa sas asaa asas asasas asasas asasas asasas asasa asas
-            asas asas as asas as a sas ass
-          </p>
-          <img src={tempImg2} alt="Post Image" />
-        </div>
-      </S.TextPost>
-    </div>
-  </S.Container>
-)
+          <div className="content">
+            <p>{postContent.body}</p>
+            {/* <img src={tempImg2} alt="Post Image" /> */}
+          </div>
+        </S.TextPost>
+      </div>
+    </S.Container>
+  )
+}
 
 export default Post
