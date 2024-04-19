@@ -45,6 +45,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   const [notAuthenticated, setNotAuthenticated] = useState(false)
   const [listType, setListType] = useState<ShowingType>('posts')
   const [listContent, setListContent] = useState<User[]>()
+  const [userFollowed, setUserFollowed] = useState(false)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -83,6 +84,84 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
       }
     }
   }, [listType, user])
+
+  useEffect(() => {
+    // Verificando se usuário já é seguido
+    const isFollowing = profile?.follows.some(
+      (profile) => profile.id === Number(id)
+    )
+    if (isFollowing) {
+      setUserFollowed(isFollowing)
+    }
+  }, [id, profile?.follows])
+
+  const followUser = async (
+    user_to_follow_id: number,
+    user_to_be_followed_id: number
+  ) => {
+    if (localStorage.getItem('access')) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      const body = JSON.stringify({
+        user_to_follow_id: user_to_follow_id,
+        user_to_be_followed_id: user_to_be_followed_id
+      })
+
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/auth/follow/`,
+          body,
+          config
+        )
+        console.log(res.data)
+        setUserFollowed(true)
+      } catch (err) {
+        setUserFollowed(false)
+      }
+    } else {
+      setUserFollowed(false)
+    }
+  }
+
+  const unfollowUser = async (
+    user_to_unfollow_id: number,
+    user_to_be_unfollowed_id: number
+  ) => {
+    if (localStorage.getItem('access')) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      const body = JSON.stringify({
+        user_to_unfollow_id: user_to_unfollow_id,
+        user_to_be_unfollowed_id: user_to_be_unfollowed_id
+      })
+
+      try {
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/auth/unfollow/`,
+          body,
+          config
+        )
+        console.log(res.data)
+        setUserFollowed(false)
+      } catch (err) {
+        setUserFollowed(false)
+      }
+    } else {
+      setUserFollowed(false)
+    }
+  }
 
   const handlePostsList = () => {
     setListType('posts')
@@ -131,9 +210,23 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                     <div>
                       <S.Name className="name">
                         {user.data.name}{' '}
-                        {Number(id) !== profile.id && (
-                          <Button type="button" title="Follow" styled="follow">
+                        {Number(id) !== profile.id && !userFollowed ? (
+                          <Button
+                            type="button"
+                            title="Follow"
+                            styled="follow"
+                            onClick={() => followUser(profile.id, Number(id))}
+                          >
                             +
+                          </Button>
+                        ) : (
+                          <Button
+                            type="button"
+                            title="Unfollow"
+                            styled="follow"
+                            onClick={() => unfollowUser(profile.id, Number(id))}
+                          >
+                            -
                           </Button>
                         )}
                       </S.Name>
