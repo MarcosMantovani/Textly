@@ -109,17 +109,15 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
       }
 
       const body = JSON.stringify({
-        user_to_follow_id: user_to_follow_id,
         user_to_be_followed_id: user_to_be_followed_id
       })
 
       try {
-        const res = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_API_URL}/auth/follow/`,
           body,
           config
         )
-        console.log(res.data)
         setUserFollowed(true)
       } catch (err) {
         setUserFollowed(false)
@@ -143,17 +141,15 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
       }
 
       const body = JSON.stringify({
-        user_to_unfollow_id: user_to_unfollow_id,
         user_to_be_unfollowed_id: user_to_be_unfollowed_id
       })
 
       try {
-        const res = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_API_URL}/auth/unfollow/`,
           body,
           config
         )
-        console.log(res.data)
         setUserFollowed(false)
       } catch (err) {
         setUserFollowed(false)
