@@ -15,6 +15,7 @@ export type PostType = {
     id: number
     name: string
     username: string
+    profile_photo: string | null
   }
 }
 
@@ -32,7 +33,11 @@ const Post = ({ postContent }: Props) => {
     <S.Container>
       <div className="sideIcons">
         <S.ProfilePhoto
-          src={tempImg}
+          src={
+            postContent.user.profile_photo
+              ? postContent.user.profile_photo
+              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+          }
           alt="Profile Photo"
           onClick={() => redirectToProfilePage(postContent.user.id)}
         />

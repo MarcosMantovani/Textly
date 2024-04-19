@@ -50,9 +50,23 @@ const Profilebar: React.FC<Props> = ({ user }) => {
   return (
     <S.Profilebar>
       <div>
-        <S.Banner src={perfilBanner} alt="Banner do perfil" />
+        <S.Banner
+          src={
+            user.banner
+              ? user.banner
+              : `${process.env.REACT_APP_API_URL}/media/images/no-banner.png`
+          }
+          alt="Banner do perfil"
+        />
         <S.MainInfo className="mainInfo">
-          <S.Photo src={tempImg} alt="Foto do perfil" />
+          <S.Photo
+            src={
+              user.profile_photo
+                ? user.profile_photo
+                : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+            }
+            alt="Foto do perfil"
+          />
           <S.Name>{user.name}</S.Name>
           <S.UserName>@{user.username}</S.UserName>
           <S.UserEmail>{user.email}</S.UserEmail>

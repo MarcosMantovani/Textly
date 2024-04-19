@@ -13,12 +13,15 @@ import { Name, Username } from '../../components/Post/styles'
 import Post, { PostType } from '../../components/Post'
 import Button from '../../components/Button'
 
-import tempBanner from '../../assets/media/rl_evergreen_16x9.jpg'
-import tempPhoto from '../../assets/media/Foto LinkedIn.jpg'
-import tempImg from '../../assets/media/Foto LinkedIn.jpg'
-
 import { Title } from '../Home/styles'
 import * as S from './styles'
+
+type SocialUsersType = {
+  id: number
+  name: string
+  username: string
+  profile_photo: string | null
+}
 
 type Params = {
   id: string
@@ -117,8 +120,10 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     if (user && user.data) {
       if (listType === 'follows') {
         setListContent(user.data.follows)
+        console.log(user.data)
       } else if (listType === 'followers') {
         setListContent(user.data.followed_by)
+        console.log(user.data)
       }
     }
   }, [listType, posts, user])
@@ -208,13 +213,25 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
       {user && user.data && profile ? (
         <>
           <S.Header className="container">
-            <S.BackgroundBanner src={tempBanner} />
-            <S.Banner>
+            <S.BackgroundBanner
+              src={
+                user.data.banner
+                  ? user.data.banner
+                  : `${process.env.REACT_APP_API_URL}/media/images/no-banner.png`
+              }
+            />
+            <S.Banner $banner={user.data.banner}>
               <S.Info>
                 <div className="social"></div>
                 <div className="maininfo">
                   <div>
-                    <S.ProfilePhoto src={tempPhoto} />
+                    <S.ProfilePhoto
+                      src={
+                        user.data.profile_photo
+                          ? user.data.profile_photo
+                          : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                      }
+                    />
                     <div>
                       <S.Name className="name">
                         {user.data.name}{' '}
@@ -298,7 +315,11 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                       <li key={user.id}>
                         <S.ListProfilePhoto
                           className="profilePhoto"
-                          src={tempImg}
+                          src={
+                            user.profile_photo
+                              ? user.profile_photo
+                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                          }
                           alt="Foto de perfil"
                           onClick={() => redirectToProfilePage(user.id)}
                         />

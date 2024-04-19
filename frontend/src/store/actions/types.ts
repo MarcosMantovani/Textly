@@ -20,6 +20,8 @@ export interface User {
   name: string
   username: string
   email: string
+  profile_photo: string | null
+  banner: string | null
 }
 
 export interface Profile extends User {
