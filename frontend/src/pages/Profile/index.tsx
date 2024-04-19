@@ -41,8 +41,6 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
   const { id } = useParams<Params>()
   const [user, setUser] = useState<AxiosResponse<ProfileType | null>>()
-  const [userNotFound, setUserNotFound] = useState(false)
-  const [notAuthenticated, setNotAuthenticated] = useState(false)
   const [listType, setListType] = useState<ShowingType>('posts')
   const [listContent, setListContent] = useState<User[]>()
   const [userFollowed, setUserFollowed] = useState(false)
@@ -65,10 +63,10 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
           )
           setUser(response)
         } catch (err) {
-          setUserNotFound(true)
+          return <h3>Perfil não encontrado ou inexistente</h3>
         }
       } else {
-        setNotAuthenticated(true)
+        return <h3>Entre para visualizar outros perfis</h3>
       }
     }
 
@@ -88,17 +86,16 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
         try {
           const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/auth/posts/${id}/`,
+            `${process.env.REACT_APP_API_URL}/posts/${id}/`,
             config
           )
 
-          console.log(res.data)
           setPosts(res.data)
         } catch (err) {
-          console.log(err)
+          return <h3>Erro ao carregar posts deste usuário</h3>
         }
       } else {
-        console.log('Entre para ter acesso ao posts')
+        return <h3>Entre para vizualizar os posts de outros usuários</h3>
       }
     }
 
@@ -178,9 +175,11 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
         setUserFollowed(false)
       } catch (err) {
         setUserFollowed(false)
+        return <h3>Houve um erro ao seguir o usuário</h3>
       }
     } else {
       setUserFollowed(false)
+      return <h3>Entre para seguir outros usuários</h3>
     }
   }
 
@@ -203,15 +202,6 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     navigate('/login', { replace: true })
   }
 
-  if (userNotFound || notAuthenticated) {
-    return (
-      <div className="container">
-        {userNotFound && <h3>Usuário não encontrado ou inexistente</h3>}
-        {notAuthenticated && <h3>Entre para visualizar outros perfis</h3>}
-      </div>
-    )
-  }
-
   return (
     <>
       <Sidebar />
@@ -224,10 +214,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                 <div className="social"></div>
                 <div className="maininfo">
                   <div>
-                    <S.ProfilePhoto
-                      src={tempPhoto}
-                      onClick={() => console.log(listType)} // retirar depois
-                    />
+                    <S.ProfilePhoto src={tempPhoto} />
                     <div>
                       <S.Name className="name">
                         {user.data.name}{' '}

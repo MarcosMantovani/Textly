@@ -237,17 +237,16 @@ const Home: React.FC<PropsFromRedux> = ({
 
         try {
           const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/auth/posts/`,
+            `${process.env.REACT_APP_API_URL}/posts/`,
             config
           )
 
-          console.log(res.data)
           setPosts(res.data)
         } catch (err) {
-          console.log(err)
+          return <h3>Erro ao carregar posts</h3>
         }
       } else {
-        console.log('Entre para ter acesso ao posts')
+        return <h3>Entre para visualizar a Home Page</h3>
       }
     }
 

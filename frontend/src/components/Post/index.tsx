@@ -1,12 +1,10 @@
 import { ReactComponent as LikeIcon } from '../../assets/media/heart-outline.svg'
 import { ReactComponent as MessageIcon } from '../../assets/media/message-circle-outline.svg'
 import tempImg from '../../assets/media/Foto LinkedIn.jpg'
-import tempImg2 from '../../assets/media/rl_evergreen_16x9.jpg'
 
 import Button from '../Button'
 
 import * as S from './styles'
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export type PostType = {
