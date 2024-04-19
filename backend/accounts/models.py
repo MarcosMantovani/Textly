@@ -36,6 +36,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
                                     symmetrical=False,
                                     blank=True)
     date_modified = models.DateTimeField(auto_now=True)
+    profile_photo = models.ImageField(null=True, blank=True, upload_to='images')
+    banner = models.ImageField(null=True, blank=True, upload_to='images')
 
     objects = UserAccountManager()
 
@@ -61,13 +63,6 @@ class Post(models.Model):
     )
     body = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def get_user(self):
-        return {
-            "username": self.user.username,
-            "name": self.user.name,
-            "id": self.user.id,
-        }
 
     def get_post(self):
         return {

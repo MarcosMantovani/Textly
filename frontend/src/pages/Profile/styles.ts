@@ -2,7 +2,9 @@ import styled from 'styled-components'
 
 import { ProfilePhoto as PostProfilePhoto } from '../../components/Post/styles'
 
-import TempBanner from '../../assets/media/rl_evergreen_16x9.jpg'
+type BannerProps = {
+  $banner: string | null
+}
 
 import {
   ProfilePhoto as ProfilePhotoPost,
@@ -31,8 +33,11 @@ export const BackgroundBanner = styled.img`
   filter: blur(10px);
 `
 
-export const Banner = styled.div`
-  background-image: url(${TempBanner});
+export const Banner = styled.div<BannerProps>`
+  background-image: ${({ $banner }) =>
+    $banner
+      ? `url(${$banner})`
+      : `url(${process.env.REACT_APP_API_URL}/media/images/no-banner.png)`};
   background-size: cover;
   position: absolute;
   left: 50%;

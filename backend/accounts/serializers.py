@@ -11,34 +11,30 @@ class userCreateSerializer(UserCreateSerializer):
         model = User
         fields = ('id', 'email', 'name', 'username', 'password')
 
+class CustomSoaiclUsersSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        model = UserAccount
+        fields = ('id', 'username', 'name', 'profile_photo')
+
 class CustomUserSerializer(UserSerializer):
-    follows = UserSerializer(many=True, read_only=True)
-    followed_by = UserSerializer(many=True, read_only=True)
+    follows = CustomSoaiclUsersSerializer(many=True, read_only=True)
+    followed_by = CustomSoaiclUsersSerializer(many=True, read_only=True)
 
     class Meta(UserSerializer.Meta):
         model = UserAccount
-        fields = ('id', 'email', 'username', 'name', 'follows', 'followed_by', 'date_modified')
+        fields = ('id', 'email', 'username', 'name', 'profile_photo', 'banner', 'follows', 'followed_by', 'date_modified')
 
-    # Retornando usuários de follows e followed_by
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['follows'] = UserSerializer(instance.follows.all(), many=True).data
-        data['followed_by'] = UserSerializer(instance.followed_by.all(), many=True).data
-        return data
+class PostUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ('id', 'name', 'username', 'profile_photo')
 
 class PostSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
+    user = PostUserSerializer()
 
     class Meta:
         model = Post
         fields = ('id', 'user', 'body', 'created_at')
-
-    def get_user(self, obj):
-        return {
-            'id': obj.user.id,
-            'username': obj.user.username,
-            'name': obj.user.name
-        }
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
