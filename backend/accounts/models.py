@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
-from django.db.models.signals import post_save
 
 
 class UserAccountManager(BaseUserManager):
@@ -54,3 +53,32 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
+
+class Post(models.Model):
+    user = models.ForeignKey(
+        UserAccount, related_name="posts",
+        on_delete=models.DO_NOTHING
+    )
+    body = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_user(self):
+        return {
+            "username": self.user.username,
+            "name": self.user.name,
+            "id": self.user.id,
+        }
+
+    def get_post(self):
+        return {
+            "id": self.id,
+            "body": self.body,
+            "created_at": self.created_at.strftime("%d/%m/%Y %H:%M:%S"),
+        }
+
+    def __str__(self):
+        return (
+            f"{self.user} "
+            f"({self.created_at:%d-%m-%Y %H:%M}): "
+            f"{self.body}"
+        )

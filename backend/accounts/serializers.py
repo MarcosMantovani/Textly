@@ -1,6 +1,6 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from django.contrib.auth import get_user_model
-from .models import UserAccount
+from .models import UserAccount, Post
 from rest_framework import serializers
 
 
@@ -25,3 +25,23 @@ class CustomUserSerializer(UserSerializer):
         data['follows'] = UserSerializer(instance.follows.all(), many=True).data
         data['followed_by'] = UserSerializer(instance.followed_by.all(), many=True).data
         return data
+
+class PostSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Post
+        fields = ('id', 'user', 'body', 'created_at')
+
+    def get_user(self, obj):
+        return {
+            'id': obj.user.id,
+            'username': obj.user.username,
+            'name': obj.user.name
+        }
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        created_at = instance.created_at.strftime("%d/%m/%Y %H:%M")
+        representation['created_at'] = created_at
+        return representation

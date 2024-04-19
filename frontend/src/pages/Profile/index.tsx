@@ -10,7 +10,7 @@ import Loader from '../../components/Loader'
 import Sidebar from '../../components/Sidebar'
 import Profilebar from '../../components/Profilebar'
 import { Name, Username } from '../../components/Post/styles'
-import Post from '../../components/Post'
+import Post, { PostType } from '../../components/Post'
 import Button from '../../components/Button'
 
 import tempBanner from '../../assets/media/rl_evergreen_16x9.jpg'
@@ -46,6 +46,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   const [listType, setListType] = useState<ShowingType>('posts')
   const [listContent, setListContent] = useState<User[]>()
   const [userFollowed, setUserFollowed] = useState(false)
+  const [posts, setPosts] = useState<PostType[]>()
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -75,15 +76,34 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   }, [id])
 
   useEffect(() => {
-    // Adicionar lista de posts
-    if (user && user.data) {
-      if (listType === 'follows') {
-        setListContent(user.data.follows)
-      } else if (listType === 'followers') {
-        setListContent(user.data.followed_by)
+    const fecthPosts = async () => {
+      if (localStorage.getItem('access')) {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('access')}`,
+            Accept: 'application/json'
+          }
+        }
+
+        try {
+          const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/auth/posts/${id}/`,
+            config
+          )
+
+          console.log(res.data)
+          setPosts(res.data)
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        console.log('Entre para ter acesso ao posts')
       }
     }
-  }, [listType, user])
+
+    fecthPosts()
+  }, [id])
 
   useEffect(() => {
     // Verificando se usuário já é seguido
@@ -95,10 +115,18 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     }
   }, [id, profile?.follows])
 
-  const followUser = async (
-    user_to_follow_id: number,
-    user_to_be_followed_id: number
-  ) => {
+  useEffect(() => {
+    // Adicionar lista de posts
+    if (user && user.data) {
+      if (listType === 'follows') {
+        setListContent(user.data.follows)
+      } else if (listType === 'followers') {
+        setListContent(user.data.followed_by)
+      }
+    }
+  }, [listType, posts, user])
+
+  const followUser = async (user_to_be_followed_id: number) => {
     if (localStorage.getItem('access')) {
       const config = {
         headers: {
@@ -127,10 +155,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     }
   }
 
-  const unfollowUser = async (
-    user_to_unfollow_id: number,
-    user_to_be_unfollowed_id: number
-  ) => {
+  const unfollowUser = async (user_to_be_unfollowed_id: number) => {
     if (localStorage.getItem('access')) {
       const config = {
         headers: {
@@ -201,29 +226,33 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                   <div>
                     <S.ProfilePhoto
                       src={tempPhoto}
-                      onClick={() => console.log(listType)}
+                      onClick={() => console.log(listType)} // retirar depois
                     />
                     <div>
                       <S.Name className="name">
                         {user.data.name}{' '}
-                        {Number(id) !== profile.id && !userFollowed ? (
-                          <Button
-                            type="button"
-                            title="Follow"
-                            styled="follow"
-                            onClick={() => followUser(profile.id, Number(id))}
-                          >
-                            +
-                          </Button>
-                        ) : (
-                          <Button
-                            type="button"
-                            title="Unfollow"
-                            styled="follow"
-                            onClick={() => unfollowUser(profile.id, Number(id))}
-                          >
-                            -
-                          </Button>
+                        {Number(id) !== profile.id && (
+                          <>
+                            {!userFollowed ? (
+                              <Button
+                                type="button"
+                                title="Follow"
+                                styled="follow"
+                                onClick={() => followUser(Number(id))}
+                              >
+                                +
+                              </Button>
+                            ) : (
+                              <Button
+                                type="button"
+                                title="Unfollow"
+                                styled="follow"
+                                onClick={() => unfollowUser(Number(id))}
+                              >
+                                -
+                              </Button>
+                            )}
+                          </>
                         )}
                       </S.Name>
                       <S.Username>@{user.data.username}</S.Username>
@@ -243,7 +272,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                       </p>
                     </div>
                     <div>
-                      <p>100</p>
+                      <p>{posts?.length}</p>
                       <p className="description" onClick={handlePostsList}>
                         Posts
                       </p>
@@ -253,51 +282,56 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
               </S.Info>
             </S.Banner>
           </S.Header>
-          {listContent && (
-            <S.ProfileContent className="container">
-              {listType === 'posts' ? ( // Fazer map dos posts
-                <>
-                  <Title>POSTS</Title>
-                  <Post />
-                </>
-              ) : (
-                <>
-                  {listType === 'follows' && (
-                    <Title>Quem @{user.data.username} segue</Title>
-                  )}
-                  {listType === 'followers' && (
-                    <Title>Quem segue @{user.data.username}</Title>
-                  )}
-                  {listContent.length > 0 && (
-                    <S.List>
-                      {listContent.map((user) => (
-                        <li key={user.id}>
-                          <S.ListProfilePhoto
-                            className="profilePhoto"
-                            src={tempImg}
-                            alt="Foto de perfil"
+          <S.ProfileContent className="container">
+            {listType === 'posts' && posts && (
+              <>
+                <Title>POSTS</Title>
+                {posts ? (
+                  <>
+                    {posts.map((post) => (
+                      <Post postContent={post} key={post.id} />
+                    ))}
+                  </>
+                ) : (
+                  <Loader withBackground={false} active />
+                )}
+              </>
+            )}
+            {listType !== 'posts' && listContent && (
+              <>
+                {listType === 'follows' && (
+                  <Title>Quem @{user.data.username} segue</Title>
+                )}
+                {listType === 'followers' && (
+                  <Title>Quem segue @{user.data.username}</Title>
+                )}
+                {listContent.length > 0 && (
+                  <S.List>
+                    {listContent.map((user) => (
+                      <li key={user.id}>
+                        <S.ListProfilePhoto
+                          className="profilePhoto"
+                          src={tempImg}
+                          alt="Foto de perfil"
+                          onClick={() => redirectToProfilePage(user.id)}
+                        />
+                        <div>
+                          <Name onClick={() => redirectToProfilePage(user.id)}>
+                            {user.name}
+                          </Name>
+                          <Username
                             onClick={() => redirectToProfilePage(user.id)}
-                          />
-                          <div>
-                            <Name
-                              onClick={() => redirectToProfilePage(user.id)}
-                            >
-                              {user.name}
-                            </Name>
-                            <Username
-                              onClick={() => redirectToProfilePage(user.id)}
-                            >
-                              @{user.username}
-                            </Username>
-                          </div>
-                        </li>
-                      ))}
-                    </S.List>
-                  )}
-                </>
-              )}
-            </S.ProfileContent>
-          )}
+                          >
+                            @{user.username}
+                          </Username>
+                        </div>
+                      </li>
+                    ))}
+                  </S.List>
+                )}
+              </>
+            )}
+          </S.ProfileContent>
         </>
       ) : (
         <Loader withBackground={false} active />

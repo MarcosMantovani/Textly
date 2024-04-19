@@ -1,13 +1,10 @@
-from django.http import Http404
 from rest_framework.generics import RetrieveAPIView
-from rest_framework import permissions
-from rest_framework.views import APIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from .models import UserAccount
-from .serializers import CustomUserSerializer
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import UserAccount, Post
+from .serializers import CustomUserSerializer, PostSerializer
 
 class UserDetailView(RetrieveAPIView):
     queryset = UserAccount.objects.all()
@@ -62,3 +59,20 @@ def unfollow_user(request):
     user_to_follow.follows.remove(user_to_be_followed)
 
     return Response({"message": "User unfollowed successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_posts(request, user_id=None):
+    if user_id is not None:
+        # Se um ID de usuário foi fornecido na URL, filtrar os posts por esse usuário
+        posts = Post.objects.filter(user_id=user_id)
+    else:
+        # Se nenhum ID de usuário foi fornecido na URL, retornar todos os posts
+        posts = Post.objects.all()
+
+    # Ordenar os posts do mais novo para o mais antigo
+    posts = posts.order_by('-created_at')
+
+    # Serializar os posts
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data)

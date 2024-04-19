@@ -1,17 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import { ConnectedProps, connect } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { RootState } from '../../store/reducers'
 import { load_user } from '../../store/actions/auth'
 import { Profile } from '../../store/actions/types'
 
 import NewPost from '../../components/NewPost'
-import Post from '../../components/Post'
+import Post, { PostType } from '../../components/Post'
 import Sidebar from '../../components/Sidebar'
 import Profilebar from '../../components/Profilebar'
 
 import * as S from './styles'
+import axios from 'axios'
+import Loader from '../../components/Loader'
 
 export const mock: Profile = {
   id: 1,
@@ -214,11 +216,43 @@ const Home: React.FC<PropsFromRedux> = ({
 }) => {
   const navigate = useNavigate()
 
+  const [posts, setPosts] = useState<PostType[]>()
+
   useEffect(() => {
     if (!profile) {
       load_user()
     }
   }, [load_user, profile])
+
+  useEffect(() => {
+    const fecthPosts = async () => {
+      if (localStorage.getItem('access')) {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('access')}`,
+            Accept: 'application/json'
+          }
+        }
+
+        try {
+          const res = await axios.get(
+            `${process.env.REACT_APP_API_URL}/auth/posts/`,
+            config
+          )
+
+          console.log(res.data)
+          setPosts(res.data)
+        } catch (err) {
+          console.log(err)
+        }
+      } else {
+        console.log('Entre para ter acesso ao posts')
+      }
+    }
+
+    fecthPosts()
+  }, [])
 
   if (isAuthenticated !== true) {
     navigate('/login', { replace: true })
@@ -232,12 +266,15 @@ const Home: React.FC<PropsFromRedux> = ({
           <div className="container">
             <S.Title>HOME</S.Title>
             <NewPost />
-            <Post />
-            <Post />
-            <Post />
-            <Post />
-            <Post />
-            <Post />
+            {posts ? (
+              <>
+                {posts.map((post) => (
+                  <Post postContent={post} key={post.id} />
+                ))}
+              </>
+            ) : (
+              <Loader withBackground={false} active />
+            )}
           </div>
           <Profilebar user={profile} />
         </>
