@@ -65,6 +65,10 @@ class Post(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='images')
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(UserAccount, related_name="post_like", blank=True)
+    quoted_post = models.ForeignKey(
+        'self', related_name='quotes',
+        on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     def number_of_likes(self):
         return self.likes.count()

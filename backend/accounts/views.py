@@ -86,22 +86,32 @@ def create_post(request):
     # Obtendo os dados do corpo da solicitação
     body = request.data.get('body', None)
     image = request.data.get('image', None)
+    quoted_post_id = request.data.get('quoted_post_id', None)
 
     if body is None:
         return Response({"message": "The post body was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
     # Criando o post
-    post = Post.objects.create(user=user, body=body)
+    if quoted_post_id:
+        try:
+            quoted_post = Post.objects.get(id=quoted_post_id)
+        except Post.DoesNotExist:
+            return Response({"message": "Quoted post not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        post = Post.objects.create(user=user, body=body, quoted_post=quoted_post)
+    else:
+        post = Post.objects.create(user=user, body=body)
 
     # Se uma imagem foi fornecida, atribua-a ao post
     if image:
         post.image = image
         post.save()
 
-    # Serializando o post criado para retornar todas as informações
+    # Serializando o post criado para retornar todas as informações, incluindo a quoted_post
     serializer = PostSerializer(post)
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

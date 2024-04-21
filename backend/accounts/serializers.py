@@ -31,13 +31,33 @@ class PostUserSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = PostUserSerializer()
+    quoted_post = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ('id', 'user', 'body', 'image', 'created_at', 'likes', 'number_of_likes')
+        fields = ('id', 'user', 'body', 'image', 'created_at', 'likes', 'number_of_likes', 'quoted_post')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         created_at = instance.created_at.strftime("%d/%m/%Y %H:%M")
         representation['created_at'] = created_at
         return representation
+
+    def get_quoted_post(self, instance):
+        # Retorna a representação do post citado
+        if instance.quoted_post:
+            return {
+                "id": instance.quoted_post.id,
+                "user": {
+                    "id": instance.quoted_post.user.id,
+                    "name": instance.quoted_post.user.name,
+                    "username": instance.quoted_post.user.username,
+                    "profile_photo": instance.quoted_post.user.profile_photo.url if instance.quoted_post.user.profile_photo else None
+                },
+                "body": instance.quoted_post.body,
+                "image": instance.quoted_post.image.url if instance.quoted_post.image else None,
+                "created_at": instance.quoted_post.created_at.strftime("%d/%m/%Y %H:%M:%S"),
+                "likes": instance.quoted_post.likes.count(),
+                "number_of_likes": instance.quoted_post.likes.count()
+            }
+        return None

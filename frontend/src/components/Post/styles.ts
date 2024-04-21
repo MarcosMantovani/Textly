@@ -26,7 +26,10 @@ export const Container = styled.div<ContainerProps>`
 export const ProfilePhoto = styled.img`
   margin-top: 8px;
   width: 40px;
+  max-width: 40px;
   height: 40px;
+  max-height: 40px;
+  object-fit: cover;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -68,12 +71,12 @@ export const TextPost = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
+  }
 
-    .secondInfo {
-      text-align: end;
-      font-size: 12px;
-      opacity: 0.5;
-    }
+  .secondInfo {
+    text-align: end;
+    font-size: 12px;
+    opacity: 0.5;
   }
 
   .content {
@@ -82,9 +85,9 @@ export const TextPost = styled.div`
     row-gap: 16px;
     padding-bottom: 8px;
 
-    img {
+    .PostImage {
       object-fit: cover;
-      width: 584px;
+      width: 100%;
       max-height: 300px;
       border-radius: 8px;
     }
@@ -94,5 +97,33 @@ export const TextPost = styled.div`
   &:hover {
     filter: brightness(110%);
     transform: translateY(-1%);
+  }
+`
+
+export const QuotedProfilePhoto = styled(ProfilePhoto)`
+  margin: 0;
+`
+
+export const QuotedPostContainer = styled.div`
+  .headInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .mainInfo {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+  }
+
+  .quotedBody {
+    margin-top: 8px;
+  }
+
+  .quotedContent {
+    .PostImage {
+      margin-top: 16px;
+    }
   }
 `
