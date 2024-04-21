@@ -14,6 +14,7 @@ export type PostType = {
   image?: string | null
   created_at: string
   number_of_likes: number
+  likes: number[]
   user: {
     id: number
     name: string
@@ -24,9 +25,10 @@ export type PostType = {
 
 type Props = {
   postContent: PostType
+  profile_id: number
 }
 
-const Post = ({ postContent }: Props) => {
+const Post = ({ postContent, profile_id }: Props) => {
   const navigate = useNavigate()
 
   const [likes, setLikes] = useState(postContent.number_of_likes)
@@ -34,6 +36,12 @@ const Post = ({ postContent }: Props) => {
 
   const redirectToProfilePage = () =>
     navigate(`/profile/${postContent.user.id}`, { replace: true })
+
+  const hasLikedPost = (): boolean => {
+    return postContent.likes.includes(profile_id)
+  }
+
+  const [liked, setLiked] = useState(hasLikedPost)
 
   const likePost = async () => {
     if (localStorage.getItem('access')) {
@@ -56,10 +64,16 @@ const Post = ({ postContent }: Props) => {
           config
         )
 
-        if (likes === postContent.number_of_likes) {
-          setLikes(likes + 1)
+        if (!hasLikedPost) {
+          setLikes(
+            likes === postContent.number_of_likes ? likes + 1 : likes - 1
+          )
+          setLiked(likes === postContent.number_of_likes ? true : false)
         } else {
-          setLikes(likes - 1)
+          setLikes(
+            likes === postContent.number_of_likes ? likes - 1 : likes + 1
+          )
+          setLiked(likes === postContent.number_of_likes ? false : true)
         }
       } catch (err) {
         setError('Erro ao curtir post, atualize a página.')
@@ -79,7 +93,7 @@ const Post = ({ postContent }: Props) => {
   }
 
   return (
-    <S.Container>
+    <S.Container $liked={liked}>
       <div className="sideIcons">
         <S.ProfilePhoto
           src={
@@ -91,6 +105,7 @@ const Post = ({ postContent }: Props) => {
           onClick={redirectToProfilePage}
         />
         <Button
+          className="likeButton"
           title=""
           type="button"
           styled="post"

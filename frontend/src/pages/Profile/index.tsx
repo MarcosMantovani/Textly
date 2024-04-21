@@ -294,7 +294,11 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                 {posts ? (
                   <>
                     {posts.map((post) => (
-                      <Post postContent={post} key={post.id} />
+                      <Post
+                        profile_id={profile.id}
+                        postContent={post}
+                        key={post.id}
+                      />
                     ))}
                   </>
                 ) : (
