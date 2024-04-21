@@ -11,7 +11,6 @@ export const Container = styled.div<ContainerProps>`
   grid-template-columns: 40px 600px;
   column-gap: 8px;
   margin-bottom: 24px;
-
   .sideIcons {
     display: flex;
     flex-direction: column;
@@ -20,6 +19,19 @@ export const Container = styled.div<ContainerProps>`
 
   .likeButton svg * {
     fill: ${({ $liked }) => ($liked ? `${colors.likeColor}` : '')};
+  }
+
+  .textQuotePost {
+    background-color: transparent;
+    border: 1px solid ${colors.white};
+    border-radius: 8px;
+    resize: none;
+    overflow-y: auto;
+    color: ${colors.white};
+    font-size: 16px;
+    width: 100%;
+    padding: 8px;
+    outline: none;
   }
 `
 
@@ -125,5 +137,30 @@ export const QuotedPostContainer = styled.div`
     .PostImage {
       margin-top: 16px;
     }
+  }
+`
+
+export const QuotePostForm = styled.form`
+  display: grid;
+  grid-template-columns: 40px 600px;
+  column-gap: 8px;
+  margin-bottom: 24px;
+  .sideIcons {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+
+  .textQuotePost {
+    background-color: transparent;
+    border: 1px solid ${colors.white};
+    border-radius: 8px;
+    resize: none;
+    overflow-y: auto;
+    color: ${colors.white};
+    font-size: 16px;
+    width: 100%;
+    padding: 8px;
+    outline: none;
   }
 `
