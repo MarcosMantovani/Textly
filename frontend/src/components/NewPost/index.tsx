@@ -11,16 +11,15 @@ import Post, { PostType } from '../Post'
 
 type Props = {
   profilePhoto: string
-  profile_id: number
 }
 
-const NewPost = ({ profilePhoto, profile_id }: Props) => {
+const NewPost = ({ profilePhoto }: Props) => {
   const [postBody, setPostBody] = useState('')
   const [postImage, setPostImage] = useState<File | null>(null)
   const [formCallback, setFormCallback] = useState<PostType[] | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const handleCreatePost = async () => {
+  const createPost = async () => {
     if (localStorage.getItem('access')) {
       const formData = new FormData()
       formData.append('body', postBody)
@@ -67,6 +66,12 @@ const NewPost = ({ profilePhoto, profile_id }: Props) => {
     setPostImage(file)
   }
 
+  const handleQuotePostSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    createPost()
+  }
+
   if (error) {
     return (
       <>
@@ -78,7 +83,7 @@ const NewPost = ({ profilePhoto, profile_id }: Props) => {
 
   return (
     <>
-      <S.Container>
+      <S.Form onSubmit={(e) => handleQuotePostSubmit(e)}>
         <div className="sideIcons">
           <S.ProfilePhoto src={profilePhoto} alt="profilePhoto" />
           <Button
@@ -88,13 +93,7 @@ const NewPost = ({ profilePhoto, profile_id }: Props) => {
             icon={<ImageIcon />}
             onChange={(e) => handleImageChange(e)}
           />
-          <Button
-            title=""
-            type="button"
-            styled="post"
-            icon={<ConfirmIcon />}
-            onClick={handleCreatePost}
-          />
+          <Button title="" type="submit" styled="post" icon={<ConfirmIcon />} />
         </div>
         <div className="postContent">
           <S.TextPost>
@@ -110,9 +109,9 @@ const NewPost = ({ profilePhoto, profile_id }: Props) => {
             />
           </S.TextPost>
         </div>
-      </S.Container>
+      </S.Form>
       {formCallback?.map((post) => (
-        <Post profile_id={profile_id} postContent={post} key={post.id} />
+        <Post postContent={post} key={post.id} />
       ))}
     </>
   )

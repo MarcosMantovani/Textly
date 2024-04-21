@@ -275,7 +275,6 @@ const Home: React.FC<PropsFromRedux> = ({
           <div className="container">
             <S.Title>HOME</S.Title>
             <NewPost
-              profile_id={profile.id}
               profilePhoto={
                 profile.profile_photo
                   ? profile.profile_photo
@@ -285,11 +284,7 @@ const Home: React.FC<PropsFromRedux> = ({
             {posts ? (
               <>
                 {posts.map((post) => (
-                  <Post
-                    postContent={post}
-                    profile_id={profile.id}
-                    key={post.id}
-                  />
+                  <Post postContent={post} key={post.id} />
                 ))}
               </>
             ) : (

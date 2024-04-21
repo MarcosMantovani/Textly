@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { colors } from '../../styles'
 import { ProfilePhoto as ProfilePhotoPost } from '../Post/styles'
 
-export const Container = styled.div`
+export const Form = styled.form`
   display: grid;
   grid-template-columns: 40px 600px;
   column-gap: 8px;
