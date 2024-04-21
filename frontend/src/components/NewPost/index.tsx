@@ -11,9 +11,10 @@ import Post, { PostType } from '../Post'
 
 type Props = {
   profilePhoto: string
+  profile_id: number
 }
 
-const NewPost = ({ profilePhoto }: Props) => {
+const NewPost = ({ profilePhoto, profile_id }: Props) => {
   const [postBody, setPostBody] = useState('')
   const [postImage, setPostImage] = useState<File | null>(null)
   const [formCallback, setFormCallback] = useState<PostType[] | null>(null)
@@ -111,7 +112,7 @@ const NewPost = ({ profilePhoto }: Props) => {
         </div>
       </S.Container>
       {formCallback?.map((post) => (
-        <Post postContent={post} key={post.id} />
+        <Post profile_id={profile_id} postContent={post} key={post.id} />
       ))}
     </>
   )

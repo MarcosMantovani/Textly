@@ -2,7 +2,11 @@ import styled from 'styled-components'
 
 import { colors } from '../../styles'
 
-export const Container = styled.div`
+type ContainerProps = {
+  $liked: boolean
+}
+
+export const Container = styled.div<ContainerProps>`
   display: grid;
   grid-template-columns: 40px 600px;
   column-gap: 8px;
@@ -12,6 +16,10 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+  }
+
+  .likeButton svg * {
+    fill: ${({ $liked }) => ($liked ? `${colors.likeColor}` : '')};
   }
 `
 

@@ -9,6 +9,7 @@ type ButtonProps = {
   styled?: 'standard' | 'minimalist' | 'sidebar' | 'post' | 'follow' | 'postImg'
   icon?: React.ReactNode
   disabled?: boolean
+  className?: string
   onClick?: () => void
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -21,13 +22,15 @@ const Button = ({
   disabled = false,
   icon,
   onClick,
-  onChange
+  onChange,
+  className
 }: ButtonProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   if (styled === 'post') {
     return (
       <S.PostButton
+        className={className}
         type={type}
         title={title}
         onClick={onClick}
@@ -46,7 +49,7 @@ const Button = ({
     }
 
     return (
-      <S.PostImgButton>
+      <S.PostImgButton className={className}>
         <S.PostButton
           onClick={handleButtonClick}
           type="button"
@@ -67,6 +70,7 @@ const Button = ({
   if (styled === 'sidebar') {
     return (
       <S.SideBarButton
+        className={className}
         type={type}
         title={title}
         onClick={onClick}
@@ -81,6 +85,7 @@ const Button = ({
   if (styled === 'follow') {
     return (
       <S.FollowButton
+        className={className}
         type={type}
         title={title}
         onClick={onClick}
@@ -94,6 +99,7 @@ const Button = ({
   // if styled === 'standard' || styled === 'minimalist'
   return (
     <S.StandardButton
+      className={className}
       type={type}
       title={title}
       onClick={onClick}
