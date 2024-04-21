@@ -46,6 +46,7 @@ export const StandardButton = styled.button<StandardButtonProps>`
 `
 
 export const PostButton = styled.button`
+  position: relative;
   background-color: ${colors.blue};
   width: 40px;
   height: 40px;
@@ -57,21 +58,21 @@ export const PostButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 
-  &:hover {
-    background-color: ${colors.white};
-    border-bottom-color: ${colors.black};
-
-    svg * {
-      fill: ${colors.blue};
-    }
-  }
-
   svg {
     width: 20px;
     height: 20px;
 
     * {
       fill: ${colors.white};
+    }
+  }
+
+  &:hover {
+    background-color: ${colors.white};
+    border-bottom-color: ${colors.black};
+
+    svg * {
+      fill: ${colors.blue};
     }
   }
 

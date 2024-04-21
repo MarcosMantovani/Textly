@@ -16,13 +16,6 @@ import Button from '../../components/Button'
 import { Title } from '../Home/styles'
 import * as S from './styles'
 
-type SocialUsersType = {
-  id: number
-  name: string
-  username: string
-  profile_photo: string | null
-}
-
 type Params = {
   id: string
 }

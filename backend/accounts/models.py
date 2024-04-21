@@ -59,11 +59,15 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 class Post(models.Model):
     user = models.ForeignKey(
         UserAccount, related_name="posts",
-        on_delete=models.DO_NOTHING
+        on_delete=models.CASCADE
     )
     body = models.CharField(max_length=200)
     image = models.ImageField(null=True, blank=True, upload_to='images')
     created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(UserAccount, related_name="post_like", blank=True)
+
+    def number_of_likes(self):
+        return self.likes.count()
 
     def get_post(self):
         return {
@@ -75,6 +79,7 @@ class Post(models.Model):
 
     def __str__(self):
         return (
+            f"{self.id}: "
             f"{self.user} "
             f"({self.created_at:%d-%m-%Y %H:%M}): "
             f"{self.body}"

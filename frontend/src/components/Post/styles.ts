@@ -61,7 +61,8 @@ export const TextPost = styled.div`
     justify-content: space-between;
     padding: 8px 0;
 
-    .time {
+    .secondInfo {
+      text-align: end;
       font-size: 12px;
       opacity: 0.5;
     }
