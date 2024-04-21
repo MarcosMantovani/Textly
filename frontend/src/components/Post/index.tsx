@@ -21,6 +21,20 @@ export type PostType = {
     username: string
     profile_photo: string | null
   }
+  quoted_post?: {
+    id: number
+    body: string
+    image?: string | null
+    created_at: string
+    likes: number[]
+    number_of_likes: number
+    user: {
+      id: number
+      name: string
+      username: string
+      profile_photo: string | null
+    }
+  }
 }
 
 type Props = {
@@ -31,17 +45,22 @@ type Props = {
 const Post = ({ postContent, profile_id }: Props) => {
   const navigate = useNavigate()
 
-  const [likes, setLikes] = useState(postContent.number_of_likes)
   const [error, setError] = useState<string | null>(null)
-
-  const redirectToProfilePage = () =>
-    navigate(`/profile/${postContent.user.id}`, { replace: true })
 
   const hasLikedPost = (): boolean => {
     return postContent.likes.includes(profile_id)
   }
 
   const [liked, setLiked] = useState(hasLikedPost)
+
+  const redirectToProfilePage = () =>
+    navigate(`/profile/${postContent.user.id}`, { replace: true })
+
+  const redirectToQuotedProfilePage = () => {
+    if (postContent.quoted_post) {
+      navigate(`/profile/${postContent.quoted_post.user.id}`, { replace: true })
+    }
+  }
 
   const likePost = async () => {
     if (localStorage.getItem('access')) {
@@ -64,17 +83,10 @@ const Post = ({ postContent, profile_id }: Props) => {
           config
         )
 
-        if (!hasLikedPost) {
-          setLikes(
-            likes === postContent.number_of_likes ? likes + 1 : likes - 1
-          )
-          setLiked(likes === postContent.number_of_likes ? true : false)
-        } else {
-          setLikes(
-            likes === postContent.number_of_likes ? likes - 1 : likes + 1
-          )
-          setLiked(likes === postContent.number_of_likes ? false : true)
-        }
+        console.log(liked)
+
+        setLiked(!liked)
+        liked ? postContent.number_of_likes-- : postContent.number_of_likes++
       } catch (err) {
         setError('Erro ao curtir post, atualize a página.')
       }
@@ -127,13 +139,62 @@ const Post = ({ postContent, profile_id }: Props) => {
             </div>
             <div>
               <p className="secondInfo">{postContent.created_at}</p>
-              <p className="secondInfo">{likes} curtidas</p>
+              <p className="secondInfo">
+                {postContent.number_of_likes} curtidas
+              </p>
             </div>
           </div>
           <div className="content">
             <p>{postContent.body}</p>
             {postContent.image && (
-              <img src={postContent.image} alt="Post Image" />
+              <img
+                className="PostImage"
+                src={postContent.image}
+                alt="Post Image"
+              />
+            )}
+            {postContent.quoted_post && (
+              <S.QuotedPostContainer>
+                <div className="headInfo">
+                  <div className="mainInfo">
+                    <S.QuotedProfilePhoto
+                      src={
+                        postContent.quoted_post.user.profile_photo
+                          ? postContent.quoted_post.user.profile_photo
+                          : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                      }
+                      alt="Profile Photo"
+                      onClick={redirectToQuotedProfilePage}
+                    />
+                    <div>
+                      <S.Name onClick={redirectToQuotedProfilePage}>
+                        {postContent.quoted_post.user.name}
+                      </S.Name>
+                      <S.Username onClick={redirectToQuotedProfilePage}>
+                        {postContent.quoted_post.user.username}
+                      </S.Username>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="secondInfo">
+                      {postContent.quoted_post.created_at}
+                    </p>
+                    <p className="secondInfo">
+                      {postContent.quoted_post.likes} curtidas
+                    </p>
+                  </div>
+                </div>
+                <div className="quotedContent">
+                  <p className="quotedBody">{postContent.quoted_post.body}</p>
+                  {postContent.quoted_post.image && (
+                    <img
+                      className="PostImage"
+                      src={postContent.quoted_post.image}
+                      alt="Post Image"
+                    />
+                  )}
+                </div>
+              </S.QuotedPostContainer>
             )}
           </div>
         </S.TextPost>
