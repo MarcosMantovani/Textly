@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import LoginRegister from './pages/LoginRegister'
 import ConfirmForm from './pages/ConfirmForm'
 import Profile from './pages/Profile'
+import FileUpload from './components/FileUpload'
 
 const connector = connect(null, {
   checkAuthenticated: checkAuthenticated,
@@ -38,6 +39,7 @@ const PageRoutes: React.FC<PropsFromRedux> = ({
         element={<ConfirmForm />}
       />
       <Route path="/activate/:uid/:token" element={<ConfirmForm />} />
+      <Route path="/test" element={<FileUpload />} />
     </Routes>
   )
 }

@@ -1,6 +1,5 @@
 import { ReactComponent as LikeIcon } from '../../assets/media/heart-outline.svg'
 import { ReactComponent as MessageIcon } from '../../assets/media/message-circle-outline.svg'
-import tempImg from '../../assets/media/Foto LinkedIn.jpg'
 
 import Button from '../Button'
 
@@ -10,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 export type PostType = {
   id: number
   body: string
+  image?: string | null
   created_at: string
   user: {
     id: number
@@ -63,7 +63,9 @@ const Post = ({ postContent }: Props) => {
           </div>
           <div className="content">
             <p>{postContent.body}</p>
-            {/* <img src={tempImg2} alt="Post Image" /> */}
+            {postContent.image && (
+              <img src={postContent.image} alt="Post Image" />
+            )}
           </div>
         </S.TextPost>
       </div>

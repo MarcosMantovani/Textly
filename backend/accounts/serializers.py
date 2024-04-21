@@ -11,14 +11,14 @@ class userCreateSerializer(UserCreateSerializer):
         model = User
         fields = ('id', 'email', 'name', 'username', 'password')
 
-class CustomSoaiclUsersSerializer(UserSerializer):
+class CustomSociallUsersSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = UserAccount
         fields = ('id', 'username', 'name', 'profile_photo')
 
 class CustomUserSerializer(UserSerializer):
-    follows = CustomSoaiclUsersSerializer(many=True, read_only=True)
-    followed_by = CustomSoaiclUsersSerializer(many=True, read_only=True)
+    follows = CustomSociallUsersSerializer(many=True, read_only=True)
+    followed_by = CustomSociallUsersSerializer(many=True, read_only=True)
 
     class Meta(UserSerializer.Meta):
         model = UserAccount
@@ -34,7 +34,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'user', 'body', 'created_at')
+        fields = ('id', 'user', 'body', 'image', 'created_at')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)

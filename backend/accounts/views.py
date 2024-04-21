@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import UserAccount, Post
-from .serializers import CustomUserSerializer, PostSerializer
+from .serializers import CustomUserSerializer, PostSerializer, PostUserSerializer
 
 class UserDetailView(RetrieveAPIView):
     queryset = UserAccount.objects.all()
@@ -84,15 +84,53 @@ def create_post(request):
     user = request.user
 
     # Obtendo os dados do corpo da solicitação
-    data = request.data
+    body = request.data.get('body', None)
+    image = request.data.get('image', None)
 
-    # Serializando os dados do corpo da solicitação
-    serializer = PostSerializer(data=data)
+    if body is None:
+        return Response({"message": "The post body was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    if serializer.is_valid():
-        # Se os dados forem válidos, salvar o post no banco de dados associando-o ao usuário atual
-        serializer.save(user=user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        # Se os dados forem inválidos, retornar uma resposta de erro com os erros de validação
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Criando o post
+    post = Post.objects.create(user=user, body=body)
+
+    # Se uma imagem foi fornecida, atribua-a ao post
+    if image:
+        post.image = image
+        post.save()
+
+    # Serializando o post criado para retornar todas as informações
+    serializer = PostSerializer(post)
+
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_profile_photo(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Verificando se a solicitação inclui uma imagem
+    if 'profile_photo' not in request.FILES:
+        return Response({"message": "No profile photo provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Atualizando a foto de perfil do usuário
+    user.profile_photo = request.FILES['profile_photo']
+    user.save()
+
+    return Response({"message": "Profile photo updated successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_banner(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Verificando se a solicitação inclui uma imagem
+    if 'banner' not in request.FILES:
+        return Response({"message": "No banner provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Atualizando a foto de perfil do usuário
+    user.banner = request.FILES['banner']
+    user.save()
+
+    return Response({"message": "banner updated successfully."}, status=status.HTTP_200_OK)
