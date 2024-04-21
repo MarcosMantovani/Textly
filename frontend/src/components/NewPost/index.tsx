@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 import Button from '../Button'
 
@@ -65,13 +65,6 @@ const NewPost = ({ profilePhoto }: Props) => {
     const file = event.target.files?.[0] || null
     setPostImage(file)
   }
-
-  useEffect(() => {
-    console.log({
-      body: postBody,
-      image: postImage
-    })
-  }, [postBody, postImage])
 
   if (error) {
     return (

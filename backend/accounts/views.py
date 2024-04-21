@@ -134,3 +134,33 @@ def update_banner(request):
     user.save()
 
     return Response({"message": "banner updated successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def like_post(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Obtendo o ID do post a ser curtido ou descurtido do corpo da solicitação
+    post_id = request.data.get('post_id', None)
+
+    if post_id is None:
+        return Response({"message": "The post ID was not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Obtendo o post pelo ID fornecido
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({"message": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    if user in post.likes.all():
+        # Se o usuário já curtiu o post, remova o like
+        post.likes.remove(user)
+        action = "unliked"
+    else:
+        # Se o usuário não curtiu o post, adicione o like
+        post.likes.add(user)
+        action = "liked"
+
+    # Retorna uma mensagem informando se o post foi curtido ou descurtido
+    return Response({"message": f"Post {action} successfully."}, status=status.HTTP_200_OK)

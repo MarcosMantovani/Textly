@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { ReactComponent as LikeIcon } from '../../assets/media/heart-outline.svg'
 import { ReactComponent as MessageIcon } from '../../assets/media/message-circle-outline.svg'
 
@@ -5,12 +6,14 @@ import Button from '../Button'
 
 import * as S from './styles'
 import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 export type PostType = {
   id: number
   body: string
   image?: string | null
   created_at: string
+  number_of_likes: number
   user: {
     id: number
     name: string
@@ -26,8 +29,54 @@ type Props = {
 const Post = ({ postContent }: Props) => {
   const navigate = useNavigate()
 
-  const redirectToProfilePage = (id: number) =>
-    navigate(`/profile/${id}`, { replace: true })
+  const [likes, setLikes] = useState(postContent.number_of_likes)
+  const [error, setError] = useState<string | null>(null)
+
+  const redirectToProfilePage = () =>
+    navigate(`/profile/${postContent.user.id}`, { replace: true })
+
+  const likePost = async () => {
+    if (localStorage.getItem('access')) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      const body = JSON.stringify({
+        post_id: postContent.id
+      })
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/like-post/`,
+          body,
+          config
+        )
+
+        if (likes === postContent.number_of_likes) {
+          setLikes(likes + 1)
+        } else {
+          setLikes(likes - 1)
+        }
+      } catch (err) {
+        setError('Erro ao curtir post, atualize a página.')
+      }
+    } else {
+      setError('Entre para curtir um post.')
+    }
+  }
+
+  if (error) {
+    return (
+      <>
+        <h3>{error}</h3>
+        <br />
+      </>
+    )
+  }
 
   return (
     <S.Container>
@@ -39,27 +88,32 @@ const Post = ({ postContent }: Props) => {
               : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
           }
           alt="Profile Photo"
-          onClick={() => redirectToProfilePage(postContent.user.id)}
+          onClick={redirectToProfilePage}
         />
-        <Button title="" type="button" styled="post" icon={<LikeIcon />} />
+        <Button
+          title=""
+          type="button"
+          styled="post"
+          icon={<LikeIcon />}
+          onClick={likePost}
+        />
         <Button title="" type="button" styled="post" icon={<MessageIcon />} />
       </div>
       <div>
         <S.TextPost>
           <div className="postHeader">
             <div>
-              <S.Name
-                onClick={() => redirectToProfilePage(postContent.user.id)}
-              >
+              <S.Name onClick={redirectToProfilePage}>
                 {postContent.user.name}
               </S.Name>
-              <S.Username
-                onClick={() => redirectToProfilePage(postContent.user.id)}
-              >
+              <S.Username onClick={redirectToProfilePage}>
                 @{postContent.user.username}
               </S.Username>
             </div>
-            <p className="time">{postContent.created_at}</p>
+            <div>
+              <p className="secondInfo">{postContent.created_at}</p>
+              <p className="secondInfo">{likes} curtidas</p>
+            </div>
           </div>
           <div className="content">
             <p>{postContent.body}</p>
