@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 import * as S from './styles'
 
@@ -6,10 +6,11 @@ type ButtonProps = {
   type: 'button' | 'submit'
   title: string
   children?: string | React.ReactNode
-  styled?: 'standard' | 'minimalist' | 'sidebar' | 'post' | 'follow'
+  styled?: 'standard' | 'minimalist' | 'sidebar' | 'post' | 'follow' | 'postImg'
   icon?: React.ReactNode
   disabled?: boolean
   onClick?: () => void
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const Button = ({
@@ -19,8 +20,11 @@ const Button = ({
   styled = 'standard',
   disabled = false,
   icon,
-  onClick
+  onClick,
+  onChange
 }: ButtonProps) => {
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
   if (styled === 'post') {
     return (
       <S.PostButton
@@ -31,6 +35,32 @@ const Button = ({
       >
         {icon}
       </S.PostButton>
+    )
+  }
+
+  if (styled === 'postImg') {
+    const handleButtonClick = () => {
+      if (fileInputRef.current) {
+        fileInputRef.current.click()
+      }
+    }
+
+    return (
+      <S.PostImgButton>
+        <S.PostButton
+          onClick={handleButtonClick}
+          type="button"
+          className="postImgButton"
+        >
+          {icon}
+        </S.PostButton>
+        <input
+          ref={fileInputRef}
+          className="postImgInput"
+          type="file"
+          onChange={onChange}
+        ></input>
+      </S.PostImgButton>
     )
   }
 

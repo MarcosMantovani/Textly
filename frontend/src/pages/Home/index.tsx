@@ -217,6 +217,7 @@ const Home: React.FC<PropsFromRedux> = ({
   const navigate = useNavigate()
 
   const [posts, setPosts] = useState<PostType[]>()
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!profile) {
@@ -243,10 +244,10 @@ const Home: React.FC<PropsFromRedux> = ({
 
           setPosts(res.data)
         } catch (err) {
-          return <h3>Erro ao carregar posts</h3>
+          setError('Erro ao carregar posts')
         }
       } else {
-        return <h3>Entre para visualizar a Home Page</h3>
+        setError('Entre para visualizar a Home Page')
       }
     }
 
@@ -257,6 +258,15 @@ const Home: React.FC<PropsFromRedux> = ({
     navigate('/login', { replace: true })
   }
 
+  if (error) {
+    return (
+      <>
+        <h3>{error}</h3>
+        <br />
+      </>
+    )
+  }
+
   if (type !== 'IS_LOADING') {
     if (profile) {
       return (
@@ -264,7 +274,13 @@ const Home: React.FC<PropsFromRedux> = ({
           <Sidebar />
           <div className="container">
             <S.Title>HOME</S.Title>
-            <NewPost />
+            <NewPost
+              profilePhoto={
+                profile.profile_photo
+                  ? profile.profile_photo
+                  : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+              }
+            />
             {posts ? (
               <>
                 {posts.map((post) => (

@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Profile } from '../../store/actions/types'
 
-import perfilBanner from '../../assets/media/rl_evergreen_16x9.jpg'
-import tempImg from '../../assets/media/Foto LinkedIn.jpg'
 import { ReactComponent as ProfileIcon } from '../../assets/media/person-outline.svg'
 import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
 

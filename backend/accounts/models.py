@@ -62,12 +62,14 @@ class Post(models.Model):
         on_delete=models.DO_NOTHING
     )
     body = models.CharField(max_length=200)
+    image = models.ImageField(null=True, blank=True, upload_to='images')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def get_post(self):
         return {
             "id": self.id,
             "body": self.body,
+            "image": self.image,
             "created_at": self.created_at.strftime("%d/%m/%Y %H:%M:%S"),
         }
 

@@ -81,6 +81,12 @@ export const PostButton = styled.button`
   }
 `
 
+export const PostImgButton = styled.div`
+  .postImgInput[type='file'] {
+    display: none;
+  }
+`
+
 export const SideBarButton = styled.button`
   display: flex;
   width: 100%;

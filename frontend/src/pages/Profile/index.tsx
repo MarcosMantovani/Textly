@@ -48,6 +48,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   const [listContent, setListContent] = useState<User[]>()
   const [userFollowed, setUserFollowed] = useState(false)
   const [posts, setPosts] = useState<PostType[]>()
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -61,15 +62,15 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
         }
         try {
           const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/auth/${id}/`,
+            `${process.env.REACT_APP_API_URL}/user/${id}/`,
             config
           )
           setUser(response)
         } catch (err) {
-          return <h3>Perfil não encontrado ou inexistente</h3>
+          setError('Perfil não encontrado ou inexistente')
         }
       } else {
-        return <h3>Entre para visualizar outros perfis</h3>
+        setError('Entre para visualizar outros perfis')
       }
     }
 
@@ -95,10 +96,10 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
           setPosts(res.data)
         } catch (err) {
-          return <h3>Erro ao carregar posts deste usuário</h3>
+          setError('Erro ao carregar posts deste usuário')
         }
       } else {
-        return <h3>Entre para vizualizar os posts de outros usuários</h3>
+        setError('Entre para vizualizar os posts de outros usuários')
       }
     }
 
@@ -120,10 +121,8 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     if (user && user.data) {
       if (listType === 'follows') {
         setListContent(user.data.follows)
-        console.log(user.data)
       } else if (listType === 'followers') {
         setListContent(user.data.followed_by)
-        console.log(user.data)
       }
     }
   }, [listType, posts, user])
@@ -144,7 +143,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
       try {
         await axios.post(
-          `${process.env.REACT_APP_API_URL}/auth/follow/`,
+          `${process.env.REACT_APP_API_URL}/user/follow/`,
           body,
           config
         )
@@ -173,18 +172,18 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
       try {
         await axios.post(
-          `${process.env.REACT_APP_API_URL}/auth/unfollow/`,
+          `${process.env.REACT_APP_API_URL}/user/unfollow/`,
           body,
           config
         )
         setUserFollowed(false)
       } catch (err) {
         setUserFollowed(false)
-        return <h3>Houve um erro ao seguir o usuário</h3>
+        setError('Houve um erro ao seguir o usuário')
       }
     } else {
       setUserFollowed(false)
-      return <h3>Entre para seguir outros usuários</h3>
+      setError('Entre para seguir outros usuários')
     }
   }
 
@@ -205,6 +204,15 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
   if (isAuthenticated !== true) {
     navigate('/login', { replace: true })
+  }
+
+  if (error) {
+    return (
+      <>
+        <h3>{error}</h3>
+        <br />
+      </>
+    )
   }
 
   return (

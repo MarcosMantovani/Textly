@@ -1,79 +1,114 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 import Button from '../Button'
 
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
-import tempImg from '../../assets/media/Foto LinkedIn.jpg'
 
 import * as S from './styles'
 import axios from 'axios'
 import Post, { PostType } from '../Post'
 
-type CreatePostType = {
-  body: string
+type Props = {
+  profilePhoto: string
 }
 
-const NewPost = () => {
-  const [formData, setFormData] = useState<CreatePostType>({ body: '' })
+const NewPost = ({ profilePhoto }: Props) => {
+  const [postBody, setPostBody] = useState('')
+  const [postImage, setPostImage] = useState<File | null>(null)
   const [formCallback, setFormCallback] = useState<PostType[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const createPost = async () => {
+  const handleCreatePost = async () => {
     if (localStorage.getItem('access')) {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `JWT ${localStorage.getItem('access')}`,
-          Accept: 'application/json'
-        }
+      const formData = new FormData()
+      formData.append('body', postBody)
+      if (postImage) {
+        formData.append('image', postImage)
       }
 
-      const body = JSON.stringify(formData)
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `JWT ${localStorage.getItem('access')}`
+        }
+      }
 
       try {
         const res = await axios.post(
           `${process.env.REACT_APP_API_URL}/create-post/`,
-          body,
+          formData,
           config
         )
+
         if (formCallback !== null) {
           setFormCallback([res.data, ...formCallback])
         } else {
           setFormCallback([res.data])
         }
+
+        setPostBody('')
+        setPostImage(null)
       } catch (err) {
-        return <h3>Erro ao criar seu post, tente novamente.</h3>
+        setError('Houve um erro ao criar o post. Recarregue a página.')
       }
     } else {
-      return <h3>Para criar posts, é necessário estar autenticado</h3>
+      setError('Entre para criar posts')
     }
   }
 
-  const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+  const handleBodyChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setPostBody(e.target.value)
   }
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    createPost()
-    setFormData({ body: '' })
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null
+    setPostImage(file)
+  }
+
+  useEffect(() => {
+    console.log({
+      body: postBody,
+      image: postImage
+    })
+  }, [postBody, postImage])
+
+  if (error) {
+    return (
+      <>
+        <h3>{error}</h3>
+        <br />
+      </>
+    )
   }
 
   return (
     <>
-      <S.Form onSubmit={(e) => onSubmit(e)}>
+      <S.Container>
         <div className="sideIcons">
-          <S.ProfilePhoto src={tempImg} alt="profilePhoto" />
-          <Button title="" type="button" styled="post" icon={<ImageIcon />} />
-          <Button title="" type="submit" styled="post" icon={<ConfirmIcon />} />
+          <S.ProfilePhoto src={profilePhoto} alt="profilePhoto" />
+          <Button
+            title=""
+            type="button"
+            styled="postImg"
+            icon={<ImageIcon />}
+            onChange={(e) => handleImageChange(e)}
+          />
+          <Button
+            title=""
+            type="button"
+            styled="post"
+            icon={<ConfirmIcon />}
+            onClick={handleCreatePost}
+          />
         </div>
         <div className="postContent">
           <S.TextPost>
             <textarea
               className="newPostContainer"
               name="body"
-              value={formData.body}
-              onChange={(e) => onChange(e)}
+              value={postBody}
+              onChange={(e) => handleBodyChange(e)}
               minLength={3}
               maxLength={200}
               placeholder="Digite algo"
@@ -81,7 +116,7 @@ const NewPost = () => {
             />
           </S.TextPost>
         </div>
-      </S.Form>
+      </S.Container>
       {formCallback?.map((post) => (
         <Post postContent={post} key={post.id} />
       ))}
