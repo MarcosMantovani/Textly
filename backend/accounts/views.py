@@ -192,3 +192,30 @@ def update_bio(request):
     user.save()
 
     return Response({"message": "Bio updated successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def delete_post(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Obtendo o ID do post a ser deletado do corpo da solicitação
+    post_id = request.data.get('post_id', None)
+
+    if post_id is None:
+        return Response({"message": "The post ID was not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Obtendo o post pelo ID fornecido
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({"message": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Verificando se o usuário tem permissão para deletar o post
+    if user != post.user:
+        return Response({"message": "You do not have permission to delete this post."}, status=status.HTTP_403_FORBIDDEN)
+
+    # Deletando o post
+    post.delete()
+
+    return Response({"message": "Post deleted successfully."}, status=status.HTTP_200_OK)

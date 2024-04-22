@@ -85,6 +85,27 @@ export const TextPost = styled.div`
     padding: 8px 0;
   }
 
+  .username {
+    display: flex;
+  }
+
+  .trashButton {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    * {
+      fill: ${colors.white};
+    }
+
+    &:hover * {
+      fill: ${colors.likeColor};
+    }
+  }
+
   .secondInfo {
     text-align: end;
     font-size: 12px;
