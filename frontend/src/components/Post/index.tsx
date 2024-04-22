@@ -9,6 +9,7 @@ import { ReactComponent as MessageIcon } from '../../assets/media/message-circle
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 import { ReactComponent as CloseIcon } from '../../assets/media/close-outline.svg'
 import { ReactComponent as ShareIcon } from '../../assets/media/corner-down-right-outline.svg'
+import { ReactComponent as TrashIcon } from '../../assets/media/trash-2-outline.svg'
 
 import Button from '../Button'
 
@@ -65,6 +66,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
   const [isQuote, setIsQuote] = useState(false)
   const [postQuoteBody, setPostQuoteBody] = useState('')
   const [postCreated, setPostCreated] = useState(false)
+  const [postDeleted, setPostDeleted] = useState(false)
 
   const hasLikedPost = (): boolean => {
     if (profile) {
@@ -164,6 +166,35 @@ const Post = ({ postContent, profile }: CombinedProps) => {
     e.preventDefault()
 
     createQuotePost()
+  }
+
+  const delete_post = async (post_id: number) => {
+    if (localStorage.getItem('access')) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`
+        }
+      }
+
+      const body = JSON.stringify({
+        post_id: post_id
+      })
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/delete-post/`,
+          body,
+          config
+        )
+
+        setPostDeleted(true)
+      } catch (err) {
+        setError('Houve um erro ao deletar o post. Recarregue a página.')
+      }
+    } else {
+      setError('Entre para deletar posts')
+    }
   }
 
   if (isQuote && profile) {
@@ -267,11 +298,18 @@ const Post = ({ postContent, profile }: CombinedProps) => {
 
   return (
     <>
+      <Message opened={error ? true : false} onClick={() => setError(null)}>
+        {error}
+      </Message>
       <Message
-        opened={postCreated}
-        onClick={() => setPostCreated(!postCreated)}
+        opened={postCreated || postDeleted}
+        onClick={() => {
+          setPostCreated(false)
+          setPostDeleted(false)
+        }}
       >
-        Citação de Post criada.
+        {postCreated && 'Citação de Post criada.'}
+        {postDeleted && 'Post deletado.'}
       </Message>
       <S.Container $liked={liked}>
         <div className="sideIcons">
@@ -303,13 +341,20 @@ const Post = ({ postContent, profile }: CombinedProps) => {
         <div>
           <S.TextPost>
             <div className="postHeader">
-              <div>
-                <S.Name onClick={redirectToProfilePage}>
-                  {postContent.user.name}
-                </S.Name>
-                <S.Username onClick={redirectToProfilePage}>
-                  @{postContent.user.username}
-                </S.Username>
+              <div className="username">
+                <div>
+                  <S.Name onClick={redirectToProfilePage}>
+                    {postContent.user.name}
+                  </S.Name>
+                  <S.Username onClick={redirectToProfilePage}>
+                    @{postContent.user.username}
+                  </S.Username>
+                </div>
+                {postContent.user.id === profile?.id && (
+                  <button type="button" className="trashButton">
+                    <TrashIcon onClick={() => delete_post(postContent.id)} />
+                  </button>
+                )}
               </div>
               <div>
                 <p className="secondInfo">{postContent.created_at}</p>
