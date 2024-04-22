@@ -11,6 +11,7 @@ import { ReactComponent as CloseIcon } from '../../assets/media/close-outline.sv
 import { ReactComponent as ShareIcon } from '../../assets/media/corner-down-right-outline.svg'
 import { ReactComponent as TrashIcon } from '../../assets/media/trash-2-outline.svg'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
+import { ReactComponent as EditIcon } from '../../assets/media/edit-outline.svg'
 
 import Button from '../Button'
 
@@ -25,6 +26,7 @@ export type PostType = {
   created_at: string
   number_of_likes: number
   likes: number[]
+  edited: boolean
   user: {
     id: number
     name: string
@@ -38,6 +40,7 @@ export type PostType = {
     created_at: string
     likes: number[]
     number_of_likes: number
+    edited: boolean
     user: {
       id: number
       name: string
@@ -64,10 +67,25 @@ const Post = ({ postContent, profile }: CombinedProps) => {
   const navigate = useNavigate()
 
   const [error, setError] = useState<string | null>(null)
+
+  const [postBody, setPostBody] = useState<string>(postContent.body)
+
   const [isQuote, setIsQuote] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [postCreated, setPostCreated] = useState(false)
+
   const [postQuoteBody, setPostQuoteBody] = useState('')
   const [quotePostImage, setQuotePostImage] = useState<File | null>(null)
-  const [postCreated, setPostCreated] = useState(false)
+
+  const [editedPostBody, setEditedPostBody] = useState(postContent.body)
+  const [editedPostImageUrl, setEditedPostImageUrl] = useState<null | string>(
+    postContent.image ? postContent.image : null
+  )
+  const [editedPostImageFile, setEditedPostImageFile] = useState<File | null>(
+    null
+  )
+  const [postEdited, setPostEdited] = useState(false)
+
   const [postDeleted, setPostDeleted] = useState(false)
 
   const hasLikedPost = (): boolean => {
@@ -208,6 +226,226 @@ const Post = ({ postContent, profile }: CombinedProps) => {
     }
   }
 
+  const editPost = async () => {
+    if (localStorage.getItem('access')) {
+      const formData = new FormData()
+      formData.append('body', editedPostBody)
+      formData.append('post_id', String(postContent.id))
+      if (editedPostImageFile) {
+        formData.append('image', editedPostImageFile)
+      } else if (editedPostImageUrl === postContent.image) {
+        formData.append('image', 'same')
+      }
+
+      const config = {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/edit-post/`,
+          formData,
+          config
+        )
+
+        setPostBody(editedPostBody)
+        setIsEditing(false)
+        setPostEdited(true)
+      } catch (err) {
+        setError('Houve um erro ao editar o post. Recarregue a página.')
+      }
+    } else {
+      setError('Entre para editar o post')
+    }
+  }
+
+  const handleEditedPostBodyChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setEditedPostBody(e.target.value)
+    console.log(editedPostBody)
+  }
+
+  const handleEditedPostImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0] || null
+
+    if (file) {
+      setEditedPostImageFile(file)
+      setEditedPostImageUrl(URL.createObjectURL(file))
+    } else {
+      setEditedPostImageFile(null)
+      setEditedPostImageUrl(null)
+    }
+  }
+
+  const handleEditedPostSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    editPost()
+  }
+
+  const cancelEditing = () => {
+    setIsEditing(false)
+    setEditedPostBody(postBody)
+    setEditedPostImageUrl(postContent.image ? postContent.image : null)
+    setEditedPostImageFile(null)
+  }
+
+  if (isEditing && profile) {
+    return (
+      <>
+        <Message opened={error ? true : false} onClick={() => setError(null)}>
+          {error}
+        </Message>
+        <Message
+          opened={postCreated || postDeleted}
+          onClick={() => {
+            setPostCreated(false)
+            setPostDeleted(false)
+          }}
+        >
+          {postCreated && 'Citação de Post criada.'}
+          {postDeleted && 'Post deletado.'}
+        </Message>
+        <S.EditPostContainer
+          $image={editedPostImageUrl ? editedPostImageUrl : ''}
+          onSubmit={(e) => handleEditedPostSubmit(e)}
+        >
+          <div className="sideIcons">
+            <S.ProfilePhoto
+              src={
+                postContent.user.profile_photo
+                  ? postContent.user.profile_photo
+                  : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+              }
+              alt="Profile Photo"
+              onClick={redirectToProfilePage}
+            />
+            <Button
+              title=""
+              type="button"
+              styled="postImg"
+              icon={<ImageIcon />}
+              onChange={(e) => handleEditedPostImageChange(e)}
+            />
+            <Button
+              title=""
+              type="button"
+              styled="post"
+              icon={<CloseIcon />}
+              onClick={cancelEditing}
+            />
+            <Button
+              title="Confirm"
+              type="submit"
+              styled="post"
+              icon={<ConfirmIcon />}
+            />
+          </div>
+          <div>
+            <S.TextPost>
+              <div className="postHeader">
+                <div className="username">
+                  <div>
+                    <S.Name onClick={redirectToProfilePage}>
+                      {postContent.user.name}
+                    </S.Name>
+                    <S.Username onClick={redirectToProfilePage}>
+                      @{postContent.user.username}
+                    </S.Username>
+                  </div>
+                </div>
+                <div>
+                  <p className="secondInfo">{postContent.created_at}</p>
+                  <p className="secondInfo">
+                    {postContent.number_of_likes} curtidas
+                  </p>
+                </div>
+              </div>
+              <div className="content">
+                <textarea
+                  className="textQuotePost"
+                  name="body"
+                  value={editedPostBody}
+                  onChange={(e) => handleEditedPostBodyChange(e)}
+                  minLength={3}
+                  maxLength={200}
+                  required
+                />
+                {editedPostImageUrl && (
+                  <>
+                    <div className="PostImage editPostImage">
+                      <TrashIcon
+                        className="deleteEditedPostImage"
+                        onClick={() => {
+                          setEditedPostImageUrl(null)
+                          setEditedPostImageFile(null)
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
+                {postContent.quoted_post && (
+                  <S.QuotedPostContainer>
+                    <div className="shareIcon">
+                      <ShareIcon />
+                    </div>
+                    <div>
+                      <div className="headInfo">
+                        <div className="mainInfo">
+                          <S.QuotedProfilePhoto
+                            src={
+                              postContent.quoted_post.user.profile_photo
+                                ? postContent.quoted_post.user.profile_photo
+                                : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                            }
+                            alt="Profile Photo"
+                            onClick={redirectToQuotedProfilePage}
+                          />
+                          <div>
+                            <S.Name onClick={redirectToQuotedProfilePage}>
+                              {postContent.quoted_post.user.name}
+                            </S.Name>
+                            <S.Username onClick={redirectToQuotedProfilePage}>
+                              {postContent.quoted_post.user.username}
+                            </S.Username>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="secondInfo">
+                            {postContent.quoted_post.created_at}
+                          </p>
+                          <p className="secondInfo">
+                            {postContent.quoted_post.likes} curtidas
+                          </p>
+                        </div>
+                      </div>
+                      <div className="quotedContent">
+                        <p className="quotedBody">
+                          {postContent.quoted_post.body}
+                        </p>
+                        {postContent.quoted_post.image && (
+                          <img
+                            className="PostImage"
+                            src={postContent.quoted_post.image}
+                            alt="Post Image"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </S.QuotedPostContainer>
+                )}
+              </div>
+            </S.TextPost>
+          </div>
+        </S.EditPostContainer>
+      </>
+    )
+  }
+
   if (isQuote && profile) {
     // Creating a Quote Post
     return (
@@ -328,7 +566,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
         {error}
       </Message>
       <Message
-        opened={postCreated || postDeleted}
+        opened={postCreated || postDeleted || postEdited}
         onClick={() => {
           setPostCreated(false)
           setPostDeleted(false)
@@ -336,6 +574,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
       >
         {postCreated && 'Citação de Post criada.'}
         {postDeleted && 'Post deletado.'}
+        {postEdited && 'Post editado com sucesso.'}
       </Message>
       <S.Container $liked={liked}>
         <div className="sideIcons">
@@ -377,24 +616,30 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                   </S.Username>
                 </div>
                 {postContent.user.id === profile?.id && (
-                  <button type="button" className="trashButton">
-                    <TrashIcon onClick={() => delete_post(postContent.id)} />
-                  </button>
+                  <>
+                    <button type="button" className="editButton">
+                      <EditIcon onClick={() => setIsEditing(true)} />
+                    </button>
+                    <button type="button" className="trashButton">
+                      <TrashIcon onClick={() => delete_post(postContent.id)} />
+                    </button>
+                  </>
                 )}
               </div>
               <div>
                 <p className="secondInfo">{postContent.created_at}</p>
                 <p className="secondInfo">
+                  {postContent.edited && 'editado - '}
                   {postContent.number_of_likes} curtidas
                 </p>
               </div>
             </div>
             <div className="content">
-              <p>{postContent.body}</p>
-              {postContent.image && (
+              <p>{postBody}</p>
+              {editedPostImageUrl && (
                 <img
                   className="PostImage"
-                  src={postContent.image}
+                  src={editedPostImageUrl}
                   alt="Post Image"
                 />
               )}
@@ -429,7 +674,8 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                           {postContent.quoted_post.created_at}
                         </p>
                         <p className="secondInfo">
-                          {postContent.quoted_post.likes} curtidas
+                          {postContent.quoted_post.edited && 'editado - '}
+                          {postContent.quoted_post.number_of_likes} curtidas
                         </p>
                       </div>
                     </div>

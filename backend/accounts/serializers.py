@@ -35,7 +35,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ('id', 'user', 'body', 'image', 'created_at', 'likes', 'number_of_likes', 'quoted_post')
+        fields = ('id', 'user', 'body', 'image', 'created_at', 'likes', 'number_of_likes', 'quoted_post', 'edited')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -58,6 +58,7 @@ class PostSerializer(serializers.ModelSerializer):
                 "image": instance.quoted_post.image.url if instance.quoted_post.image else None,
                 "created_at": instance.quoted_post.created_at.strftime("%d/%m/%Y %H:%M:%S"),
                 "likes": instance.quoted_post.likes.count(),
-                "number_of_likes": instance.quoted_post.likes.count()
+                "number_of_likes": instance.quoted_post.likes.count(),
+                "edited": instance.quoted_post.edited
             }
         return None
