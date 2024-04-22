@@ -10,6 +10,7 @@ import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outl
 import { ReactComponent as CloseIcon } from '../../assets/media/close-outline.svg'
 import { ReactComponent as ShareIcon } from '../../assets/media/corner-down-right-outline.svg'
 import { ReactComponent as TrashIcon } from '../../assets/media/trash-2-outline.svg'
+import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
 
 import Button from '../Button'
 
@@ -65,6 +66,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
   const [error, setError] = useState<string | null>(null)
   const [isQuote, setIsQuote] = useState(false)
   const [postQuoteBody, setPostQuoteBody] = useState('')
+  const [quotePostImage, setQuotePostImage] = useState<File | null>(null)
   const [postCreated, setPostCreated] = useState(false)
   const [postDeleted, setPostDeleted] = useState(false)
 
@@ -127,22 +129,24 @@ const Post = ({ postContent, profile }: CombinedProps) => {
 
   const createQuotePost = async () => {
     if (localStorage.getItem('access')) {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `JWT ${localStorage.getItem('access')}`
-        }
+      const formData = new FormData()
+      formData.append('body', postQuoteBody)
+      formData.append('quoted_post_id', String(postContent.id))
+      if (quotePostImage) {
+        formData.append('image', quotePostImage)
       }
 
-      const body = JSON.stringify({
-        body: postQuoteBody,
-        quoted_post_id: postContent.id
-      })
+      const config = {
+        headers: {
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
 
       try {
         await axios.post(
           `${process.env.REACT_APP_API_URL}/create-post/`,
-          body,
+          formData,
           config
         )
 
@@ -160,6 +164,13 @@ const Post = ({ postContent, profile }: CombinedProps) => {
   const handleQuoteBodyChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPostQuoteBody(e.target.value)
     console.log(postQuoteBody)
+  }
+
+  const handleQuoteImageChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0] || null
+    setQuotePostImage(file)
   }
 
   const handleQuotePostSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -198,6 +209,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
   }
 
   if (isQuote && profile) {
+    // Creating a Quote Post
     return (
       <>
         <Message opened={error ? true : false} onClick={() => setError(null)}>
@@ -214,6 +226,13 @@ const Post = ({ postContent, profile }: CombinedProps) => {
               }
               alt="Profile Photo"
               onClick={redirectToUserProfilePage}
+            />
+            <Button
+              title=""
+              type="button"
+              styled="postImg"
+              icon={<ImageIcon />}
+              onChange={(e) => handleQuoteImageChange(e)}
             />
             <Button
               title=""
@@ -252,40 +271,47 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                   required
                 />
                 <S.QuotedPostContainer>
-                  <div className="headInfo">
-                    <div className="mainInfo">
-                      <S.QuotedProfilePhoto
-                        src={
-                          postContent.user.profile_photo
-                            ? postContent.user.profile_photo
-                            : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-                        }
-                        alt="Profile Photo"
-                        onClick={redirectToQuotedProfilePage}
-                      />
+                  <div className="shareIcon">
+                    <ShareIcon />
+                  </div>
+                  <div>
+                    <div className="headInfo">
+                      <div className="mainInfo">
+                        <S.QuotedProfilePhoto
+                          src={
+                            postContent.user.profile_photo
+                              ? postContent.user.profile_photo
+                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                          }
+                          alt="Profile Photo"
+                          onClick={redirectToQuotedProfilePage}
+                        />
+                        <div>
+                          <S.Name onClick={redirectToQuotedProfilePage}>
+                            {postContent.user.name}
+                          </S.Name>
+                          <S.Username onClick={redirectToQuotedProfilePage}>
+                            @{postContent.user.username}
+                          </S.Username>
+                        </div>
+                      </div>
                       <div>
-                        <S.Name onClick={redirectToQuotedProfilePage}>
-                          {postContent.user.name}
-                        </S.Name>
-                        <S.Username onClick={redirectToQuotedProfilePage}>
-                          {postContent.user.username}
-                        </S.Username>
+                        <p className="secondInfo">{postContent.created_at}</p>
+                        <p className="secondInfo">
+                          {postContent.likes} curtidas
+                        </p>
                       </div>
                     </div>
-                    <div>
-                      <p className="secondInfo">{postContent.created_at}</p>
-                      <p className="secondInfo">{postContent.likes} curtidas</p>
+                    <div className="quotedContent">
+                      <p className="quotedBody">{postContent.body}</p>
+                      {postContent.image && (
+                        <img
+                          className="PostImage"
+                          src={postContent.image}
+                          alt="Post Image"
+                        />
+                      )}
                     </div>
-                  </div>
-                  <div className="quotedContent">
-                    <p className="quotedBody">{postContent.body}</p>
-                    {postContent.image && (
-                      <img
-                        className="PostImage"
-                        src={postContent.image}
-                        alt="Post Image"
-                      />
-                    )}
                   </div>
                 </S.QuotedPostContainer>
               </div>
