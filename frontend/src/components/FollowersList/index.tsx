@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 import { User } from '../../store/actions/types'
 
-import tempImg from '../../assets/media/Foto LinkedIn.jpg'
-
 import { Name, Username } from '../Post/styles'
+
 import * as S from './styles'
 
 type Props = {
@@ -51,7 +50,11 @@ const FollowersList = ({ followers, following, listDisplay }: Props) => {
                   <li key={user.id}>
                     <S.ProfilePhoto
                       className="profilePhoto"
-                      src={tempImg}
+                      src={
+                        user.profile_photo
+                          ? user.profile_photo
+                          : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                      }
                       alt="Foto de perfil"
                       onClick={() => redirectToProfilePage(user.id)}
                     />

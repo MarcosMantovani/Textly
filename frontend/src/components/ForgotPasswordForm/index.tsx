@@ -5,6 +5,7 @@ import { reset_password } from '../../store/actions/auth'
 import { RootState } from '../../store/reducers'
 
 import Button from '../Button'
+
 import { Input, Title } from '../../pages/LoginRegister/styles'
 
 import { ForgotPasswordForm as Form } from './styles'

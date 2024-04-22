@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import UserAccount, Post
-from .serializers import CustomUserSerializer, PostSerializer
+from .serializers import CustomUserSerializer, PostSerializer, SearchedUsersSerializer
 from django.utils import timezone
+from django.db.models import Q
 
 class UserDetailView(RetrieveAPIView):
     queryset = UserAccount.objects.all()
@@ -271,3 +272,36 @@ def edit_post(request):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_posts(request, search_text=None):
+    # Obtendo todos os posts
+    posts = Post.objects.all()
+
+    if search_text:
+        # Filtrando os posts pelo trecho de texto fornecido
+        posts = posts.filter(body__icontains=search_text)
+
+    # Ordenando os posts do mais novo para o mais antigo
+    posts = posts.order_by('-created_at')
+
+    # Serializando os posts
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_users(request, search_text=None):
+    # Obtendo todos os usuários
+    users = UserAccount.objects.all()
+
+    if search_text:
+        # Filtrando os usuários pelo nome de usuário e nome real
+        users = users.filter(Q(username__icontains=search_text) | Q(name__icontains=search_text))
+
+    # Removendo usuários duplicados
+    users = users.distinct()
+
+    # Serializando os usuários
+    serializer = SearchedUsersSerializer(users, many=True)
+    return Response(serializer.data)

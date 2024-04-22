@@ -12,10 +12,11 @@ import Profilebar from '../../components/Profilebar'
 import { Name, Username } from '../../components/Post/styles'
 import Post, { PostType } from '../../components/Post'
 import Button from '../../components/Button'
+import Message from '../../components/Message'
 
 import { Title } from '../Home/styles'
+
 import * as S from './styles'
-import Message from '../../components/Message'
 
 type Params = {
   id: string

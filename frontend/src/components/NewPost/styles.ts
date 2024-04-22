@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
-import { colors } from '../../styles'
 import { ProfilePhoto as ProfilePhotoPost } from '../Post/styles'
+
+import { colors } from '../../styles'
 
 export const Form = styled.form`
   display: grid;
