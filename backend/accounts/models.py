@@ -70,6 +70,7 @@ class Post(models.Model):
         'self', related_name='quotes',
         on_delete=models.SET_NULL, null=True, blank=True
     )
+    edited = models.BooleanField(default=False)
 
     def number_of_likes(self):
         return self.likes.count()

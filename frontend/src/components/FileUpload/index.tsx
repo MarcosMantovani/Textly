@@ -2,7 +2,6 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import axios from 'axios'
 import Button from '../Button'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
-import Message from '../Message'
 
 const FileUpload = () => {
   const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null)

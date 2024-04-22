@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import UserAccount, Post
-from .serializers import CustomUserSerializer, PostSerializer, PostUserSerializer
+from .serializers import CustomUserSerializer, PostSerializer
+from django.utils import timezone
 
 class UserDetailView(RetrieveAPIView):
     queryset = UserAccount.objects.all()
@@ -219,3 +220,54 @@ def delete_post(request):
     post.delete()
 
     return Response({"message": "Post deleted successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def edit_post(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Obtendo os dados do corpo da solicitação
+    post_id = request.data.get('post_id', None)
+    body = request.data.get('body', None)
+    image = request.data.get('image', None)
+
+    if post_id is None:
+        return Response({"message": "The post ID was not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        # Obtendo o post pelo ID fornecido
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return Response({"message": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Verificando se o usuário é o autor do post
+    if user != post.user:
+        return Response({"message": "You do not have permission to edit this post."}, status=status.HTTP_403_FORBIDDEN)
+
+    # Atualizando os campos do post
+    if body:
+        post.body = body
+    if image == "same":
+        # Mantendo a mesma imagem do post
+        pass
+    elif image is not None:
+        post.image = image
+    elif 'image' not in request.FILES:
+        # Se nenhum novo arquivo de imagem for enviado, remover a imagem existente do post
+        post.image = None
+
+    # Marcando o post como editado
+    post.edited = True
+
+    # Atualizando o timestamp de edição
+    post.created_at = timezone.now()
+
+    # Salvando as alterações no post
+    post.save()
+
+    # Serializando o post atualizado
+    serializer = PostSerializer(post)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+

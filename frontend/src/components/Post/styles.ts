@@ -89,7 +89,8 @@ export const TextPost = styled.div`
     display: flex;
   }
 
-  .trashButton {
+  .trashButton,
+  .editButton {
     width: 20px;
     height: 20px;
     background-color: transparent;
@@ -108,7 +109,7 @@ export const TextPost = styled.div`
 
   .secondInfo {
     text-align: end;
-    font-size: 12px;
+    font-size: 10px;
     opacity: 0.5;
   }
 
@@ -197,5 +198,72 @@ export const QuotePostForm = styled.form`
     width: 100%;
     padding: 8px;
     outline: none;
+  }
+`
+
+type EditPostContainerProps = {
+  $image: string | null | File
+}
+
+export const EditPostContainer = styled.form<EditPostContainerProps>`
+  display: grid;
+  grid-template-columns: 40px 600px;
+  column-gap: 8px;
+  margin-bottom: 24px;
+
+  .sideIcons {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+  }
+
+  .textQuotePost {
+    background-color: transparent;
+    border: 1px solid ${colors.white};
+    border-radius: 8px;
+    resize: none;
+    overflow-y: auto;
+    color: ${colors.white};
+    font-size: 16px;
+    width: 100%;
+    padding: 8px;
+    outline: none;
+  }
+
+  .editPostImage {
+    position: relative;
+    background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
+    background-size: cover;
+    height: 300px;
+
+    &:hover {
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+
+      .deleteEditedPostImage {
+        display: block;
+      }
+    }
+
+    .deleteEditedPostImage {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      fill: ${colors.likeColor};
+      cursor: pointer;
+      z-index: 5;
+    }
   }
 `
