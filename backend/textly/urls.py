@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.contrib import admin
-from accounts.views import UserDetailView, follow_user, unfollow_user, get_posts, create_post, update_profile_photo, update_banner, like_post, update_bio, delete_post, edit_post
+from accounts.views import UserDetailView, follow_user, unfollow_user, get_posts, create_post, update_profile_photo, update_banner, like_post, update_bio, delete_post, edit_post, search_posts, search_users
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -22,6 +22,10 @@ urlpatterns = [
     path('like-post/', like_post, name='like-post'),
     path('delete-post/', delete_post, name='delete-post'),
     path('edit-post/', edit_post, name='edit-post'),
+    path('search-posts/<str:search_text>/', search_posts, name='search-posts'),
+    path('search-posts/', search_posts, name='search-posts'),
+    path('search-users/<str:search_text>/', search_users, name='search-users'),
+    path('search-users/', search_users, name='search-users'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]

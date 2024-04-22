@@ -95,7 +95,7 @@ const Profilebar: React.FC<Props> = ({ user }) => {
           icon={<HomeIcon />}
           onClick={() => redirectToHomePage()}
         >
-          HOME
+          Home
         </Button>
       ) : (
         <Button
@@ -105,7 +105,7 @@ const Profilebar: React.FC<Props> = ({ user }) => {
           icon={<ProfileIcon />}
           onClick={() => redirectToProfilePage(user.id)}
         >
-          PERFIL
+          Perfil
         </Button>
       )}
     </S.Profilebar>

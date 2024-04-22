@@ -2,14 +2,14 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ConnectedProps, connect } from 'react-redux'
 
+import { login } from '../../store/actions/auth'
+import { RootState } from '../../store/reducers'
+
 import Button from '../../components/Button'
 import TextlyTitle from '../../components/TextlyTitle'
 import SignupForm from '../../components/SignupForm'
 import ForgotPasswordForm from '../../components/ForgotPasswordForm'
 import Loader from '../../components/Loader'
-
-import { login } from '../../store/actions/auth'
-import { RootState } from '../../store/reducers'
 
 import * as S from './styles'
 

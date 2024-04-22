@@ -40,7 +40,7 @@ const PageRoutes: React.FC<PropsFromRedux> = ({
         element={<ConfirmForm />}
       />
       <Route path="/activate/:uid/:token" element={<ConfirmForm />} />
-      <Route path="/test" element={<Search />} />
+      <Route path="/search" element={<Search />} />
     </Routes>
   )
 }

@@ -1,14 +1,15 @@
 import { ChangeEvent, useState } from 'react'
+import axios from 'axios'
 
 import Button from '../Button'
 
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
 
-import * as S from './styles'
-import axios from 'axios'
 import Post, { PostType } from '../Post'
 import Message from '../Message'
+
+import * as S from './styles'
 
 type Props = {
   profilePhoto: string

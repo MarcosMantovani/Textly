@@ -1,4 +1,5 @@
 import Button from '../Button'
+
 import * as S from './styles'
 
 type Props = {
@@ -16,6 +17,7 @@ const Message = ({ children, opened = false, onClick }: Props) => {
         </div>
         <div className="button">
           <Button
+            className="button"
             type="button"
             title="fechar"
             styled="minimalist"

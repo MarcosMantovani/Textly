@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { logout } from '../../store/actions/auth'
 
-import { ReactComponent as TempIcon } from '../../assets/media/email-outline.svg'
 import { ReactComponent as LogoutIcon } from '../../assets/media/log-out-outline.svg'
+import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
+import { ReactComponent as SearchIcon } from '../../assets/media/search-outline.svg'
+import { ReactComponent as OptionsIcon } from '../../assets/media/options-2-outline.svg'
 
 import Button from '../Button'
 import TextlyTitle from '../TextlyTitle'
@@ -24,18 +26,44 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
     logout()
     navigate('/login', { replace: true })
   }
+
+  const redirectToHomePage = () => {
+    navigate('/home', { replace: true })
+  }
+
+  const redirectToSearchPage = () => {
+    navigate('/search', { replace: true })
+  }
+
   return (
     <S.Sidebar>
       <S.MainOptions>
         <TextlyTitle />
-        <Button title="test" type="button" styled="sidebar" icon={<TempIcon />}>
-          Test
+        <Button
+          title="test"
+          type="button"
+          styled="sidebar"
+          icon={<HomeIcon />}
+          onClick={redirectToHomePage}
+        >
+          Home
         </Button>
-        <Button title="test" type="button" styled="sidebar" icon={<TempIcon />}>
-          Test
+        <Button
+          title="test"
+          type="button"
+          styled="sidebar"
+          icon={<SearchIcon />}
+          onClick={redirectToSearchPage}
+        >
+          Search
         </Button>
-        <Button title="test" type="button" styled="sidebar" icon={<TempIcon />}>
-          Test
+        <Button
+          title="test"
+          type="button"
+          styled="sidebar"
+          icon={<OptionsIcon />}
+        >
+          Configurações
         </Button>
       </S.MainOptions>
       <Button

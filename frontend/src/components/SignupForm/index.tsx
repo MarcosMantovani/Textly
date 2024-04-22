@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
 
 import { signup } from '../../store/actions/auth'
+import { RootState } from '../../store/reducers'
 
 import Button from '../Button'
 
@@ -12,7 +13,6 @@ import {
   Title
 } from '../../pages/LoginRegister/styles'
 import * as S from './styles'
-import { RootState } from '../../store/reducers'
 
 const connector = connect(
   (state: RootState) => ({

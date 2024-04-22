@@ -62,3 +62,8 @@ class PostSerializer(serializers.ModelSerializer):
                 "edited": instance.quoted_post.edited
             }
         return None
+
+class SearchedUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserAccount
+        fields = ('id', 'name', 'username', 'profile_photo', 'followed_by', 'follows', 'bio')

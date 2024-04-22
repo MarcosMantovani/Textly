@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ChangeEvent, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { RootState } from '../../store/reducers'
 
@@ -17,9 +18,9 @@ import { ReactComponent as CheckedPersonIcon } from '../../assets/media/person-d
 
 import Button from '../Button'
 
-import * as S from './styles'
-import { useNavigate } from 'react-router-dom'
 import Message from '../Message'
+
+import * as S from './styles'
 
 export type PostType = {
   id: number
@@ -330,9 +331,11 @@ const Post = ({ postContent, profile }: CombinedProps) => {
         setUserFollowed(true)
       } catch (err) {
         setUserFollowed(false)
+        setError('Houve um erro ao seguir o usuário')
       }
     } else {
       setUserFollowed(false)
+      setError('Entre para seguir outros usuários')
     }
   }
 
@@ -359,11 +362,11 @@ const Post = ({ postContent, profile }: CombinedProps) => {
         setUserFollowed(false)
       } catch (err) {
         setUserFollowed(false)
-        setError('Houve um erro ao seguir o usuário')
+        setError('Houve um erro ao deixar de seguir o usuário')
       }
     } else {
       setUserFollowed(false)
-      setError('Entre para seguir outros usuários')
+      setError('Entre para deixar de seguir outros usuários')
     }
   }
 
