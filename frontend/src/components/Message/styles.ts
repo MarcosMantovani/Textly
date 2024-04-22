@@ -22,4 +22,5 @@ export const Container = styled.div<Props>`
   text-align: center;
   opacity: ${({ $opened }) => ($opened ? '1' : '0')};
   transition: top 0.3s ease, opacity 0.3s ease;
+  z-index: 11;
 `

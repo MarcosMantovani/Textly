@@ -12,6 +12,8 @@ import { ReactComponent as ShareIcon } from '../../assets/media/corner-down-righ
 import { ReactComponent as TrashIcon } from '../../assets/media/trash-2-outline.svg'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
 import { ReactComponent as EditIcon } from '../../assets/media/edit-outline.svg'
+import { ReactComponent as AddPersonIcon } from '../../assets/media/person-add-outline.svg'
+import { ReactComponent as CheckedPersonIcon } from '../../assets/media/person-done-outline.svg'
 
 import Button from '../Button'
 
@@ -32,6 +34,7 @@ export type PostType = {
     name: string
     username: string
     profile_photo: string | null
+    followed_by: number[]
   }
   quoted_post?: {
     id: number
@@ -46,6 +49,7 @@ export type PostType = {
       name: string
       username: string
       profile_photo: string | null
+      followed_by: number[]
     }
   }
 }
@@ -94,6 +98,15 @@ const Post = ({ postContent, profile }: CombinedProps) => {
     }
     return false
   }
+
+  const isFollowing = (): boolean => {
+    if (profile) {
+      return postContent.user.followed_by.includes(profile.id)
+    }
+    return false
+  }
+
+  const [userFollowed, setUserFollowed] = useState(isFollowing())
 
   const [liked, setLiked] = useState(hasLikedPost)
 
@@ -292,6 +305,66 @@ const Post = ({ postContent, profile }: CombinedProps) => {
     setEditedPostBody(postBody)
     setEditedPostImageUrl(postContent.image ? postContent.image : null)
     setEditedPostImageFile(null)
+  }
+
+  const followUser = async (user_to_be_followed_id: number) => {
+    if (localStorage.getItem('access')) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      const body = JSON.stringify({
+        user_to_be_followed_id: user_to_be_followed_id
+      })
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/user/follow/`,
+          body,
+          config
+        )
+        setUserFollowed(true)
+      } catch (err) {
+        setUserFollowed(false)
+      }
+    } else {
+      setUserFollowed(false)
+    }
+  }
+
+  const unfollowUser = async (user_to_be_unfollowed_id: number) => {
+    if (localStorage.getItem('access')) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      const body = JSON.stringify({
+        user_to_be_unfollowed_id: user_to_be_unfollowed_id
+      })
+
+      try {
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/user/unfollow/`,
+          body,
+          config
+        )
+        setUserFollowed(false)
+      } catch (err) {
+        setUserFollowed(false)
+        setError('Houve um erro ao seguir o usuário')
+      }
+    } else {
+      setUserFollowed(false)
+      setError('Entre para seguir outros usuários')
+    }
   }
 
   if (isEditing && profile) {
@@ -616,14 +689,31 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                   </S.Username>
                 </div>
                 {postContent.user.id === profile?.id && (
-                  <>
-                    <button type="button" className="editButton">
+                  <div>
+                    <button type="button" className="headerButton">
                       <EditIcon onClick={() => setIsEditing(true)} />
                     </button>
-                    <button type="button" className="trashButton">
+                    <button type="button" className="headerButton">
                       <TrashIcon onClick={() => delete_post(postContent.id)} />
                     </button>
-                  </>
+                  </div>
+                )}
+                {postContent.user.id !== profile?.id && (
+                  <div>
+                    {userFollowed ? (
+                      <button type="button" className="headerButton">
+                        <CheckedPersonIcon
+                          onClick={() => unfollowUser(postContent.user.id)}
+                        />
+                      </button>
+                    ) : (
+                      <button type="button" className="headerButton">
+                        <AddPersonIcon
+                          onClick={() => followUser(postContent.user.id)}
+                        />
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
               <div>

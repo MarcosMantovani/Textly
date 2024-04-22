@@ -6,10 +6,18 @@ type ButtonProps = {
   type: 'button' | 'submit'
   title: string
   children?: string | React.ReactNode
-  styled?: 'standard' | 'minimalist' | 'sidebar' | 'post' | 'follow' | 'postImg'
   icon?: React.ReactNode
   disabled?: boolean
   className?: string
+  active?: boolean
+  styled?:
+    | 'standard'
+    | 'minimalist'
+    | 'sidebar'
+    | 'post'
+    | 'follow'
+    | 'postImg'
+    | 'search'
   onClick?: () => void
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -23,7 +31,8 @@ const Button = ({
   icon,
   onClick,
   onChange,
-  className
+  className,
+  active = false
 }: ButtonProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -75,10 +84,27 @@ const Button = ({
         title={title}
         onClick={onClick}
         disabled={disabled}
+        $active={active}
       >
         {icon}
         {children}
       </S.SideBarButton>
+    )
+  }
+
+  if (styled === 'search') {
+    return (
+      <S.SearchButton
+        className={className}
+        type={type}
+        title={title}
+        onClick={onClick}
+        disabled={disabled}
+        $active={active}
+      >
+        {icon}
+        {children}
+      </S.SearchButton>
     )
   }
 
@@ -96,7 +122,7 @@ const Button = ({
     )
   }
 
-  // if styled === 'standard' || styled === 'minimalist'
+  // if (styled === 'standard' || styled === 'minimalist')
   return (
     <S.StandardButton
       className={className}
