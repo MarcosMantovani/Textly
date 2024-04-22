@@ -117,6 +117,22 @@ export const QuotedProfilePhoto = styled(ProfilePhoto)`
 `
 
 export const QuotedPostContainer = styled.div`
+  display: grid;
+  grid-template-columns: 20px auto;
+
+  .shareIcon {
+    display: flex;
+    align-items: center;
+    max-width: 20px;
+    height: 40px;
+
+    svg {
+      * {
+        fill: ${colors.white};
+      }
+    }
+  }
+
   .headInfo {
     display: flex;
     justify-content: space-between;

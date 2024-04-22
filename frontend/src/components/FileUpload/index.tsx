@@ -135,21 +135,9 @@ const FileUpload = () => {
     })
   }, [postBody, postImage])
 
-  const [opened, setOpened] = useState(true)
-
   return (
     <div>
-      <Message opened={opened} onClick={() => setOpened(!opened)}>
-        Teste alou um dois tres asasa sasasa sasas
-      </Message>
-      <button
-        onClick={() => {
-          console.log(opened)
-        }}
-      >
-        teste
-      </button>
-      {/* <input
+      <input
         type="file"
         onChange={handleProfilePhotoChange}
         accept=".jpg, .jpeg, .png, .gif"
@@ -200,7 +188,7 @@ const FileUpload = () => {
       />
       <button type="button" onClick={handleCreatePost}>
         criar post
-      </button> */}
+      </button>
     </div>
   )
 }
