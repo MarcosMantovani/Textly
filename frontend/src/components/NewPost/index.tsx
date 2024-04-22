@@ -8,6 +8,7 @@ import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.sv
 import * as S from './styles'
 import axios from 'axios'
 import Post, { PostType } from '../Post'
+import Message from '../Message'
 
 type Props = {
   profilePhoto: string
@@ -72,17 +73,11 @@ const NewPost = ({ profilePhoto }: Props) => {
     createPost()
   }
 
-  if (error) {
-    return (
-      <>
-        <h3>{error}</h3>
-        <br />
-      </>
-    )
-  }
-
   return (
     <>
+      <Message opened={error ? true : false} onClick={() => setError(null)}>
+        {error}
+      </Message>
       <S.Form onSubmit={(e) => handleQuotePostSubmit(e)}>
         <div className="sideIcons">
           <S.ProfilePhoto src={profilePhoto} alt="profilePhoto" />

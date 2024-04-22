@@ -15,6 +15,7 @@ import Button from '../../components/Button'
 
 import { Title } from '../Home/styles'
 import * as S from './styles'
+import Message from '../../components/Message'
 
 type Params = {
   id: string
@@ -199,17 +200,11 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     navigate('/login', { replace: true })
   }
 
-  if (error) {
-    return (
-      <>
-        <h3>{error}</h3>
-        <br />
-      </>
-    )
-  }
-
   return (
     <>
+      <Message opened={error ? true : false} onClick={() => setError(null)}>
+        {error}
+      </Message>
       <Sidebar />
       {user && user.data && profile ? (
         <>

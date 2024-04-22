@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from 'react'
 import axios from 'axios'
 import Button from '../Button'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
+import Message from '../Message'
 
 const FileUpload = () => {
   const [profilePhotoFile, setProfilePhotoFile] = useState<File | null>(null)
@@ -134,9 +135,21 @@ const FileUpload = () => {
     })
   }, [postBody, postImage])
 
+  const [opened, setOpened] = useState(true)
+
   return (
     <div>
-      <input
+      <Message opened={opened} onClick={() => setOpened(!opened)}>
+        Teste alou um dois tres asasa sasasa sasas
+      </Message>
+      <button
+        onClick={() => {
+          console.log(opened)
+        }}
+      >
+        teste
+      </button>
+      {/* <input
         type="file"
         onChange={handleProfilePhotoChange}
         accept=".jpg, .jpeg, .png, .gif"
@@ -187,7 +200,7 @@ const FileUpload = () => {
       />
       <button type="button" onClick={handleCreatePost}>
         criar post
-      </button>
+      </button> */}
     </div>
   )
 }

@@ -14,6 +14,7 @@ import Profilebar from '../../components/Profilebar'
 import * as S from './styles'
 import axios from 'axios'
 import Loader from '../../components/Loader'
+import Message from '../../components/Message'
 
 // export const mock: Profile = {
 //   id: 1,
@@ -258,19 +259,13 @@ const Home: React.FC<PropsFromRedux> = ({
     navigate('/login', { replace: true })
   }
 
-  if (error) {
-    return (
-      <>
-        <h3>{error}</h3>
-        <br />
-      </>
-    )
-  }
-
   if (type !== 'IS_LOADING') {
     if (profile) {
       return (
         <>
+          <Message opened={error ? true : false} onClick={() => setError(null)}>
+            {error}
+          </Message>
           <Sidebar />
           <div className="container">
             <S.Title>HOME</S.Title>
