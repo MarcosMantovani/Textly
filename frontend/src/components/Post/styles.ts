@@ -87,10 +87,10 @@ export const TextPost = styled.div`
 
   .username {
     display: flex;
+    column-gap: 4px;
   }
 
-  .trashButton,
-  .editButton {
+  .headerButton {
     width: 20px;
     height: 20px;
     background-color: transparent;

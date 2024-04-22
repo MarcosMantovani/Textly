@@ -6,6 +6,10 @@ type StandardButtonProps = {
   $styled?: 'standard' | 'minimalist' | 'sidebar' | 'post' | 'follow'
 }
 
+type SideBarButtonProps = {
+  $active: boolean
+}
+
 export const StandardButton = styled.button<StandardButtonProps>`
   background-color: ${({ $styled }) =>
     $styled === 'minimalist' ? 'transparent' : `${colors.blue}`};
@@ -88,7 +92,7 @@ export const PostImgButton = styled.div`
   }
 `
 
-export const SideBarButton = styled.button`
+export const SideBarButton = styled.button<SideBarButtonProps>`
   display: flex;
   width: 100%;
   align-items: center;
@@ -100,8 +104,9 @@ export const SideBarButton = styled.button`
   font-size: 16px;
   text-align: left;
 
-  background-color: ${colors.black};
-  color: ${colors.white};
+  background-color: ${({ $active }) =>
+    $active ? `${colors.white}` : `${colors.black}`};
+  color: ${({ $active }) => ($active ? `${colors.black}` : `${colors.white}`)};
 
   column-gap: 8px;
 
@@ -122,7 +127,8 @@ export const SideBarButton = styled.button`
     width: 30px;
 
     * {
-      fill: ${colors.white};
+      fill: ${({ $active }) =>
+        $active ? `${colors.black}` : `${colors.white}`};
     }
   }
 
@@ -130,6 +136,17 @@ export const SideBarButton = styled.button`
     background-color: ${colors.black};
     color: ${colors.white};
     transition: none;
+  }
+`
+
+export const SearchButton = styled(SideBarButton)`
+  width: auto;
+  padding: 8px;
+  border-radius: 8px;
+
+  svg {
+    height: 20px;
+    width: 20px;
   }
 `
 

@@ -10,14 +10,17 @@ export const Title = styled.h1<TitleProps>`
   top: ${({ $position }) => ($position === 'middle-top' ? '32px' : '')};
   left: ${({ $position }) => ($position === 'middle-top' ? '50%' : '')};
   transform: ${({ $position }) =>
-    $position === 'middle-top' ? 'translateX(-50%)' : ''};
+    $position === 'middle-top' ? 'translate(-50%)' : ''};
   height: 40px;
   text-align: ${({ $position }) =>
     $position === 'middle-top' ? '' : 'center'};
   transition: all 0.3s ease-in-out;
 
   &:hover {
-    transform: translate(-50%, -10%);
+    transform: ${({ $position }) =>
+      $position === 'middle-top'
+        ? 'translate(-50%, -10%)'
+        : 'translateY(-10%)'};
   }
 
   img {
