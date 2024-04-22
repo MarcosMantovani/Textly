@@ -283,6 +283,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
             </S.Banner>
           </S.Header>
           <S.ProfileContent className="container">
+            {user.data.bio && <h5 className="bio">{user.data.bio}</h5>}
             {listType === 'posts' && posts && (
               <>
                 <Title>POSTS</Title>

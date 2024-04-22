@@ -22,6 +22,7 @@ export interface User {
   email: string
   profile_photo: string | null
   banner: string | null
+  bio: string | null
 }
 
 export interface Profile extends User {

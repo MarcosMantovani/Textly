@@ -11,6 +11,7 @@ import {
   Name as NamePost,
   Username as UsernamePost
 } from '../../components/Post/styles'
+import { colors } from '../../styles'
 
 export const Header = styled.div`
   position: relative;
@@ -20,6 +21,15 @@ export const Header = styled.div`
 export const ProfileContent = styled.div`
   &.container {
     margin-top: 402px;
+  }
+
+  .bio {
+    width: 100%;
+    margin-bottom: 16px;
+    background-color: ${colors.blue};
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid ${colors.white};
   }
 `
 

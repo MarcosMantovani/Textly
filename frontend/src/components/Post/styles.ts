@@ -126,10 +126,8 @@ export const QuotedPostContainer = styled.div`
     max-width: 20px;
     height: 40px;
 
-    svg {
-      * {
-        fill: ${colors.white};
-      }
+    svg * {
+      fill: ${colors.white};
     }
   }
 

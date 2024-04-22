@@ -22,7 +22,7 @@ class CustomUserSerializer(UserSerializer):
 
     class Meta(UserSerializer.Meta):
         model = UserAccount
-        fields = ('id', 'email', 'username', 'name', 'profile_photo', 'banner', 'follows', 'followed_by', 'date_modified')
+        fields = ('id', 'email', 'username', 'name', 'profile_photo', 'banner', 'follows', 'followed_by', 'date_modified', 'bio')
 
 class PostUserSerializer(serializers.ModelSerializer):
     class Meta:

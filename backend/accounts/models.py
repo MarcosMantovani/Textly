@@ -38,6 +38,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     date_modified = models.DateTimeField(auto_now=True)
     profile_photo = models.ImageField(null=True, blank=True, upload_to='images')
     banner = models.ImageField(null=True, blank=True, upload_to='images')
+    bio = models.CharField(null=True, blank=True, max_length=200)
 
     objects = UserAccountManager()
 
