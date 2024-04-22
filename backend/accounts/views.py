@@ -174,3 +174,21 @@ def like_post(request):
 
     # Retorna uma mensagem informando se o post foi curtido ou descurtido
     return Response({"message": f"Post {action} successfully."}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_bio(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Obtendo a nova bio do corpo da solicitação
+    new_bio = request.data.get('bio', None)
+
+    if new_bio is None:
+        return Response({"message": "The bio was not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Atualizando a bio do usuário
+    user.bio = new_bio
+    user.save()
+
+    return Response({"message": "Bio updated successfully."}, status=status.HTTP_200_OK)
