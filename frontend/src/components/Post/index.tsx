@@ -8,6 +8,7 @@ import { ReactComponent as LikeIcon } from '../../assets/media/heart-outline.svg
 import { ReactComponent as MessageIcon } from '../../assets/media/message-circle-outline.svg'
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 import { ReactComponent as CloseIcon } from '../../assets/media/close-outline.svg'
+import { ReactComponent as ShareIcon } from '../../assets/media/corner-down-right-outline.svg'
 
 import Button from '../Button'
 
@@ -328,44 +329,51 @@ const Post = ({ postContent, profile }: CombinedProps) => {
               )}
               {postContent.quoted_post && (
                 <S.QuotedPostContainer>
-                  <div className="headInfo">
-                    <div className="mainInfo">
-                      <S.QuotedProfilePhoto
-                        src={
-                          postContent.quoted_post.user.profile_photo
-                            ? postContent.quoted_post.user.profile_photo
-                            : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-                        }
-                        alt="Profile Photo"
-                        onClick={redirectToQuotedProfilePage}
-                      />
+                  <div className="shareIcon">
+                    <ShareIcon />
+                  </div>
+                  <div>
+                    <div className="headInfo">
+                      <div className="mainInfo">
+                        <S.QuotedProfilePhoto
+                          src={
+                            postContent.quoted_post.user.profile_photo
+                              ? postContent.quoted_post.user.profile_photo
+                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                          }
+                          alt="Profile Photo"
+                          onClick={redirectToQuotedProfilePage}
+                        />
+                        <div>
+                          <S.Name onClick={redirectToQuotedProfilePage}>
+                            {postContent.quoted_post.user.name}
+                          </S.Name>
+                          <S.Username onClick={redirectToQuotedProfilePage}>
+                            {postContent.quoted_post.user.username}
+                          </S.Username>
+                        </div>
+                      </div>
                       <div>
-                        <S.Name onClick={redirectToQuotedProfilePage}>
-                          {postContent.quoted_post.user.name}
-                        </S.Name>
-                        <S.Username onClick={redirectToQuotedProfilePage}>
-                          {postContent.quoted_post.user.username}
-                        </S.Username>
+                        <p className="secondInfo">
+                          {postContent.quoted_post.created_at}
+                        </p>
+                        <p className="secondInfo">
+                          {postContent.quoted_post.likes} curtidas
+                        </p>
                       </div>
                     </div>
-                    <div>
-                      <p className="secondInfo">
-                        {postContent.quoted_post.created_at}
+                    <div className="quotedContent">
+                      <p className="quotedBody">
+                        {postContent.quoted_post.body}
                       </p>
-                      <p className="secondInfo">
-                        {postContent.quoted_post.likes} curtidas
-                      </p>
+                      {postContent.quoted_post.image && (
+                        <img
+                          className="PostImage"
+                          src={postContent.quoted_post.image}
+                          alt="Post Image"
+                        />
+                      )}
                     </div>
-                  </div>
-                  <div className="quotedContent">
-                    <p className="quotedBody">{postContent.quoted_post.body}</p>
-                    {postContent.quoted_post.image && (
-                      <img
-                        className="PostImage"
-                        src={postContent.quoted_post.image}
-                        alt="Post Image"
-                      />
-                    )}
                   </div>
                 </S.QuotedPostContainer>
               )}
