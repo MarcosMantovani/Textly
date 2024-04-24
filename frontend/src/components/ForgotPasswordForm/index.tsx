@@ -68,7 +68,7 @@ const ForgotPasswordForm: React.FC<PropsFromRedux> = ({
         />
         {errorMsg && <span>{errorMsg}</span>}
       </div>
-      <Button disabled={requestSent} title="Sign Up" type="submit">
+      <Button disabled={requestSent} title="Reset Passowrd" type="submit">
         {requestSent ? 'EMAIL ENVIADO' : 'Confirmar e-mail'}
       </Button>
     </Form>

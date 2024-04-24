@@ -28,6 +28,7 @@ export interface User {
 export interface Profile extends User {
   follows: User[]
   followed_by: User[]
+  post_count: number
   date_modified: string
 }
 

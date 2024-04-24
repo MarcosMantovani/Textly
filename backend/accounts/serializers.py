@@ -19,10 +19,15 @@ class CustomSociallUsersSerializer(UserSerializer):
 class CustomUserSerializer(UserSerializer):
     follows = CustomSociallUsersSerializer(many=True, read_only=True)
     followed_by = CustomSociallUsersSerializer(many=True, read_only=True)
+    post_count = serializers.SerializerMethodField()
 
     class Meta(UserSerializer.Meta):
         model = UserAccount
-        fields = ('id', 'email', 'username', 'name', 'profile_photo', 'banner', 'follows', 'followed_by', 'date_modified', 'bio')
+        fields = ('id', 'email', 'username', 'name', 'profile_photo', 'banner', 'follows', 'followed_by', 'date_modified', 'bio', 'post_count')
+
+    def get_post_count(self, obj):
+        # Retorna a contagem de posts do usuário
+        return obj.posts.count()
 
 class PostUserSerializer(serializers.ModelSerializer):
     class Meta:

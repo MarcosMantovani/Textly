@@ -76,7 +76,7 @@ export const Info = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: end;
   padding: 20px;
 
   .maininfo {
@@ -111,8 +111,10 @@ export const Info = styled.div`
 `
 
 export const ProfilePhoto = styled(ProfilePhotoPost)`
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  max-width: 64px;
+  height: 64px;
+  max-height: 64px;
   margin: 0;
   cursor: auto;
 `
@@ -143,6 +145,9 @@ export const List = styled.ul`
 
 export const ListProfilePhoto = styled(PostProfilePhoto)`
   margin-top: 0;
-  width: 60px;
+  max-width: 60px;
+  width: 100%;
+  max-height: 60px;
   height: 60px;
+  object-fit: cover;
 `

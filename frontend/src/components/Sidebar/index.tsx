@@ -1,5 +1,5 @@
 import { ConnectedProps, connect } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { logout } from '../../store/actions/auth'
 
@@ -21,6 +21,11 @@ const connector = connect(null, {
 
 const Sidebar = ({ logout }: PropsFromRedux) => {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const isHome = location.pathname === '/' || location.pathname === '/home'
+  const isSearch = location.pathname === '/search'
+  const isEditProfile = location.pathname === '/edit-profile'
 
   const handlerLogout = () => {
     logout()
@@ -35,6 +40,10 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
     navigate('/search', { replace: true })
   }
 
+  const redirectToEditProfilePage = () => {
+    navigate('/edit-profile', { replace: true })
+  }
+
   return (
     <S.Sidebar>
       <S.MainOptions>
@@ -45,6 +54,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
           styled="sidebar"
           icon={<HomeIcon />}
           onClick={redirectToHomePage}
+          active={isHome}
         >
           Home
         </Button>
@@ -54,6 +64,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
           styled="sidebar"
           icon={<SearchIcon />}
           onClick={redirectToSearchPage}
+          active={isSearch}
         >
           Search
         </Button>
@@ -62,8 +73,10 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
           type="button"
           styled="sidebar"
           icon={<OptionsIcon />}
+          onClick={redirectToEditProfilePage}
+          active={isEditProfile}
         >
-          Configurações
+          Editar Perfil
         </Button>
       </S.MainOptions>
       <Button

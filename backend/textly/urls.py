@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from django.contrib import admin
-from accounts.views import UserDetailView, follow_user, unfollow_user, get_posts, create_post, update_profile_photo, update_banner, like_post, update_bio, delete_post, edit_post, search_posts, search_users
+from accounts.views import UserDetailView, follow_user, unfollow_user, get_posts, create_post, update_profile_photo, update_banner, like_post, update_bio, delete_post, edit_post, search_posts, search_users, update_name
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path('user/update-profile-photo/', update_profile_photo, name='update-profile-photo'),
     path('user/update-banner/', update_banner, name='update-banner'),
     path('user/update-bio/', update_bio, name='update-bio'),
+    path('user/update-name/', update_name, name='update-name'),
     path('posts/', get_posts, name='get-posts'),
     path('posts/<int:user_id>/', get_posts, name='get-posts'),
     path('create-post/', create_post, name='create-post'),
