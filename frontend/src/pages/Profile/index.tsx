@@ -219,7 +219,6 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
             />
             <S.Banner $banner={user.data.banner}>
               <S.Info>
-                <div className="social"></div>
                 <div className="maininfo">
                   <div>
                     <S.ProfilePhoto

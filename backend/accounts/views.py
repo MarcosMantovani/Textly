@@ -305,3 +305,21 @@ def search_users(request, search_text=None):
     # Serializando os usuários
     serializer = SearchedUsersSerializer(users, many=True)
     return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def update_name(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Obtendo o novo nome do corpo da solicitação
+    new_name = request.data.get('name', None)
+
+    if new_name is None:
+        return Response({"message": "The name was not provided."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Atualizando o nome do usuário
+    user.name = new_name
+    user.save()
+
+    return Response({"message": "Name updated successfully."}, status=status.HTTP_200_OK)
