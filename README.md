@@ -31,11 +31,9 @@ To get started with this project, follow these steps:
 
 ### Backend Setup
 1. Navigate to the `backend` directory.
-2. Create a virtual environment using Poetry with the command `poetry install`.
-3. Activate the virtual environment with `poetry shell`.
-4. Install required Python packages with `poetry install`.
-5. Apply migrations with `poetry run python manage.py migrate`.
-6. Create a superuser with `poetry run python manage.py createsuperuser`.
-7. Finally, start the Django development server with `poetry run python manage.py runserver`.
+2. Install required Python packages with `poetry install`.
+3. Make migrations with `poetry run python manage.py makemigrations`.
+3. Apply migrations with `poetry run python manage.py migrate`.
+5. Finally, start the Django development server with `poetry run python manage.py runserver`.
 
 Now you should be able to access the application at `http://localhost:8000/` in your browser and interact with it.
