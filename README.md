@@ -27,7 +27,7 @@ To get started with this project, follow these steps:
 ### Frontend Setup
 1. Navigate to the `frontend` directory.
 2. Run `npm install` to install dependencies.
-3. After installation, run `npm start` to start the development server.
+3. After installation, run `npm run build` to build the frontend files.
 
 ### Backend Setup
 1. Navigate to the `backend` directory.
