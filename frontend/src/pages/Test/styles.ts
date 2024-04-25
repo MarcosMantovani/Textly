@@ -5,7 +5,7 @@ import { colors } from '../../styles'
 export const Title = styled.h2`
   text-align: center;
   font-size: 24px;
-  width: 100%;
+  width: 648px;
   margin-bottom: 20px;
   color: ${colors.white};
   padding-bottom: 24px;

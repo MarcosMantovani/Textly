@@ -29,7 +29,7 @@ const connector = connect(
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-const Home: React.FC<PropsFromRedux> = ({
+const Test: React.FC<PropsFromRedux> = ({
   isAuthenticated,
   profile,
   type,
@@ -39,6 +39,19 @@ const Home: React.FC<PropsFromRedux> = ({
 
   const [posts, setPosts] = useState<PostType[]>()
   const [error, setError] = useState<string | null>(null)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
   useEffect(() => {
     if (!profile) {
@@ -75,45 +88,50 @@ const Home: React.FC<PropsFromRedux> = ({
     fecthPosts()
   }, [])
 
-  if (isAuthenticated !== true) {
-    navigate('/login', { replace: true })
-  }
-
-  if (type !== 'IS_LOADING') {
-    if (profile) {
-      return (
-        <>
-          <Message opened={error ? true : false} onClick={() => setError(null)}>
-            {error}
-          </Message>
-          {profile && <Navbar />}
-          <Sidebar />
-          <div className="container">
-            <S.Title>HOME</S.Title>
-            <NewPost
-              profilePhoto={
-                profile.profile_photo
-                  ? profile.profile_photo
-                  : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-              }
-            />
-            {posts ? (
-              <>
-                {posts.map((post) => (
-                  <Post postContent={post} key={post.id} />
-                ))}
-              </>
-            ) : (
-              <Loader withBackground={false} active />
-            )}
-          </div>
-          <Profilebar user={profile} />
-        </>
-      )
+  const postMock: PostType = {
+    id: 1,
+    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    image: 'https://example.com/image.jpg',
+    created_at: '2024-04-18T10:00:00',
+    number_of_likes: 10,
+    likes: [1, 2, 3],
+    edited: false,
+    user: {
+      id: 1,
+      name: 'John Doe',
+      username: 'johndoe',
+      profile_photo: 'https://example.com/profile.jpg',
+      followed_by: [2, 3]
+    },
+    quoted_post: {
+      id: 2,
+      body: 'Quoted post body',
+      image: null,
+      created_at: '2024-04-17T15:30:00',
+      number_of_likes: 5,
+      likes: [1, 2],
+      edited: true,
+      user: {
+        id: 2,
+        name: 'Jane Smith',
+        username: 'janesmith',
+        profile_photo: 'https://example.com/janesmith.jpg',
+        followed_by: [1, 3]
+      }
     }
   }
 
-  return <h2>Carregando...</h2>
+  return (
+    <>
+      {profile && <Navbar />}
+      <Sidebar />
+      <div className="container">
+        <h1>teste</h1>
+        <Post postContent={postMock} />
+      </div>
+      {/* <Profilebar /> */}
+    </>
+  )
 }
 
-export default connector(Home)
+export default connector(Test)

@@ -6,7 +6,8 @@ import { colors } from '../../styles'
 
 export const Form = styled.form`
   display: grid;
-  grid-template-columns: 40px 600px;
+  grid-template-columns: 40px auto;
+  width: 100%;
   column-gap: 8px;
   margin-bottom: 24px;
 

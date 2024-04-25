@@ -22,7 +22,7 @@ import {
   Name as NamePost,
   Username as UsernamePost
 } from '../../components/Post/styles'
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
 export const Header = styled.div`
   position: relative;
@@ -90,6 +90,11 @@ export const ProfileContent = styled.div`
     .passwordInputs {
       display: flex;
       column-gap: 16px;
+
+      @media (max-width: ${breakpoints.tablet}) {
+        flex-direction: column;
+        row-gap: 8px;
+      }
     }
 
     .input {
@@ -135,7 +140,8 @@ export const Banner = styled.div<BannerProps>`
   left: 50%;
   top: 40px;
   transform: translateX(-50%);
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   height: 330px;
   border-radius: 8px;
   object-fit: cover;
@@ -172,6 +178,10 @@ export const Banner = styled.div<BannerProps>`
       width: 80px;
       height: 80px;
       fill: ${colors.white};
+
+      @media (max-width: ${breakpoints.tablet}) {
+        display: block;
+      }
     }
 
     &:before {
@@ -212,6 +222,12 @@ export const Info = styled.div`
       align-items: center;
       column-gap: 8px;
     }
+
+    @media (max-width: ${breakpoints.tablet}) {
+      height: 100%;
+      flex-direction: column-reverse;
+      align-items: center;
+    }
   }
 
   .social {
@@ -236,10 +252,10 @@ export const ProfilePhoto = styled.div<ProfilePhotoProps>`
       ? `url(${$profilePhoto})`
       : `url(${process.env.REACT_APP_API_URL}/media/images/no-banner.png)`};
   background-size: cover;
-  max-width: 64px;
   width: 64px;
-  max-height: 64px;
+  max-width: 64px;
   height: 64px;
+  max-height: 64px;
   border-radius: 50%;
   transition: all 0.3s ease-in-out;
   cursor: pointer;
@@ -258,6 +274,10 @@ export const ProfilePhoto = styled.div<ProfilePhotoProps>`
     height: 46px;
     fill: ${colors.white};
     z-index: 1;
+
+    @media (max-width: ${breakpoints.tablet}) {
+      display: block;
+    }
   }
 
   &::after {

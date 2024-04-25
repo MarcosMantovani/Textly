@@ -9,6 +9,7 @@ import Button from '../Button'
 import { Input, Title } from '../../pages/LoginRegister/styles'
 
 import { ForgotPasswordForm as Form } from './styles'
+import { useNavigate } from 'react-router-dom'
 
 const connector = connect(
   (state: RootState) => ({
@@ -25,6 +26,8 @@ const ForgotPasswordForm: React.FC<PropsFromRedux> = ({
   type,
   reset_password
 }) => {
+  const navigate = useNavigate()
+
   const [requestSent, setRequestSent] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
@@ -55,6 +58,8 @@ const ForgotPasswordForm: React.FC<PropsFromRedux> = ({
     reset_password(email)
   }
 
+  const rediretcToLoginPage = () => navigate('/login', { replace: true })
+
   return (
     <Form onSubmit={(e) => onSubmit(e)}>
       <Title>Esqueceu a Senha?</Title>
@@ -71,6 +76,12 @@ const ForgotPasswordForm: React.FC<PropsFromRedux> = ({
       <Button disabled={requestSent} title="Reset Passowrd" type="submit">
         {requestSent ? 'EMAIL ENVIADO' : 'Confirmar e-mail'}
       </Button>
+      <div className="mobileButton">
+        <span>Lembrou da senha? </span>
+        <span className="button" onClick={rediretcToLoginPage}>
+          Entrar
+        </span>
+      </div>
     </Form>
   )
 }

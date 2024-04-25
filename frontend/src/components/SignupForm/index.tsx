@@ -13,6 +13,7 @@ import {
   Title
 } from '../../pages/LoginRegister/styles'
 import * as S from './styles'
+import { useNavigate } from 'react-router-dom'
 
 const connector = connect(
   (state: RootState) => ({
@@ -27,6 +28,8 @@ const connector = connect(
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
+  const navigate = useNavigate()
+
   const [signupData, setSignupData] = useState({
     name: '',
     username: '',
@@ -68,6 +71,8 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
       signup(name, username, email, password, re_password)
     }
   }
+
+  const rediretcToLoginPage = () => navigate('/login', { replace: true })
 
   return (
     <Form onSubmit={(e) => OnSubmit(e)}>
@@ -154,6 +159,12 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
       >
         {accountCreated ? 'Verifique seu e-mail' : 'Registrar-se'}
       </Button>
+      <div className="mobileButton">
+        <span>Já tem uma conta? </span>
+        <span className="button" onClick={rediretcToLoginPage}>
+          Entrar
+        </span>
+      </div>
     </Form>
   )
 }

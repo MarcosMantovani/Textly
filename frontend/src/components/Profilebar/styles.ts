@@ -6,7 +6,7 @@ import {
   Username as UsernamePost
 } from '../Post/styles'
 import { Sidebar } from '../Sidebar/styles'
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
 export const Profilebar = styled(Sidebar)`
   right: 0;
@@ -14,6 +14,10 @@ export const Profilebar = styled(Sidebar)`
 
   > div {
     position: relative;
+  }
+
+  @media (max-width: ${breakpoints.desktop}) {
+    display: none;
   }
 `
 
@@ -42,7 +46,9 @@ export const MainInfo = styled.div`
 `
 
 export const Photo = styled(ProfilePhotoPost)`
+  max-width: 80px;
   width: 80px;
+  max-height: 80px;
   height: 80px;
   margin: 0;
   cursor: default;

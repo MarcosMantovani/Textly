@@ -67,10 +67,10 @@ export const SearchForm = styled.form`
 `
 
 export const ProfilePhoto = styled(PostProfilePhoto)`
-  width: 100%;
   max-width: 100px;
-  height: 100%;
+  width: 100px;
   max-height: 100px;
+  height: 100px;
 `
 
 export const Name = styled(PostName)`

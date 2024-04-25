@@ -8,9 +8,11 @@ type ContainerProps = {
 
 export const Container = styled.div<ContainerProps>`
   display: grid;
-  grid-template-columns: 40px 600px;
+  grid-template-columns: 40px auto;
+  width: 100%;
   column-gap: 8px;
   margin-bottom: 24px;
+
   .sideIcons {
     display: flex;
     flex-direction: column;
@@ -37,9 +39,7 @@ export const Container = styled.div<ContainerProps>`
 
 export const ProfilePhoto = styled.img`
   margin-top: 8px;
-  width: 40px;
   max-width: 40px;
-  height: 40px;
   max-height: 40px;
   object-fit: cover;
   border-radius: 50%;

@@ -11,7 +11,7 @@ import {
   Name as NamePost,
   Username as UsernamePost
 } from '../../components/Post/styles'
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
 export const Header = styled.div`
   position: relative;
@@ -53,7 +53,8 @@ export const Banner = styled.div<BannerProps>`
   left: 50%;
   top: 40px;
   transform: translateX(-50%);
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   height: 330px;
   border-radius: 8px;
   object-fit: cover;
@@ -108,13 +109,23 @@ export const Info = styled.div`
       cursor: pointer;
     }
   }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    justify-content: center;
+
+    .maininfo {
+      height: 100%;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+    }
+  }
 `
 
 export const ProfilePhoto = styled(ProfilePhotoPost)`
-  width: 64px;
   max-width: 64px;
-  height: 64px;
+  width: 64px;
   max-height: 64px;
+  height: 64px;
   margin: 0;
   cursor: auto;
 `
@@ -146,7 +157,7 @@ export const List = styled.ul`
 export const ListProfilePhoto = styled(PostProfilePhoto)`
   margin-top: 0;
   max-width: 60px;
-  width: 100%;
+  width: 60px;
   max-height: 60px;
   height: 60px;
   object-fit: cover;
