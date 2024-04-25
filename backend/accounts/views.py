@@ -2,6 +2,7 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from rest_framework import status
 from .models import UserAccount, Post
 from .serializers import CustomUserSerializer, PostSerializer, SearchedUsersSerializer
@@ -62,6 +63,11 @@ def unfollow_user(request):
 
     return Response({"message": "User unfollowed successfully."}, status=status.HTTP_200_OK)
 
+class PostPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_posts(request, user_id=None):
@@ -72,12 +78,17 @@ def get_posts(request, user_id=None):
         # Se nenhum ID de usuário foi fornecido na URL, retornar todos os posts
         posts = Post.objects.all()
 
-    # Ordenando os posts do mais novo para o mais antigo
+    # Ordenar os posts do mais novo para o mais antigo
     posts = posts.order_by('-created_at')
 
+    # Aplicar paginação aos resultados
+    paginator = PostPagination()
+    result_page = paginator.paginate_queryset(posts, request)
+
     # Serializando os posts
-    serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data)
+    serializer = PostSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -285,9 +296,14 @@ def search_posts(request, search_text=None):
     # Ordenando os posts do mais novo para o mais antigo
     posts = posts.order_by('-created_at')
 
+    # Aplicar paginação aos resultados
+    paginator = PostPagination()
+    result_page = paginator.paginate_queryset(posts, request)
+
     # Serializando os posts
-    serializer = PostSerializer(posts, many=True)
-    return Response(serializer.data)
+    serializer = PostSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -302,9 +318,14 @@ def search_users(request, search_text=None):
     # Removendo usuários duplicados
     users = users.distinct()
 
+    # Aplicar paginação aos resultados
+    paginator = PostPagination()  # Aqui você precisa ajustar para a sua classe de paginação de usuário, se houver uma diferente.
+    result_page = paginator.paginate_queryset(users, request)
+
     # Serializando os usuários
-    serializer = SearchedUsersSerializer(users, many=True)
-    return Response(serializer.data)
+    serializer = SearchedUsersSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
