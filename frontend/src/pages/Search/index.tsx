@@ -11,6 +11,7 @@ import Sidebar from '../../components/Sidebar'
 import Profilebar from '../../components/Profilebar'
 import Message from '../../components/Message'
 import Loader from '../../components/Loader'
+import Navbar from '../../components/Navbar'
 
 import { Title } from '../Home/styles'
 
@@ -262,6 +263,7 @@ const Search = ({ profile, isAuthenticated }: PropsFromRedux) => {
       <Message opened={message ? true : false} onClick={() => setMessage(null)}>
         {message}
       </Message>
+      {profile && <Navbar />}
       <Sidebar />
       <div className="container">
         <S.SearchForm onSubmit={(e) => OnSubmit(e)}>

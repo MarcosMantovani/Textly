@@ -25,6 +25,7 @@ import * as S from './styles'
 
 import { Profile } from '../../store/actions/types'
 import { load_user } from '../../store/actions/auth'
+import Navbar from '../../components/Navbar'
 
 // const profile: Profile = {
 //   id: 1,
@@ -497,6 +498,7 @@ const EditProfile = ({
             </form>
           </S.RequestPassword>
         )}
+        {profile && <Navbar />}
         <Sidebar />
         {profile ? (
           <>

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
 export const Sidebar = styled.div`
   position: fixed;
@@ -14,6 +14,10 @@ export const Sidebar = styled.div`
   height: 100svh;
   width: 300px;
   background-color: ${colors.blue};
+
+  @media (max-width: ${breakpoints.desktop}) {
+    display: none;
+  }
 `
 
 export const MainOptions = styled.div`

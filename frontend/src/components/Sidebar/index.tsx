@@ -49,7 +49,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
       <S.MainOptions>
         <TextlyTitle />
         <Button
-          title="test"
+          title="Home"
           type="button"
           styled="sidebar"
           icon={<HomeIcon />}
@@ -59,7 +59,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
           Home
         </Button>
         <Button
-          title="test"
+          title="Search"
           type="button"
           styled="sidebar"
           icon={<SearchIcon />}
@@ -69,7 +69,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
           Search
         </Button>
         <Button
-          title="test"
+          title="Edit Profile"
           type="button"
           styled="sidebar"
           icon={<OptionsIcon />}
@@ -80,7 +80,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
         </Button>
       </S.MainOptions>
       <Button
-        title="test"
+        title="Logout"
         type="button"
         styled="sidebar"
         icon={<LogoutIcon />}

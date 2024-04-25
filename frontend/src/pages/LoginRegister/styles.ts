@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
-type ConatainerProps = {
+type ContainerProps = {
   $signup: boolean
 }
 
@@ -23,6 +23,10 @@ export const SignIn = styled.div`
   left: 0;
   width: 50%;
   z-index: 2;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+  }
 `
 
 export const SignUp = styled.div`
@@ -34,9 +38,13 @@ export const SignUp = styled.div`
   width: 50%;
   opacity: 0;
   z-index: 1;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 100%;
+  }
 `
 
-export const Container = styled.div<ConatainerProps>`
+export const Container = styled.div<ContainerProps>`
   background-color: ${colors.white};
   border-radius: 30px;
   position: relative;
@@ -44,8 +52,27 @@ export const Container = styled.div<ConatainerProps>`
   max-width: 100%;
   min-height: 480px;
 
+  @media (max-width: ${breakpoints.desktop}) {
+    width: 80%;
+  }
+
   span {
     font-size: 12px;
+  }
+
+  .mobileButton {
+    display: none;
+    text-align: center;
+    margin-top: 16px;
+
+    .button {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    @media (max-width: ${breakpoints.tablet}) {
+      display: block;
+    }
   }
 
   .toggle-container {
@@ -60,6 +87,10 @@ export const Container = styled.div<ConatainerProps>`
     border-radius: ${({ $signup }) =>
       $signup ? '25px 150px 100px 25px' : '150px 25px 25px 100px'};
     z-index: 6;
+
+    @media (max-width: ${breakpoints.tablet}) {
+      display: none;
+    }
   }
 
   .toggle {
@@ -107,6 +138,10 @@ export const Container = styled.div<ConatainerProps>`
     transform: ${({ $signup }) => ($signup ? 'translateX(100%)' : '')};
     opacity: ${({ $signup }) => ($signup ? '1' : '0')};
     z-index: ${({ $signup }) => ($signup ? '5' : '')};
+
+    @media (max-width: ${breakpoints.tablet}) {
+      transform: ${({ $signup }) => ($signup ? 'translateX(0%)' : '')};
+    }
   }
 `
 

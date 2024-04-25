@@ -39,10 +39,6 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
   const [forgotPassword, setForgotPassword] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  if (isAuthenticated) {
-    navigate('/', { replace: true })
-  }
-
   useEffect(() => {
     if (pathname === '/register') {
       setSignUp(true)
@@ -50,6 +46,9 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
     } else if (pathname === '/forgot-password') {
       setSignUp(true)
       setForgotPassword(true)
+    } else if (pathname === '/login') {
+      setSignUp(false)
+      setForgotPassword(false)
     }
   }, [pathname])
 
@@ -91,6 +90,10 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
     e.preventDefault()
 
     login(username, password)
+  }
+
+  if (isAuthenticated) {
+    navigate('/', { replace: true })
   }
 
   return (
@@ -159,6 +162,12 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
             >
               Entrar
             </Button>
+            <div className="mobileButton">
+              <span>Não tem uma conta? </span>
+              <span className="button" onClick={redirectToRegister}>
+                Registrar-se
+              </span>
+            </div>
           </S.Form>
         </S.SignIn>
         <div className="toggle-container">

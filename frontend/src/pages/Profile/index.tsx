@@ -17,6 +17,7 @@ import Message from '../../components/Message'
 import { Title } from '../Home/styles'
 
 import * as S from './styles'
+import Navbar from '../../components/Navbar'
 
 type Params = {
   id: string
@@ -206,6 +207,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
       <Message opened={error ? true : false} onClick={() => setError(null)}>
         {error}
       </Message>
+      {profile && <Navbar />}
       <Sidebar />
       {user && user.data && profile ? (
         <>

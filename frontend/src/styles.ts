@@ -1,4 +1,5 @@
-import { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
+import { Sidebar } from './components/Sidebar/styles'
 
 export const colors = {
   black: '#0D0D0D',
