@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { colors } from '../../styles'
+import { breakpoints, colors } from '../../styles'
 
 type ContainerProps = {
   $liked: boolean
@@ -17,6 +17,18 @@ export const Container = styled.div<ContainerProps>`
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: flex;
+    flex-direction: column-reverse;
+    row-gap: 8px;
+
+    .sideIcons {
+      justify-content: end;
+      flex-direction: row;
+      column-gap: 8px;
+    }
   }
 
   .likeButton svg * {
@@ -49,6 +61,10 @@ export const ProfilePhoto = styled.img`
   &:hover {
     transform: translateY(-10%);
   }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    margin: 0;
+  }
 `
 
 export const Name = styled.p`
@@ -73,11 +89,18 @@ export const Username = styled.p`
 `
 
 export const TextPost = styled.div`
+  display: flex;
+  flex-direction: column;
   background-color: ${colors.blue};
   border-radius: 8px;
   border-top-left-radius: 0;
   padding: 0 8px;
-  min-height: 142px;
+  width: 100%;
+  flex-grow: 1;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    border-radius: 8px;
+  }
 
   .postHeader {
     display: flex;
@@ -176,15 +199,32 @@ export const QuotedPostContainer = styled.div`
   }
 `
 
-export const QuotePostForm = styled.form`
-  display: grid;
-  grid-template-columns: 40px 600px;
+type QuotePostFormProps = {
+  $image: string | null | File
+}
+
+export const QuotePostForm = styled.form<QuotePostFormProps>`
+  display: flex;
   column-gap: 8px;
   margin-bottom: 24px;
+  width: 100%;
+
   .sideIcons {
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: flex;
+    flex-direction: column-reverse;
+    row-gap: 8px;
+
+    .sideIcons {
+      justify-content: end;
+      flex-direction: row;
+      column-gap: 8px;
+    }
   }
 
   .textQuotePost {
@@ -199,6 +239,47 @@ export const QuotePostForm = styled.form`
     padding: 8px;
     outline: none;
   }
+
+  .quotePostImage {
+    position: relative;
+    background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
+    background-size: cover;
+    height: 300px;
+
+    &:hover {
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+
+      .deleteQuotePostImage {
+        display: block;
+      }
+    }
+
+    .deleteQuotePostImage {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      fill: ${colors.likeColor};
+      cursor: pointer;
+      z-index: 5;
+
+      @media (max-width: ${breakpoints.desktop}) {
+        display: block;
+      }
+    }
+  }
 `
 
 type EditPostContainerProps = {
@@ -206,15 +287,27 @@ type EditPostContainerProps = {
 }
 
 export const EditPostContainer = styled.form<EditPostContainerProps>`
-  display: grid;
-  grid-template-columns: 40px 600px;
+  display: flex;
   column-gap: 8px;
   margin-bottom: 24px;
+  width: 100%;
 
   .sideIcons {
     display: flex;
     flex-direction: column;
     row-gap: 8px;
+  }
+
+  @media (max-width: ${breakpoints.tablet}) {
+    display: flex;
+    flex-direction: column-reverse;
+    row-gap: 8px;
+
+    .sideIcons {
+      justify-content: end;
+      flex-direction: row;
+      column-gap: 8px;
+    }
   }
 
   .textQuotePost {
@@ -264,6 +357,10 @@ export const EditPostContainer = styled.form<EditPostContainerProps>`
       fill: ${colors.likeColor};
       cursor: pointer;
       z-index: 5;
+
+      @media (max-width: ${breakpoints.desktop}) {
+        display: block;
+      }
     }
   }
 `

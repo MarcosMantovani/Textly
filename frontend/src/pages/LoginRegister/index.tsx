@@ -17,7 +17,7 @@ const connector = connect(
   (state: RootState) => ({
     isAuthenticated: state.auth.isAuthenticated,
     type: state.auth.type,
-    error: state.auth.error?.detail
+    error: state.auth.error
   }),
   {
     login: login
@@ -55,6 +55,8 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
   useEffect(() => {
     if (type === 'LOGIN_FAIL' && error) {
       setErrorMsg(error)
+    } else {
+      setErrorMsg(null)
     }
   }, [type, error])
 

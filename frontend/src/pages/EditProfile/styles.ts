@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 
-import { ProfilePhoto as PostProfilePhoto } from '../../components/Post/styles'
-
 function hexToRGBA(hex: string, alpha: number) {
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
@@ -17,11 +15,6 @@ type ProfilePhotoProps = {
   $profilePhoto: string
 }
 
-import {
-  ProfilePhoto as ProfilePhotoPost,
-  Name as NamePost,
-  Username as UsernamePost
-} from '../../components/Post/styles'
 import { breakpoints, colors } from '../../styles'
 
 export const Header = styled.div`

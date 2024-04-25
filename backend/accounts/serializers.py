@@ -14,7 +14,7 @@ class userCreateSerializer(UserCreateSerializer):
 class CustomSociallUsersSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = UserAccount
-        fields = ('id', 'username', 'name', 'profile_photo')
+        fields = ('id', 'username', 'name', 'profile_photo', 'follows', 'followed_by')
 
 class CustomUserSerializer(UserSerializer):
     follows = CustomSociallUsersSerializer(many=True, read_only=True)

@@ -1,10 +1,9 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 
 import RootReducer from '../reducers'
 import {
   AuthActionTypes,
-  Error,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   USER_LOADED_SUCCESS,
@@ -136,18 +135,24 @@ export const login =
       })
 
       dispatch(load_user())
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<Error>
-        if (axiosError.response) {
-          dispatch({
-            type: LOGIN_FAIL,
-            payload: {
-              detail: axiosError.response.data.detail
-            }
-          })
+    } catch (error) {
+      let errorMessage
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data) {
+          errorMessage =
+            error.response.data[Object.keys(error.response.data)[0]]
+        } else {
+          errorMessage = error
         }
+      } else {
+        errorMessage = error
       }
+
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: errorMessage
+      })
     }
   }
 
@@ -189,16 +194,24 @@ export const signup =
         type: SIGNUP_SUCCESS,
         payload: res.data
       })
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<Error>
-        if (axiosError.response) {
-          dispatch({
-            type: SIGNUP_FAIL,
-            payload: axiosError.response.data
-          })
+    } catch (error) {
+      let errorMessage
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data) {
+          errorMessage =
+            error.response.data[Object.keys(error.response.data)[0]][0]
+        } else {
+          errorMessage = error
         }
+      } else {
+        errorMessage = error
       }
+
+      dispatch({
+        type: SIGNUP_FAIL,
+        payload: errorMessage
+      })
     }
   }
 
@@ -256,16 +269,24 @@ export const reset_password =
       dispatch({
         type: PASSWORD_RESET_SUCCESS
       })
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        const axiosError = err as AxiosError<Error>
-        if (axiosError.response) {
-          dispatch({
-            type: PASSWORD_RESET_FAIL,
-            payload: axiosError.response.data
-          })
+    } catch (error) {
+      let errorMessage
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data) {
+          errorMessage =
+            error.response.data[Object.keys(error.response.data)[0]][0]
+        } else {
+          errorMessage = error
         }
+      } else {
+        errorMessage = error
       }
+
+      dispatch({
+        type: PASSWORD_RESET_FAIL,
+        payload: errorMessage
+      })
     }
   }
 
@@ -290,9 +311,23 @@ export const reset_password_confirm =
       dispatch({
         type: PASSWORD_RESET_CONFIRM_SUCCESS
       })
-    } catch (err) {
+    } catch (error) {
+      let errorMessage
+
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data) {
+          errorMessage =
+            error.response.data[Object.keys(error.response.data)[0]][0]
+        } else {
+          errorMessage = error
+        }
+      } else {
+        errorMessage = error
+      }
+
       dispatch({
-        type: PASSWORD_RESET_CONFIRM_FAIL
+        type: PASSWORD_RESET_CONFIRM_FAIL,
+        payload: errorMessage
       })
     }
   }

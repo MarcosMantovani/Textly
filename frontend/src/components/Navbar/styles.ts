@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import { breakpoints, colors } from '../../styles'
+
 import { SideBarButton } from '../Button/styles'
 import { ProfilePhoto as PostProfilePhoto } from '../Post/styles'
+import { breakpoints, colors } from '../../styles'
 
 export const Container = styled.div`
   display: none;

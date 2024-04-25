@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { signup } from '../../store/actions/auth'
 import { RootState } from '../../store/reducers'
@@ -13,7 +14,6 @@ import {
   Title
 } from '../../pages/LoginRegister/styles'
 import * as S from './styles'
-import { useNavigate } from 'react-router-dom'
 
 const connector = connect(
   (state: RootState) => ({
@@ -43,16 +43,8 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   useEffect(() => {
-    if (type === 'SIGNUP_FAIL' && error) {
-      if (error) {
-        if (error.email && error.email[0]) {
-          setErrorMsg(error.email[0])
-        } else if (error.password && error.password[0]) {
-          setErrorMsg(error.password[0])
-        } else if (error.username && error.username[0]) {
-          setErrorMsg(error.username[0])
-        }
-      }
+    if (type === 'SIGNUP_FAIL') {
+      setErrorMsg(error)
     } else if (type === 'SIGNUP_SUCCESS') {
       setErrorMsg(null)
       setAccountCreated(true)
@@ -60,16 +52,22 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
   }, [error, type])
 
   const OnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSignupData({ ...signupData, [e.target.name]: e.target.value })
+    if (e.target.name === 'username') {
+      const cleanedValue = e.target.value.replace(/[^a-zA-Z0-9-_]/g, '')
+      setSignupData({ ...signupData, [e.target.name]: cleanedValue })
+    } else if (e.target.name === 'name') {
+      const cleanedValue = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+      setSignupData({ ...signupData, [e.target.name]: cleanedValue })
+    } else {
+      setSignupData({ ...signupData, [e.target.name]: e.target.value })
+    }
     setErrorMsg(null)
   }
 
   const OnSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (password === re_password) {
-      signup(name, username, email, password, re_password)
-    }
+    signup(name, username, email, password, re_password)
   }
 
   const rediretcToLoginPage = () => navigate('/login', { replace: true })

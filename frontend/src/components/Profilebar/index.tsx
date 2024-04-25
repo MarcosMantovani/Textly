@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Profile } from '../../store/actions/types'
 
-import { ReactComponent as ProfileIcon } from '../../assets/media/person-outline.svg'
-import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
-
 import Button from '../Button'
 import FollowersList from '../FollowersList'
+
+import { ReactComponent as ProfileIcon } from '../../assets/media/person-outline.svg'
+import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
 
 import * as S from './styles'
 
