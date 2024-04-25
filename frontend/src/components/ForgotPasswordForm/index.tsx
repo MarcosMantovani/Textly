@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import { reset_password } from '../../store/actions/auth'
 import { RootState } from '../../store/reducers'
@@ -9,11 +10,11 @@ import Button from '../Button'
 import { Input, Title } from '../../pages/LoginRegister/styles'
 
 import { ForgotPasswordForm as Form } from './styles'
-import { useNavigate } from 'react-router-dom'
 
 const connector = connect(
   (state: RootState) => ({
-    type: state.auth.type
+    type: state.auth.type,
+    error: state.auth.error
   }),
   {
     reset_password: reset_password
@@ -24,6 +25,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 
 const ForgotPasswordForm: React.FC<PropsFromRedux> = ({
   type,
+  error,
   reset_password
 }) => {
   const navigate = useNavigate()
@@ -38,12 +40,12 @@ const ForgotPasswordForm: React.FC<PropsFromRedux> = ({
 
   useEffect(() => {
     if (type === 'PASSWORD_RESET_FAIL') {
-      setErrorMsg('E-mail incorreto ou não cadastrado')
+      setErrorMsg(error)
     } else if (type === 'PASSWORD_RESET_SUCCESS') {
       setErrorMsg('Verifique seu e-mail para alterar sua senha')
       setRequestSent(true)
     }
-  }, [type])
+  }, [type, error])
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({

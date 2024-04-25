@@ -1,66 +1,23 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios from 'axios'
 import React, { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { ConnectedProps, connect } from 'react-redux'
 
-import { Profile as ProfileType, User } from '../../store/actions/types'
+import { Profile as ProfileType } from '../../store/actions/types'
+import { load_user } from '../../store/actions/auth'
 import { RootState } from '../../store/reducers'
 
 import { ReactComponent as EditIcon } from '../../assets/media/edit-outline.svg'
-import { ReactComponent as CloseIcon } from '../../assets/media/edit-outline.svg'
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 
 import Loader from '../../components/Loader'
 import Sidebar from '../../components/Sidebar'
 import Profilebar from '../../components/Profilebar'
-import { Name, Username } from '../../components/Post/styles'
-import Post, { PostType } from '../../components/Post'
 import Button from '../../components/Button'
 import Message from '../../components/Message'
-
-import { Title } from '../Home/styles'
-import test from '../../../../backend/media/images/Foto_LinkedIn_x1pGMXv.jpg'
-
-import * as S from './styles'
-
-import { Profile } from '../../store/actions/types'
-import { load_user } from '../../store/actions/auth'
 import Navbar from '../../components/Navbar'
 
-// const profile: Profile = {
-//   id: 1,
-//   name: 'John Doe',
-//   username: 'johndoe',
-//   email: 'johndoe@example.com',
-//   profile_photo:
-//     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ27f5Qdh6FzZ5qiectY4Sj-uF8cZFGybWdd9YYc3P-cQ&s',
-//   banner:
-//     'https://cdn1.epicgames.com/offer/9773aa1aa54f4f7b80e44bef04986cea/EGS_RocketLeague_PsyonixLLC_S1_2560x1440-bb7699fad7b5101432236737c8809214',
-//   bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-//   follows: [
-//     {
-//       id: 2,
-//       name: 'Jane Smith',
-//       username: 'janesmith',
-//       email: 'janesmith@example.com',
-//       profile_photo: 'https://example.com/janesmith.jpg',
-//       banner: null,
-//       bio: null
-//     }
-//     // Add more users if needed
-//   ],
-//   followed_by: [
-//     // List of users who follow John Doe
-//   ],
-//   post_count: 10,
-//   date_modified: '2024-04-18T12:00:00Z'
-// }
-
-type Params = {
-  id: string
-}
-
-type ShowingType = 'posts' | 'follows' | 'followers'
+import * as S from './styles'
 
 const connector = connect(
   (state: RootState) => ({
@@ -204,7 +161,8 @@ const EditProfile = ({
   }
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value)
+    const cleanedValue = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+    setName(cleanedValue)
   }
 
   const handleUpdateName = async () => {
@@ -251,12 +209,8 @@ const EditProfile = ({
   }
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    if (value.startsWith('@')) {
-      setUsername(value.substring(1))
-    } else {
-      setUsername(value)
-    }
+    const cleanedValue = e.target.value.replace(/[^a-zA-Z0-9-_]/g, '')
+    setUsername(cleanedValue)
   }
 
   const handleUpdateUsername = async (e: React.FormEvent) => {

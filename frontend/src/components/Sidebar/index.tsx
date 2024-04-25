@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 import { logout } from '../../store/actions/auth'
 
+import Button from '../Button'
+import TextlyTitle from '../TextlyTitle'
+
 import { ReactComponent as LogoutIcon } from '../../assets/media/log-out-outline.svg'
 import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
 import { ReactComponent as SearchIcon } from '../../assets/media/search-outline.svg'
 import { ReactComponent as OptionsIcon } from '../../assets/media/options-2-outline.svg'
-
-import Button from '../Button'
-import TextlyTitle from '../TextlyTitle'
 
 import * as S from './styles'
 

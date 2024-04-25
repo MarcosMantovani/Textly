@@ -12,9 +12,9 @@ import Sidebar from '../../components/Sidebar'
 import Profilebar from '../../components/Profilebar'
 import Loader from '../../components/Loader'
 import Message from '../../components/Message'
+import Navbar from '../../components/Navbar'
 
 import * as S from './styles'
-import Navbar from '../../components/Navbar'
 
 const connector = connect(
   (state: RootState) => ({

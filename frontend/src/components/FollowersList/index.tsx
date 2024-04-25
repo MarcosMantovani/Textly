@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { User } from '../../store/actions/types'
-
 import { Name, Username } from '../Post/styles'
 
 import * as S from './styles'
+import { SimplifiedUserType } from '../../store/actions/types'
 
 type Props = {
-  followers: User[]
-  following: User[]
+  followers: SimplifiedUserType[]
+  following: SimplifiedUserType[]
   listDisplay: 'followers' | 'following' | 'none'
 }
 
 const FollowersList = ({ followers, following, listDisplay }: Props) => {
-  const [userList, setUserList] = useState<User[] | null>(null)
+  const [userList, setUserList] = useState<SimplifiedUserType[] | null>(null)
   const navigate = useNavigate()
 
   const redirectToProfilePage = (id: number) =>

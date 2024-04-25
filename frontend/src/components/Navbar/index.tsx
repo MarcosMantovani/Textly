@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { ConnectedProps, connect } from 'react-redux'
 
 import { logout } from '../../store/actions/auth'
+import { RootState } from '../../store/reducers'
 
 import Button from '../Button'
 
@@ -11,7 +12,6 @@ import { ReactComponent as SearchIcon } from '../../assets/media/search-outline.
 import { ReactComponent as OptionsIcon } from '../../assets/media/options-2-outline.svg'
 
 import * as S from './styles'
-import { RootState } from '../../store/reducers'
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 

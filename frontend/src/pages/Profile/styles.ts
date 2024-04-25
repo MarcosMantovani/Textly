@@ -141,9 +141,8 @@ export const Username = styled(UsernamePost)`
 `
 
 export const List = styled.ul`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 32px;
+  display: flex;
+  flex-direction: column;
   row-gap: 16px;
 
   li {

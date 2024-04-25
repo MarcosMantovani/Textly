@@ -3,21 +3,24 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ConnectedProps, connect } from 'react-redux'
 
-import { Profile as ProfileType, User } from '../../store/actions/types'
+import {
+  Profile as ProfileType,
+  SimplifiedUserType
+} from '../../store/actions/types'
 import { RootState } from '../../store/reducers'
 
 import Loader from '../../components/Loader'
 import Sidebar from '../../components/Sidebar'
 import Profilebar from '../../components/Profilebar'
-import { Name, Username } from '../../components/Post/styles'
 import Post, { PostType } from '../../components/Post'
 import Button from '../../components/Button'
 import Message from '../../components/Message'
+import Navbar from '../../components/Navbar'
+import UsersList from '../../components/UsersList'
 
 import { Title } from '../Home/styles'
 
 import * as S from './styles'
-import Navbar from '../../components/Navbar'
 
 type Params = {
   id: string
@@ -41,7 +44,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   const { id } = useParams<Params>()
   const [user, setUser] = useState<AxiosResponse<ProfileType | null>>()
   const [listType, setListType] = useState<ShowingType>('posts')
-  const [listContent, setListContent] = useState<User[]>()
+  const [listContent, setListContent] = useState<SimplifiedUserType[]>()
   const [userFollowed, setUserFollowed] = useState(false)
   const [posts, setPosts] = useState<PostType[]>()
   const [error, setError] = useState<string | null>(null)
@@ -195,9 +198,6 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
     setListType('follows')
   }
 
-  const redirectToProfilePage = (id: number) =>
-    navigate(`/profile/${id}`, { replace: true })
-
   if (isAuthenticated !== true) {
     navigate('/login', { replace: true })
   }
@@ -309,32 +309,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
                   <Title>Quem segue @{user.data.username}</Title>
                 )}
                 {listContent.length > 0 && (
-                  <S.List>
-                    {listContent.map((user) => (
-                      <li key={user.id}>
-                        <S.ListProfilePhoto
-                          className="profilePhoto"
-                          src={
-                            user.profile_photo
-                              ? user.profile_photo
-                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-                          }
-                          alt="Foto de perfil"
-                          onClick={() => redirectToProfilePage(user.id)}
-                        />
-                        <div>
-                          <Name onClick={() => redirectToProfilePage(user.id)}>
-                            {user.name}
-                          </Name>
-                          <Username
-                            onClick={() => redirectToProfilePage(user.id)}
-                          >
-                            @{user.username}
-                          </Username>
-                        </div>
-                      </li>
-                    ))}
-                  </S.List>
+                  <UsersList users={listContent} profile={profile} />
                 )}
               </>
             )}

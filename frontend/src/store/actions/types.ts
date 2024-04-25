@@ -25,19 +25,24 @@ export interface User {
   bio: string | null
 }
 
+export type SimplifiedUserType = {
+  id: number
+  name: string
+  username: string
+  profile_photo: string | null
+  followed_by: number[]
+  follows: number[]
+  bio: string | null
+}
+
 export interface Profile extends User {
-  follows: User[]
-  followed_by: User[]
+  follows: SimplifiedUserType[]
+  followed_by: SimplifiedUserType[]
   post_count: number
   date_modified: string
 }
 
-export interface Error {
-  detail?: string | null
-  password?: string[] | null
-  username?: string[] | null
-  email?: string[] | null
-}
+export type Error = string
 
 export interface LoginSuccessAction {
   type: typeof LOGIN_SUCCESS
@@ -87,6 +92,7 @@ export interface PasswordResetConfirmSuccessAction {
 
 export interface PasswordResetConfirmFailAction {
   type: typeof PASSWORD_RESET_CONFIRM_FAIL
+  payload: Error
 }
 
 export interface SignupSuccessAction {

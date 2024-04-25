@@ -147,8 +147,6 @@ const Post = ({ postContent, profile }: CombinedProps) => {
           config
         )
 
-        console.log(liked)
-
         setLiked(!liked)
         liked ? postContent.number_of_likes-- : postContent.number_of_likes++
       } catch (err) {
@@ -195,7 +193,6 @@ const Post = ({ postContent, profile }: CombinedProps) => {
 
   const handleQuoteBodyChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPostQuoteBody(e.target.value)
-    console.log(postQuoteBody)
   }
 
   const handleQuoteImageChange = (
@@ -209,6 +206,12 @@ const Post = ({ postContent, profile }: CombinedProps) => {
     e.preventDefault()
 
     createQuotePost()
+  }
+
+  const cancelQuoting = () => {
+    setIsQuote(false)
+    setQuotePostImage(null)
+    setPostQuoteBody('')
   }
 
   const delete_post = async (post_id: number) => {
@@ -278,7 +281,6 @@ const Post = ({ postContent, profile }: CombinedProps) => {
 
   const handleEditedPostBodyChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setEditedPostBody(e.target.value)
-    console.log(editedPostBody)
   }
 
   const handleEditedPostImageChange = (
@@ -421,102 +423,100 @@ const Post = ({ postContent, profile }: CombinedProps) => {
               icon={<ConfirmIcon />}
             />
           </div>
-          <div>
-            <S.TextPost>
-              <div className="postHeader">
-                <div className="username">
-                  <div>
-                    <S.Name onClick={redirectToProfilePage}>
-                      {postContent.user.name}
-                    </S.Name>
-                    <S.Username onClick={redirectToProfilePage}>
-                      @{postContent.user.username}
-                    </S.Username>
-                  </div>
-                </div>
+          <S.TextPost>
+            <div className="postHeader">
+              <div className="username">
                 <div>
-                  <p className="secondInfo">{postContent.created_at}</p>
-                  <p className="secondInfo">
-                    {postContent.number_of_likes} curtidas
-                  </p>
+                  <S.Name onClick={redirectToProfilePage}>
+                    {postContent.user.name}
+                  </S.Name>
+                  <S.Username onClick={redirectToProfilePage}>
+                    @{postContent.user.username}
+                  </S.Username>
                 </div>
               </div>
-              <div className="content">
-                <textarea
-                  className="textQuotePost"
-                  name="body"
-                  value={editedPostBody}
-                  onChange={(e) => handleEditedPostBodyChange(e)}
-                  minLength={3}
-                  maxLength={200}
-                  required
-                />
-                {editedPostImageUrl && (
-                  <>
-                    <div className="PostImage editPostImage">
-                      <TrashIcon
-                        className="deleteEditedPostImage"
-                        onClick={() => {
-                          setEditedPostImageUrl(null)
-                          setEditedPostImageFile(null)
-                        }}
-                      />
-                    </div>
-                  </>
-                )}
-                {postContent.quoted_post && (
-                  <S.QuotedPostContainer>
-                    <div className="shareIcon">
-                      <ShareIcon />
-                    </div>
-                    <div>
-                      <div className="headInfo">
-                        <div className="mainInfo">
-                          <S.QuotedProfilePhoto
-                            src={
-                              postContent.quoted_post.user.profile_photo
-                                ? postContent.quoted_post.user.profile_photo
-                                : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-                            }
-                            alt="Profile Photo"
-                            onClick={redirectToQuotedProfilePage}
-                          />
-                          <div>
-                            <S.Name onClick={redirectToQuotedProfilePage}>
-                              {postContent.quoted_post.user.name}
-                            </S.Name>
-                            <S.Username onClick={redirectToQuotedProfilePage}>
-                              {postContent.quoted_post.user.username}
-                            </S.Username>
-                          </div>
-                        </div>
-                        <div>
-                          <p className="secondInfo">
-                            {postContent.quoted_post.created_at}
-                          </p>
-                          <p className="secondInfo">
-                            {postContent.quoted_post.likes} curtidas
-                          </p>
-                        </div>
-                      </div>
-                      <div className="quotedContent">
-                        <p className="quotedBody">
-                          {postContent.quoted_post.body}
-                        </p>
-                        {postContent.quoted_post.image && (
-                          <img
-                            className="PostImage"
-                            src={postContent.quoted_post.image}
-                            alt="Post Image"
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </S.QuotedPostContainer>
-                )}
+              <div>
+                <p className="secondInfo">{postContent.created_at}</p>
+                <p className="secondInfo">
+                  {postContent.number_of_likes} curtidas
+                </p>
               </div>
-            </S.TextPost>
-          </div>
+            </div>
+            <div className="content">
+              <textarea
+                className="textQuotePost"
+                name="body"
+                value={editedPostBody}
+                onChange={(e) => handleEditedPostBodyChange(e)}
+                minLength={3}
+                maxLength={200}
+                required
+              />
+              {editedPostImageUrl && (
+                <>
+                  <div className="PostImage editPostImage">
+                    <TrashIcon
+                      className="deleteEditedPostImage"
+                      onClick={() => {
+                        setEditedPostImageUrl(null)
+                        setEditedPostImageFile(null)
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+              {postContent.quoted_post && (
+                <S.QuotedPostContainer>
+                  <div className="shareIcon">
+                    <ShareIcon />
+                  </div>
+                  <div>
+                    <div className="headInfo">
+                      <div className="mainInfo">
+                        <S.QuotedProfilePhoto
+                          src={
+                            postContent.quoted_post.user.profile_photo
+                              ? postContent.quoted_post.user.profile_photo
+                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                          }
+                          alt="Profile Photo"
+                          onClick={redirectToQuotedProfilePage}
+                        />
+                        <div>
+                          <S.Name onClick={redirectToQuotedProfilePage}>
+                            {postContent.quoted_post.user.name}
+                          </S.Name>
+                          <S.Username onClick={redirectToQuotedProfilePage}>
+                            {postContent.quoted_post.user.username}
+                          </S.Username>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="secondInfo">
+                          {postContent.quoted_post.created_at}
+                        </p>
+                        <p className="secondInfo">
+                          {postContent.quoted_post.likes} curtidas
+                        </p>
+                      </div>
+                    </div>
+                    <div className="quotedContent">
+                      <p className="quotedBody">
+                        {postContent.quoted_post.body}
+                      </p>
+                      {postContent.quoted_post.image && (
+                        <img
+                          className="PostImage"
+                          src={postContent.quoted_post.image}
+                          alt="Post Image"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </S.QuotedPostContainer>
+              )}
+            </div>
+          </S.TextPost>
         </S.EditPostContainer>
       </>
     )
@@ -530,7 +530,10 @@ const Post = ({ postContent, profile }: CombinedProps) => {
           {error}
         </Message>
         <Message opened={postCreated}>Citação de Post criada.</Message>
-        <S.QuotePostForm onSubmit={(e) => handleQuotePostSubmit(e)}>
+        <S.QuotePostForm
+          onSubmit={(e) => handleQuotePostSubmit(e)}
+          $image={quotePostImage ? URL.createObjectURL(quotePostImage) : ''}
+        >
           <div className="sideIcons">
             <S.ProfilePhoto
               src={
@@ -542,18 +545,18 @@ const Post = ({ postContent, profile }: CombinedProps) => {
               onClick={redirectToUserProfilePage}
             />
             <Button
-              title=""
+              title="Add Image"
               type="button"
               styled="postImg"
               icon={<ImageIcon />}
               onChange={(e) => handleQuoteImageChange(e)}
             />
             <Button
-              title=""
+              title="Cancel"
               type="button"
               styled="post"
               icon={<CloseIcon />}
-              onClick={() => setIsQuote(false)}
+              onClick={cancelQuoting}
             />
             <Button
               title="Confirm"
@@ -562,75 +565,83 @@ const Post = ({ postContent, profile }: CombinedProps) => {
               icon={<ConfirmIcon />}
             />
           </div>
-          <div>
-            <S.TextPost>
-              <div className="postHeader">
-                <div>
-                  <S.Name onClick={redirectToUserProfilePage}>
-                    {profile.name}
-                  </S.Name>
-                  <S.Username onClick={redirectToUserProfilePage}>
-                    @{profile.username}
-                  </S.Username>
+          <S.TextPost>
+            <div className="postHeader">
+              <div>
+                <S.Name onClick={redirectToUserProfilePage}>
+                  {profile.name}
+                </S.Name>
+                <S.Username onClick={redirectToUserProfilePage}>
+                  @{profile.username}
+                </S.Username>
+              </div>
+            </div>
+            <div className="content">
+              <textarea
+                className="textQuotePost"
+                name="body"
+                value={postQuoteBody}
+                onChange={(e) => handleQuoteBodyChange(e)}
+                minLength={3}
+                maxLength={200}
+                required
+              />
+              {quotePostImage && (
+                <>
+                  <div className="PostImage quotePostImage">
+                    <TrashIcon
+                      className="deleteQuotePostImage"
+                      onClick={() => {
+                        setQuotePostImage(null)
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+              <S.QuotedPostContainer>
+                <div className="shareIcon">
+                  <ShareIcon />
                 </div>
-              </div>
-              <div className="content">
-                <textarea
-                  className="textQuotePost"
-                  name="body"
-                  value={postQuoteBody}
-                  onChange={(e) => handleQuoteBodyChange(e)}
-                  minLength={3}
-                  maxLength={200}
-                  required
-                />
-                <S.QuotedPostContainer>
-                  <div className="shareIcon">
-                    <ShareIcon />
-                  </div>
-                  <div>
-                    <div className="headInfo">
-                      <div className="mainInfo">
-                        <S.QuotedProfilePhoto
-                          src={
-                            postContent.user.profile_photo
-                              ? postContent.user.profile_photo
-                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-                          }
-                          alt="Profile Photo"
-                          onClick={redirectToQuotedProfilePage}
-                        />
-                        <div>
-                          <S.Name onClick={redirectToQuotedProfilePage}>
-                            {postContent.user.name}
-                          </S.Name>
-                          <S.Username onClick={redirectToQuotedProfilePage}>
-                            @{postContent.user.username}
-                          </S.Username>
-                        </div>
-                      </div>
+                <div>
+                  <div className="headInfo">
+                    <div className="mainInfo">
+                      <S.QuotedProfilePhoto
+                        src={
+                          postContent.user.profile_photo
+                            ? postContent.user.profile_photo
+                            : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                        }
+                        alt="Profile Photo"
+                        onClick={redirectToQuotedProfilePage}
+                      />
                       <div>
-                        <p className="secondInfo">{postContent.created_at}</p>
-                        <p className="secondInfo">
-                          {postContent.likes} curtidas
-                        </p>
+                        <S.Name onClick={redirectToQuotedProfilePage}>
+                          {postContent.user.name}
+                        </S.Name>
+                        <S.Username onClick={redirectToQuotedProfilePage}>
+                          @{postContent.user.username}
+                        </S.Username>
                       </div>
                     </div>
-                    <div className="quotedContent">
-                      <p className="quotedBody">{postContent.body}</p>
-                      {postContent.image && (
-                        <img
-                          className="PostImage"
-                          src={postContent.image}
-                          alt="Post Image"
-                        />
-                      )}
+                    <div>
+                      <p className="secondInfo">{postContent.created_at}</p>
+                      <p className="secondInfo">{postContent.likes} curtidas</p>
                     </div>
                   </div>
-                </S.QuotedPostContainer>
-              </div>
-            </S.TextPost>
-          </div>
+                  <div className="quotedContent">
+                    <p className="quotedBody">{postContent.body}</p>
+                    {postContent.image && (
+                      <img
+                        className="PostImage"
+                        src={postContent.image}
+                        alt="Post Image"
+                      />
+                    )}
+                  </div>
+                </div>
+              </S.QuotedPostContainer>
+            </div>
+          </S.TextPost>
         </S.QuotePostForm>
       </>
     )
@@ -679,117 +690,113 @@ const Post = ({ postContent, profile }: CombinedProps) => {
             onClick={() => setIsQuote(true)}
           />
         </div>
-        <div>
-          <S.TextPost>
-            <div className="postHeader">
-              <div className="username">
+        <S.TextPost>
+          <div className="postHeader">
+            <div className="username">
+              <div>
+                <S.Name onClick={redirectToProfilePage}>
+                  {postContent.user.name}
+                </S.Name>
+                <S.Username onClick={redirectToProfilePage}>
+                  @{postContent.user.username}
+                </S.Username>
+              </div>
+              {postContent.user.id === profile?.id && (
                 <div>
-                  <S.Name onClick={redirectToProfilePage}>
-                    {postContent.user.name}
-                  </S.Name>
-                  <S.Username onClick={redirectToProfilePage}>
-                    @{postContent.user.username}
-                  </S.Username>
+                  <button type="button" className="headerButton">
+                    <EditIcon onClick={() => setIsEditing(true)} />
+                  </button>
+                  <button type="button" className="headerButton">
+                    <TrashIcon onClick={() => delete_post(postContent.id)} />
+                  </button>
                 </div>
-                {postContent.user.id === profile?.id && (
-                  <div>
+              )}
+              {postContent.user.id !== profile?.id && (
+                <div>
+                  {userFollowed ? (
                     <button type="button" className="headerButton">
-                      <EditIcon onClick={() => setIsEditing(true)} />
+                      <CheckedPersonIcon
+                        onClick={() => unfollowUser(postContent.user.id)}
+                      />
                     </button>
+                  ) : (
                     <button type="button" className="headerButton">
-                      <TrashIcon onClick={() => delete_post(postContent.id)} />
+                      <AddPersonIcon
+                        onClick={() => followUser(postContent.user.id)}
+                      />
                     </button>
+                  )}
+                </div>
+              )}
+            </div>
+            <div>
+              <p className="secondInfo">{postContent.created_at}</p>
+              <p className="secondInfo">
+                {postContent.edited && 'editado - '}
+                {postContent.number_of_likes} curtidas
+              </p>
+            </div>
+          </div>
+          <div className="content">
+            <p>{postBody}</p>
+            {editedPostImageUrl && (
+              <img
+                className="PostImage"
+                src={editedPostImageUrl}
+                alt="Post Image"
+              />
+            )}
+            {postContent.quoted_post && (
+              <S.QuotedPostContainer>
+                <div className="shareIcon">
+                  <ShareIcon />
+                </div>
+                <div>
+                  <div className="headInfo">
+                    <div className="mainInfo">
+                      <S.QuotedProfilePhoto
+                        src={
+                          postContent.quoted_post.user.profile_photo
+                            ? postContent.quoted_post.user.profile_photo
+                            : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+                        }
+                        alt="Profile Photo"
+                        onClick={redirectToQuotedProfilePage}
+                      />
+                      <div>
+                        <S.Name onClick={redirectToQuotedProfilePage}>
+                          {postContent.quoted_post.user.name}
+                        </S.Name>
+                        <S.Username onClick={redirectToQuotedProfilePage}>
+                          {postContent.quoted_post.user.username}
+                        </S.Username>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="secondInfo">
+                        {postContent.quoted_post.created_at}
+                      </p>
+                      <p className="secondInfo">
+                        {postContent.quoted_post.edited && 'editado - '}
+                        {postContent.quoted_post.number_of_likes} curtidas
+                      </p>
+                    </div>
                   </div>
-                )}
-                {postContent.user.id !== profile?.id && (
-                  <div>
-                    {userFollowed ? (
-                      <button type="button" className="headerButton">
-                        <CheckedPersonIcon
-                          onClick={() => unfollowUser(postContent.user.id)}
-                        />
-                      </button>
-                    ) : (
-                      <button type="button" className="headerButton">
-                        <AddPersonIcon
-                          onClick={() => followUser(postContent.user.id)}
-                        />
-                      </button>
+                  <div className="quotedContent">
+                    <p className="quotedBody">{postContent.quoted_post.body}</p>
+                    {postContent.quoted_post.image && (
+                      <img
+                        className="PostImage"
+                        src={postContent.quoted_post.image}
+                        alt="Post Image"
+                      />
                     )}
                   </div>
-                )}
-              </div>
-              <div>
-                <p className="secondInfo">{postContent.created_at}</p>
-                <p className="secondInfo">
-                  {postContent.edited && 'editado - '}
-                  {postContent.number_of_likes} curtidas
-                </p>
-              </div>
-            </div>
-            <div className="content">
-              <p>{postBody}</p>
-              {editedPostImageUrl && (
-                <img
-                  className="PostImage"
-                  src={editedPostImageUrl}
-                  alt="Post Image"
-                />
-              )}
-              {postContent.quoted_post && (
-                <S.QuotedPostContainer>
-                  <div className="shareIcon">
-                    <ShareIcon />
-                  </div>
-                  <div>
-                    <div className="headInfo">
-                      <div className="mainInfo">
-                        <S.QuotedProfilePhoto
-                          src={
-                            postContent.quoted_post.user.profile_photo
-                              ? postContent.quoted_post.user.profile_photo
-                              : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
-                          }
-                          alt="Profile Photo"
-                          onClick={redirectToQuotedProfilePage}
-                        />
-                        <div>
-                          <S.Name onClick={redirectToQuotedProfilePage}>
-                            {postContent.quoted_post.user.name}
-                          </S.Name>
-                          <S.Username onClick={redirectToQuotedProfilePage}>
-                            {postContent.quoted_post.user.username}
-                          </S.Username>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="secondInfo">
-                          {postContent.quoted_post.created_at}
-                        </p>
-                        <p className="secondInfo">
-                          {postContent.quoted_post.edited && 'editado - '}
-                          {postContent.quoted_post.number_of_likes} curtidas
-                        </p>
-                      </div>
-                    </div>
-                    <div className="quotedContent">
-                      <p className="quotedBody">
-                        {postContent.quoted_post.body}
-                      </p>
-                      {postContent.quoted_post.image && (
-                        <img
-                          className="PostImage"
-                          src={postContent.quoted_post.image}
-                          alt="Post Image"
-                        />
-                      )}
-                    </div>
-                  </div>
-                </S.QuotedPostContainer>
-              )}
-            </div>
-          </S.TextPost>
-        </div>
+                </div>
+              </S.QuotedPostContainer>
+            )}
+          </div>
+        </S.TextPost>
       </S.Container>
     </>
   )

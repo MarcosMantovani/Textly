@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { ConnectedProps, connect } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
@@ -9,11 +9,18 @@ import TextlyTitle from '../../components/TextlyTitle'
 
 import { Body, Input } from '../LoginRegister/styles'
 import * as S from './styles'
+import { RootState } from '../../store/reducers'
 
-const connector = connect(null, {
-  reset_password_confirm: reset_password_confirm,
-  verify: verify
-})
+const connector = connect(
+  (state: RootState) => ({
+    type: state.auth.type,
+    error: state.auth.error
+  }),
+  {
+    reset_password_confirm: reset_password_confirm,
+    verify: verify
+  }
+)
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
@@ -23,6 +30,8 @@ type Params = {
 }
 
 const ConfirmForm: React.FC<PropsFromRedux> = ({
+  error,
+  type,
   reset_password_confirm,
   verify
 }) => {
@@ -36,7 +45,21 @@ const ConfirmForm: React.FC<PropsFromRedux> = ({
   })
   const { new_password, re_new_password } = formData
 
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
   const { uid, token } = useParams<Params>()
+
+  useEffect(() => {
+    if (type === 'PASSWORD_RESET_CONFIRM_FAIL') {
+      setErrorMsg(error)
+      console.log('sim')
+    } else if (type === 'PASSWORD_RESET_CONFIRM_SUCCESS') {
+      setErrorMsg('Sua senha foi alterada com sucesso')
+      console.log('nao')
+    }
+    console.log(error)
+    console.log(type)
+  }, [error, type])
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -70,6 +93,7 @@ const ConfirmForm: React.FC<PropsFromRedux> = ({
           <span>
             Confirme sua conta para aproveitar todos os recursos do Textly
           </span>
+          {errorMsg && <span>{errorMsg}</span>}
           <Button title="Sign In" type="button" onClick={verifyAccount}>
             CONFIRMAR CONTA
           </Button>
@@ -101,6 +125,7 @@ const ConfirmForm: React.FC<PropsFromRedux> = ({
           onChange={(e) => onChange(e)}
           required
         />
+        {errorMsg && <span>{errorMsg}</span>}
         <Button title="Sign In" type="submit">
           ALTERAR SENHA
         </Button>

@@ -2,12 +2,12 @@ import { ChangeEvent, useState } from 'react'
 import axios from 'axios'
 
 import Button from '../Button'
+import Post, { PostType } from '../Post'
+import Message from '../Message'
 
 import { ReactComponent as ConfirmIcon } from '../../assets/media/checkmark-outline.svg'
 import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.svg'
-
-import Post, { PostType } from '../Post'
-import Message from '../Message'
+import { ReactComponent as TrashIcon } from '../../assets/media/trash-2-outline.svg'
 
 import * as S from './styles'
 
@@ -83,28 +83,43 @@ const NewPost = ({ profilePhoto }: Props) => {
         <div className="sideIcons">
           <S.ProfilePhoto src={profilePhoto} alt="profilePhoto" />
           <Button
-            title=""
+            title="Profile Photo"
             type="button"
             styled="postImg"
             icon={<ImageIcon />}
             onChange={(e) => handleImageChange(e)}
           />
-          <Button title="" type="submit" styled="post" icon={<ConfirmIcon />} />
+          <Button
+            title="Post"
+            type="submit"
+            styled="post"
+            icon={<ConfirmIcon />}
+          />
         </div>
-        <div className="postContent">
-          <S.TextPost>
-            <textarea
-              className="newPostContainer"
-              name="body"
-              value={postBody}
-              onChange={(e) => handleBodyChange(e)}
-              minLength={3}
-              maxLength={200}
-              placeholder="Digite algo"
-              required
-            />
-          </S.TextPost>
-        </div>
+        <S.TextPost $image={postImage ? URL.createObjectURL(postImage) : ''}>
+          <textarea
+            className="newPostContainer"
+            name="body"
+            value={postBody}
+            onChange={(e) => handleBodyChange(e)}
+            minLength={3}
+            maxLength={200}
+            placeholder="Digite algo"
+            required
+          />
+          {postImage && (
+            <>
+              <div className="PostImage PostImage">
+                <TrashIcon
+                  className="deletePostImage"
+                  onClick={() => {
+                    setPostImage(null)
+                  }}
+                />
+              </div>
+            </>
+          )}
+        </S.TextPost>
       </S.Form>
       {formCallback?.map((post) => (
         <Post postContent={post} key={post.id} />
