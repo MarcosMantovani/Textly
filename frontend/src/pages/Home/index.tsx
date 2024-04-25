@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ConnectedProps, connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { connect, ConnectedProps } from 'react-redux'
 import axios from 'axios'
 
 import { RootState } from '../../store/reducers'
@@ -15,6 +15,13 @@ import Message from '../../components/Message'
 import Navbar from '../../components/Navbar'
 
 import * as S from './styles'
+
+export type PostResultType = {
+  count: number
+  next: string | null
+  previous: string | null
+  results: PostType[]
+}
 
 const connector = connect(
   (state: RootState) => ({
@@ -37,8 +44,11 @@ const Home: React.FC<PropsFromRedux> = ({
 }) => {
   const navigate = useNavigate()
 
-  const [posts, setPosts] = useState<PostType[]>()
-  const [error, setError] = useState<string | null>(null)
+  const [posts, setPosts] = useState<PostType[]>([])
+  const [message, setMessage] = useState<string | null>(null)
+  const [page, setPage] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [havePosts, setHavePosts] = useState<boolean>(true)
 
   useEffect(() => {
     if (!profile) {
@@ -47,44 +57,76 @@ const Home: React.FC<PropsFromRedux> = ({
   }, [load_user, profile])
 
   useEffect(() => {
-    const fecthPosts = async () => {
-      if (localStorage.getItem('access')) {
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `JWT ${localStorage.getItem('access')}`,
-            Accept: 'application/json'
-          }
+    const fetchPosts = async () => {
+      setIsLoading(true)
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      try {
+        const url = `${process.env.REACT_APP_API_URL}/posts/?page=${page}`
+        const response = await axios.get<PostResultType>(url, config)
+        const newPosts = response.data.results
+        if (page === 1) {
+          setPosts(newPosts)
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...newPosts])
         }
 
-        try {
-          const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/posts/`,
-            config
-          )
-
-          setPosts(res.data)
-        } catch (err) {
-          setError('Erro ao carregar posts')
-        }
-      } else {
-        setError('Entre para visualizar a Home Page')
+        setHavePosts(response.data.next !== null)
+      } catch (error) {
+        setMessage('Erro ao carregar posts')
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    fecthPosts()
-  }, [])
+    fetchPosts()
+  }, [page])
 
-  if (isAuthenticated !== true) {
+  useEffect(() => {
+    const fetchNextPage = () => {
+      if (!isLoading && havePosts) {
+        setIsLoading(true)
+        setPage((prevPage) => prevPage + 1)
+      }
+    }
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+      if (
+        !isLoading &&
+        havePosts &&
+        scrollTop + clientHeight >= scrollHeight - 100
+      ) {
+        fetchNextPage()
+      }
+    }
+
+    if (!isLoading) {
+      window.addEventListener('scroll', handleScroll)
+      return () => {
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [havePosts, isLoading])
+
+  if (!isAuthenticated) {
     navigate('/login', { replace: true })
+    return null
   }
 
   if (type !== 'IS_LOADING') {
     if (profile) {
       return (
         <>
-          <Message opened={error ? true : false} onClick={() => setError(null)}>
-            {error}
+          <Message opened={message !== null} onClick={() => setMessage(null)}>
+            {message}
           </Message>
           {profile && <Navbar />}
           <Sidebar />
@@ -97,15 +139,10 @@ const Home: React.FC<PropsFromRedux> = ({
                   : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
               }
             />
-            {posts ? (
-              <>
-                {posts.map((post) => (
-                  <Post postContent={post} key={post.id} />
-                ))}
-              </>
-            ) : (
-              <Loader withBackground={false} active />
-            )}
+            {posts.map((post) => (
+              <Post postContent={post} key={post.id} />
+            ))}
+            {isLoading && <Loader withBackground={false} active />}
           </div>
           <Profilebar user={profile} />
         </>

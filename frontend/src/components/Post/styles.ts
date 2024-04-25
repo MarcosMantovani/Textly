@@ -52,7 +52,9 @@ export const Container = styled.div<ContainerProps>`
 export const ProfilePhoto = styled.img`
   margin-top: 8px;
   max-width: 40px;
+  width: 40px;
   max-height: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
   cursor: pointer;

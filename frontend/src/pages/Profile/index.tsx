@@ -21,6 +21,7 @@ import UsersList from '../../components/UsersList'
 import { Title } from '../Home/styles'
 
 import * as S from './styles'
+import { PostResultType } from '../Home'
 
 type Params = {
   id: string
@@ -42,12 +43,17 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   const navigate = useNavigate()
 
   const { id } = useParams<Params>()
+
   const [user, setUser] = useState<AxiosResponse<ProfileType | null>>()
   const [listType, setListType] = useState<ShowingType>('posts')
   const [listContent, setListContent] = useState<SimplifiedUserType[]>()
+  const [posts, setPosts] = useState<PostType[]>([])
+  const [message, setMessage] = useState<string | null>(null)
+  const [page, setPage] = useState<number>(1)
+
   const [userFollowed, setUserFollowed] = useState(false)
-  const [posts, setPosts] = useState<PostType[]>()
-  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [havePosts, setHavePosts] = useState<boolean>(true)
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -66,10 +72,10 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
           )
           setUser(response)
         } catch (err) {
-          setError('Perfil não encontrado ou inexistente')
+          setMessage('Perfil não encontrado ou inexistente')
         }
       } else {
-        setError('Entre para visualizar outros perfis')
+        setMessage('Entre para visualizar outros perfis')
       }
     }
 
@@ -77,33 +83,64 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   }, [id])
 
   useEffect(() => {
-    const fecthPosts = async () => {
-      if (localStorage.getItem('access')) {
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `JWT ${localStorage.getItem('access')}`,
-            Accept: 'application/json'
-          }
+    const fetchPosts = async () => {
+      setIsLoading(true)
+
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${localStorage.getItem('access')}`,
+          Accept: 'application/json'
+        }
+      }
+
+      try {
+        const url = `${process.env.REACT_APP_API_URL}/posts/${id}/?page=${page}`
+        const response = await axios.get<PostResultType>(url, config)
+        const newPosts = response.data.results
+        if (page === 1) {
+          setPosts(newPosts)
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...newPosts])
         }
 
-        try {
-          const res = await axios.get(
-            `${process.env.REACT_APP_API_URL}/posts/${id}/`,
-            config
-          )
-
-          setPosts(res.data)
-        } catch (err) {
-          setError('Erro ao carregar posts deste usuário')
-        }
-      } else {
-        setError('Entre para vizualizar os posts de outros usuários')
+        setHavePosts(response.data.next !== null)
+      } catch (error) {
+        setMessage('Erro ao carregar posts do usuário')
+      } finally {
+        setIsLoading(false)
       }
     }
 
-    fecthPosts()
-  }, [id])
+    fetchPosts()
+  }, [id, page])
+
+  useEffect(() => {
+    const fetchNextPage = () => {
+      if (!isLoading && havePosts) {
+        setIsLoading(true)
+        setPage((prevPage) => prevPage + 1)
+      }
+    }
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement
+      if (
+        !isLoading &&
+        havePosts &&
+        scrollTop + clientHeight >= scrollHeight - 100
+      ) {
+        fetchNextPage()
+      }
+    }
+
+    if (!isLoading) {
+      window.addEventListener('scroll', handleScroll)
+      return () => {
+        window.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [havePosts, isLoading])
 
   useEffect(() => {
     // Verificando se usuário já é seguido
@@ -116,7 +153,6 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
   }, [id, profile?.follows])
 
   useEffect(() => {
-    // Adicionar lista de posts
     if (user && user.data) {
       if (listType === 'follows') {
         setListContent(user.data.follows)
@@ -149,8 +185,10 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
         setUserFollowed(true)
       } catch (err) {
         setUserFollowed(false)
+        setMessage('Houve um erro ao seguir o usuário')
       }
     } else {
+      setMessage('Entre para seguir outros usuários')
       setUserFollowed(false)
     }
   }
@@ -178,11 +216,11 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
         setUserFollowed(false)
       } catch (err) {
         setUserFollowed(false)
-        setError('Houve um erro ao seguir o usuário')
+        setMessage('Houve um erro ao deixar de seguir o usuário')
       }
     } else {
       setUserFollowed(false)
-      setError('Entre para seguir outros usuários')
+      setMessage('Entre para deixar de seguir outros usuários')
     }
   }
 
@@ -204,8 +242,8 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
 
   return (
     <>
-      <Message opened={error ? true : false} onClick={() => setError(null)}>
-        {error}
+      <Message opened={message ? true : false} onClick={() => setMessage(null)}>
+        {message}
       </Message>
       {profile && <Navbar />}
       <Sidebar />
@@ -289,15 +327,9 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
             {listType === 'posts' && posts && (
               <>
                 <Title>POSTS</Title>
-                {posts ? (
-                  <>
-                    {posts.map((post) => (
-                      <Post postContent={post} key={post.id} />
-                    ))}
-                  </>
-                ) : (
-                  <Loader withBackground={false} active />
-                )}
+                {posts.map((post) => (
+                  <Post postContent={post} key={post.id} />
+                ))}
               </>
             )}
             {listType !== 'posts' && listContent && (
@@ -318,6 +350,7 @@ const Profile = ({ profile, isAuthenticated }: PropsFromRedux) => {
       ) : (
         <Loader withBackground={false} active />
       )}
+      {isLoading && <Loader withBackground={false} active />}
       {profile && <Profilebar user={profile} />}
     </>
   )
