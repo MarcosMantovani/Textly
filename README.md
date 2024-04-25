@@ -1,3 +1,4 @@
+# Textly
 # Text and Image-Based Social Network
 
 ## Description
