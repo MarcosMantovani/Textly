@@ -130,6 +130,7 @@ export const Banner = styled.div<BannerProps>`
       ? `url(${$banner})`
       : `url(${process.env.REACT_APP_API_URL}/media/images/no-banner.png)`};
   background-size: cover;
+  background-position: center;
   left: 50%;
   top: 40px;
   transform: translateX(-50%);
@@ -245,6 +246,8 @@ export const ProfilePhoto = styled.div<ProfilePhotoProps>`
       ? `url(${$profilePhoto})`
       : `url(${process.env.REACT_APP_API_URL}/media/images/no-banner.png)`};
   background-size: cover;
+  background-position: center;
+  background-position: center;
   width: 64px;
   max-width: 64px;
   height: 64px;

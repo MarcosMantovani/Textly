@@ -83,6 +83,7 @@ export const TextPost = styled.div<TextPostProps>`
     position: relative;
     background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
     background-size: cover;
+    background-position: center;
     height: 300px;
 
     &:hover {

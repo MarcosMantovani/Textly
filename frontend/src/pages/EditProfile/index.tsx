@@ -467,7 +467,7 @@ const EditProfile = ({
                   ref={bannerRef}
                   type="file"
                   onChange={handleBannerChange}
-                  accept=".jpg, .jpeg, .png, .gif"
+                  accept=".jpg, .jpeg, .png"
                 />
                 <S.Info>
                   <div className="maininfo">
@@ -482,7 +482,7 @@ const EditProfile = ({
                           ref={profilePhotoRef}
                           type="file"
                           onChange={handleProfilePhotoChange}
-                          accept=".jpg, .jpeg, .png, .gif"
+                          accept=".jpg, .jpeg, .png"
                         />
                       </S.ProfilePhoto>
                       <div>
