@@ -110,9 +110,14 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
           <S.Form onSubmit={(e) => LoginOnSubmit(e)}>
             <S.Title>Entrar</S.Title>
             <S.SocialIcons>
-              <div>
+              {/* <div>
                 <a>
                   <img alt="" />
+                </a>
+              </div>
+              <div>
+                <a>
+                  <img alt="" /> Descomentar ao adicionar social auth
                 </a>
               </div>
               <div>
@@ -124,12 +129,7 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
                 <a>
                   <img alt="" />
                 </a>
-              </div>
-              <div>
-                <a>
-                  <img alt="" />
-                </a>
-              </div>
+              </div> */}
             </S.SocialIcons>
             <span>ou use seu nome de usuário e senha</span>
             <S.Input

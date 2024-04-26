@@ -331,6 +331,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
           config
         )
         setUserFollowed(true)
+        setError('Usuário seguido com sucesso.')
       } catch (err) {
         setUserFollowed(false)
         setError('Houve um erro ao seguir o usuário')
@@ -361,6 +362,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
           body,
           config
         )
+        setError('Usuário deixado de seguir com sucesso.')
         setUserFollowed(false)
       } catch (err) {
         setUserFollowed(false)
@@ -702,7 +704,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                 </S.Username>
               </div>
               {postContent.user.id === profile?.id && (
-                <div>
+                <div className="headerButtons">
                   <button type="button" className="headerButton">
                     <EditIcon onClick={() => setIsEditing(true)} />
                   </button>

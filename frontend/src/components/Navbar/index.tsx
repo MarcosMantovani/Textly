@@ -8,6 +8,7 @@ import Button from '../Button'
 
 import { ReactComponent as LogoutIcon } from '../../assets/media/log-out-outline.svg'
 import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
+import { ReactComponent as FeedIcon } from '../../assets/media/people-outline.svg'
 import { ReactComponent as SearchIcon } from '../../assets/media/search-outline.svg'
 import { ReactComponent as OptionsIcon } from '../../assets/media/options-2-outline.svg'
 
@@ -28,6 +29,7 @@ const Navbar = ({ profile, logout }: PropsFromRedux) => {
   const navigate = useNavigate()
 
   const isHome = location.pathname === '/' || location.pathname === '/home'
+  const isFeed = location.pathname === '/feed'
   const isSearch = location.pathname === '/search'
   const isEditProfile = location.pathname === '/edit-profile'
 
@@ -38,6 +40,10 @@ const Navbar = ({ profile, logout }: PropsFromRedux) => {
 
   const redirectToHomePage = () => {
     navigate('/home', { replace: true })
+  }
+
+  const redirectToFeedPage = () => {
+    navigate('/feed', { replace: true })
   }
 
   const redirectToSearchPage = () => {
@@ -78,6 +84,14 @@ const Navbar = ({ profile, logout }: PropsFromRedux) => {
         icon={<HomeIcon />}
         onClick={redirectToHomePage}
         active={isHome}
+      ></Button>
+      <Button
+        title="Home"
+        type="button"
+        styled="sidebar"
+        icon={<FeedIcon />}
+        onClick={redirectToFeedPage}
+        active={isFeed}
       ></Button>
       <Button
         title="Edit Profile"

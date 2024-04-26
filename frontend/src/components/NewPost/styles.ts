@@ -54,6 +54,7 @@ export const TextPost = styled.div<TextPostProps>`
 
   @media (max-width: ${breakpoints.tablet}) {
     min-height: auto;
+    border-top-left-radius: 8px;
   }
 
   .PostImage {
