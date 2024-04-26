@@ -508,7 +508,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                       </p>
                       {postContent.quoted_post.image && (
                         <img
-                          className="PostImage"
+                          className="postImage"
                           src={postContent.quoted_post.image}
                           alt="Post Image"
                         />
@@ -634,7 +634,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                     <p className="quotedBody">{postContent.body}</p>
                     {postContent.image && (
                       <img
-                        className="PostImage"
+                        className="postImage"
                         src={postContent.image}
                         alt="Post Image"
                       />
@@ -743,7 +743,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
             <p>{postBody}</p>
             {editedPostImageUrl && (
               <img
-                className="PostImage"
+                className="postImage"
                 src={editedPostImageUrl}
                 alt="Post Image"
               />
@@ -788,7 +788,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                     <p className="quotedBody">{postContent.quoted_post.body}</p>
                     {postContent.quoted_post.image && (
                       <img
-                        className="PostImage"
+                        className="postImage"
                         src={postContent.quoted_post.image}
                         alt="Post Image"
                       />

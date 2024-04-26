@@ -26,7 +26,7 @@ export const Banner = styled.img`
   left: 0;
   top: 0;
   width: 264px;
-  height: 144px;
+  height: 132px;
   object-fit: cover;
   border-radius: 8px;
   transition: all 0.3s ease-in-out;

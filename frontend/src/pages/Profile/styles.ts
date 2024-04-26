@@ -49,6 +49,7 @@ export const Banner = styled.div<BannerProps>`
       ? `url(${$banner})`
       : `url(${process.env.REACT_APP_API_URL}/media/images/no-banner.png)`};
   background-size: cover;
+  background-position: center;
   position: absolute;
   left: 50%;
   top: 40px;

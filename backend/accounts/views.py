@@ -8,6 +8,102 @@ from .models import UserAccount, Post
 from .serializers import CustomUserSerializer, PostSerializer, SearchedUsersSerializer
 from django.utils import timezone
 from django.db.models import Q
+from PIL import Image
+from io import BytesIO
+import io
+
+
+def reduce_image_quality(image, max_size=(1024, 1024)):
+    # Verificando o formato da imagem
+    format_lower = image.name.lower()
+    if not (format_lower.endswith('.jpg') or format_lower.endswith('.jpeg') or format_lower.endswith('.png')):
+        raise ValueError("Unsupported image format. Only JPEG and PNG formats are supported.")
+
+    # Abrir a imagem usando o Pillow
+    img = Image.open(image)
+
+    # Redimensionar a imagem mantendo a proporção original
+    img.thumbnail(max_size)
+
+    # Criar um buffer de bytes para armazenar a imagem redimensionada
+    img_buffer = io.BytesIO()
+
+    # Salvar a imagem redimensionada no buffer de bytes
+    img.save(img_buffer, format='JPEG')
+
+    # Mover o cursor do buffer de bytes para o início
+    img_buffer.seek(0)
+
+    return img_buffer
+
+def resize_profile_photo(image):
+    # Abrir a imagem usando a Pillow
+    img = Image.open(image)
+
+    # Obtém as dimensões originais da imagem
+    width, height = img.size
+
+    # Calcula as dimensões finais da imagem redimensionada
+    if width > height:
+        # Se a largura for maior do que a altura, redimensiona a imagem para ter uma altura de 265px
+        new_width = int((265 / height) * width)
+        new_height = 265
+    else:
+        # Se a altura for maior do que a largura, redimensiona a imagem para ter uma largura de 265px
+        new_width = 265
+        new_height = int((265 / width) * height)
+
+    # Redimensiona a imagem mantendo a proporção original
+    resized_img = img.resize((new_width, new_height))
+
+    # Cria uma nova imagem de fundo branco com dimensões de 265x265 pixels
+    background = Image.new('RGB', (265, 265), (255, 255, 255))
+
+    # Calcula as coordenadas de centralização para colar a imagem redimensionada na imagem de fundo branco
+    x_offset = (265 - new_width) // 2
+    y_offset = (265 - new_height) // 2
+
+    # Cola a imagem redimensionada na imagem de fundo branco
+    background.paste(resized_img, (x_offset, y_offset))
+
+    return background
+
+def resize_banner(image_file):
+    # Abrir a imagem usando o Pillow
+    img = Image.open(image_file)
+
+    # Calcula as proporções de largura e altura da imagem original
+    width_ratio = 1024 / img.width
+    height_ratio = 512 / img.height
+
+    # Calcula o fator de escala máximo para garantir que o máximo de conteúdo seja preservado
+    scale_factor = max(width_ratio, height_ratio)
+
+    # Redimensiona a imagem de acordo com o fator de escala máximo
+    new_width = int(img.width * scale_factor)
+    new_height = int(img.height * scale_factor)
+    resized_img = img.resize((new_width, new_height))
+
+    # Cria uma nova imagem de fundo branco com dimensões de 1024x576 pixels
+    background = Image.new('RGB', (1024, 512), (255, 255, 255))
+
+    # Calcula as coordenadas de centralização para colar a imagem redimensionada na imagem de fundo branco
+    x_offset = (1024 - new_width) // 2
+    y_offset = (512 - new_height) // 2
+
+    # Cola a imagem redimensionada na imagem de fundo branco
+    background.paste(resized_img, (x_offset, y_offset))
+
+    # Cria um buffer de bytes para armazenar a imagem resultante
+    output_buffer = io.BytesIO()
+
+    # Salva a imagem resultante no buffer de bytes
+    background.save(output_buffer, format='JPEG')
+
+    # Move o cursor do buffer de bytes para o início
+    output_buffer.seek(0)
+
+    return output_buffer
 
 class UserDetailView(RetrieveAPIView):
     queryset = UserAccount.objects.all()
@@ -112,7 +208,6 @@ def get_followed_users_posts(request):
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_post(request):
@@ -140,14 +235,17 @@ def create_post(request):
 
     # Se uma imagem foi fornecida, atribua-a ao post
     if image:
-        post.image = image
+        # Reduzindo a qualidade da imagem
+        reduced_image = reduce_image_quality(image)
+        
+        # Salvando a imagem processada no campo image do modelo Post
+        post.image.save(image.name, reduced_image, save=False)
         post.save()
 
     # Serializando o post criado para retornar todas as informações, incluindo a quoted_post
     serializer = PostSerializer(post)
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -159,9 +257,22 @@ def update_profile_photo(request):
     if 'profile_photo' not in request.FILES:
         return Response({"message": "No profile photo provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Atualizando a foto de perfil do usuário
-    user.profile_photo = request.FILES['profile_photo']
-    user.save()
+    # Obtendo a imagem enviada
+    profile_photo = request.FILES['profile_photo']
+
+    # Reduzindo a qualidade da imagem
+    reduced_image = reduce_image_quality(profile_photo)
+
+    # Cortando a imagem para torná-la quadrada
+    cropped_image = resize_profile_photo(reduced_image)
+
+    # Salvando a imagem cortada em um arquivo temporário
+    temp_buffer = BytesIO()
+    cropped_image.save(temp_buffer, format='JPEG')
+    temp_buffer.seek(0)
+
+    # Salvando os bytes do arquivo temporário no campo profile_photo
+    user.profile_photo.save(profile_photo.name, temp_buffer, save=True)
 
     return Response({"message": "Profile photo updated successfully."}, status=status.HTTP_200_OK)
 
@@ -175,11 +286,19 @@ def update_banner(request):
     if 'banner' not in request.FILES:
         return Response({"message": "No banner provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Atualizando a foto de perfil do usuário
-    user.banner = request.FILES['banner']
-    user.save()
+    # Obtendo o arquivo de imagem do request
+    banner_file = request.FILES['banner']
 
-    return Response({"message": "banner updated successfully."}, status=status.HTTP_200_OK)
+    # Reduzindo a qualidade da imagem
+    reduced_image = reduce_image_quality(banner_file)
+
+    # Redimensionando o banner para 1024x576px
+    resized_banner = resize_banner(reduced_image)
+
+    # Salvando a imagem redimensionada como banner do usuário
+    user.banner.save(banner_file.name, resized_banner, save=True)
+
+    return Response({"message": "Banner updated successfully."}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -287,7 +406,11 @@ def edit_post(request):
         # Mantendo a mesma imagem do post
         pass
     elif image is not None:
-        post.image = image
+        # Reduzindo a qualidade da imagem
+        reduced_image = reduce_image_quality(image)
+        
+        # Salvando a imagem processada no campo image do modelo Post
+        post.image.save(image.name, reduced_image, save=False)
     elif 'image' not in request.FILES:
         # Se nenhum novo arquivo de imagem for enviado, remover a imagem existente do post
         post.image = None
@@ -327,7 +450,6 @@ def search_posts(request, search_text=None):
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_users(request, search_text=None):
@@ -348,7 +470,6 @@ def search_users(request, search_text=None):
     # Serializando os usuários
     serializer = SearchedUsersSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
