@@ -19,7 +19,7 @@ const NewPost = ({ profilePhoto }: Props) => {
   const [postBody, setPostBody] = useState('')
   const [postImage, setPostImage] = useState<File | null>(null)
   const [formCallback, setFormCallback] = useState<PostType[] | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
 
   const createPost = async () => {
     if (localStorage.getItem('access')) {
@@ -51,11 +51,12 @@ const NewPost = ({ profilePhoto }: Props) => {
 
         setPostBody('')
         setPostImage(null)
+        setMessage('Post criado com sucesso!')
       } catch (err) {
-        setError('Houve um erro ao criar o post. Recarregue a página.')
+        setMessage('Houve um erro ao criar o post. Recarregue a página.')
       }
     } else {
-      setError('Entre para criar posts')
+      setMessage('Entre para criar posts')
     }
   }
 
@@ -76,8 +77,8 @@ const NewPost = ({ profilePhoto }: Props) => {
 
   return (
     <>
-      <Message opened={error ? true : false} onClick={() => setError(null)}>
-        {error}
+      <Message opened={message ? true : false} onClick={() => setMessage(null)}>
+        {message}
       </Message>
       <S.Form onSubmit={(e) => handleQuotePostSubmit(e)}>
         <div className="sideIcons">

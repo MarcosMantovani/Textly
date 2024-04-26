@@ -150,7 +150,7 @@ const Home: React.FC<PropsFromRedux> = ({
     }
   }
 
-  return <h2>Carregando...</h2>
+  return <Loader withBackground={false} active />
 }
 
 export default connector(Home)

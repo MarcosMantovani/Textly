@@ -137,7 +137,7 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
               value={username}
               onChange={(e) => LoginOnChange(e)}
               type="text"
-              placeholder="Nome de usuário"
+              placeholder="Username"
               required
             />
             <S.Input
