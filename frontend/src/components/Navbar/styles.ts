@@ -13,7 +13,7 @@ export const Container = styled.div`
   bottom: 0;
   width: 100%;
   height: auto;
-  column-gap: 24px;
+  column-gap: 16px;
   padding: 8px;
   background-color: ${colors.blue};
   z-index: 5;

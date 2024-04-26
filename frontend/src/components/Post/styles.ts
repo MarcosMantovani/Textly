@@ -115,6 +115,10 @@ export const TextPost = styled.div`
     column-gap: 4px;
   }
 
+  .headerButtons {
+    display: flex;
+  }
+
   .headerButton {
     width: 20px;
     height: 20px;

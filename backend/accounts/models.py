@@ -96,7 +96,7 @@ class Post(models.Model):
             hours, remainder = divmod(seconds, 3600)
             minutes, _ = divmod(remainder, 60)
             if days > 0:
-                return f"{int(days)}dias atrás"
+                return f"{int(days)} dias atrás"
             elif hours > 0:
                 return f"{int(hours)}hrs atrás"
             else:

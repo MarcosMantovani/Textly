@@ -89,6 +89,29 @@ def get_posts(request, user_id=None):
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_followed_users_posts(request):
+    # Obtendo o usuário atualmente autenticado
+    user = request.user
+
+    # Obtendo os IDs dos usuários seguidos pelo usuário atual
+    followed_user_ids = user.follows.all().values_list('id', flat=True)
+
+    # Filtrando os posts dos usuários seguidos
+    posts = Post.objects.filter(user_id__in=followed_user_ids)
+
+    # Ordenando os posts do mais novo para o mais antigo
+    posts = posts.order_by('-created_at')
+
+    # Aplicando paginação aos resultados
+    paginator = PostPagination()
+    result_page = paginator.paginate_queryset(posts, request)
+
+    # Serializando os posts
+    serializer = PostSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

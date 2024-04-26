@@ -8,6 +8,7 @@ import TextlyTitle from '../TextlyTitle'
 
 import { ReactComponent as LogoutIcon } from '../../assets/media/log-out-outline.svg'
 import { ReactComponent as HomeIcon } from '../../assets/media/home-outline.svg'
+import { ReactComponent as FeedIcon } from '../../assets/media/people-outline.svg'
 import { ReactComponent as SearchIcon } from '../../assets/media/search-outline.svg'
 import { ReactComponent as OptionsIcon } from '../../assets/media/options-2-outline.svg'
 
@@ -24,6 +25,7 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
   const location = useLocation()
 
   const isHome = location.pathname === '/' || location.pathname === '/home'
+  const isFeed = location.pathname === '/feed'
   const isSearch = location.pathname === '/search'
   const isEditProfile = location.pathname === '/edit-profile'
 
@@ -34,6 +36,10 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
 
   const redirectToHomePage = () => {
     navigate('/home', { replace: true })
+  }
+
+  const redirectToFeedPage = () => {
+    navigate('/feed', { replace: true })
   }
 
   const redirectToSearchPage = () => {
@@ -57,6 +63,16 @@ const Sidebar = ({ logout }: PropsFromRedux) => {
           active={isHome}
         >
           Home
+        </Button>
+        <Button
+          title="Home"
+          type="button"
+          styled="sidebar"
+          icon={<FeedIcon />}
+          onClick={redirectToFeedPage}
+          active={isFeed}
+        >
+          Feed
         </Button>
         <Button
           title="Search"

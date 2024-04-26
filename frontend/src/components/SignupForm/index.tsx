@@ -76,9 +76,14 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
     <Form onSubmit={(e) => OnSubmit(e)}>
       <Title>Criar Conta</Title>
       <SocialIcons>
-        <div>
+        {/* <div>
           <a>
             <img alt="" />
+          </a>
+        </div>
+        <div>
+          <a>
+            <img alt="" /> Descomentar ao adicionar social auth
           </a>
         </div>
         <div>
@@ -90,12 +95,7 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
           <a>
             <img alt="" />
           </a>
-        </div>
-        <div>
-          <a>
-            <img alt="" />
-          </a>
-        </div>
+        </div> */}
       </SocialIcons>
       <span>ou use seu e-mail para se registrar</span>
       <Input

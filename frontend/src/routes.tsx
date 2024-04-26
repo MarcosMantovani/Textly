@@ -10,6 +10,7 @@ import ConfirmForm from './pages/ConfirmForm'
 import Profile from './pages/Profile'
 import Search from './pages/Search'
 import EditProfile from './pages/EditProfile'
+import Feed from './pages/Feed'
 
 const connector = connect(null, {
   checkAuthenticated: checkAuthenticated,
@@ -31,6 +32,7 @@ const PageRoutes: React.FC<PropsFromRedux> = ({
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/home" element={<Home />} />
+      <Route path="/feed" element={<Feed />} />
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/login" element={<LoginRegister />} />
       <Route path="/register" element={<LoginRegister />} />
