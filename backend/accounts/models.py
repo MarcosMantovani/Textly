@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
+from datetime import timedelta
+from django.utils.timezone import localtime
 
 
 class UserAccountManager(BaseUserManager):
@@ -82,6 +84,27 @@ class Post(models.Model):
             "image": self.image,
             "created_at": self.created_at.strftime("%d/%m/%Y %H:%M:%S"),
         }
+
+    def get_created_at_display(self):
+        # Calcula a diferença entre o momento atual e o momento de criação do post
+        time_difference = timezone.now() - self.created_at
+
+        # Verifica se o post foi criado há menos de um mês
+        if time_difference <= timedelta(days=30):
+            # Calcula as horas e minutos desde a criação do post
+            days, seconds = divmod(time_difference.total_seconds(), 86400)
+            hours, remainder = divmod(seconds, 3600)
+            minutes, _ = divmod(remainder, 60)
+            if days > 0:
+                return f"{int(days)}dias atrás"
+            elif hours > 0:
+                return f"{int(hours)}hrs atrás"
+            else:
+                return f"{int(minutes)}min atrás"
+        else:
+            # Retorna a data e hora no horário de Brasília
+            return localtime(self.created_at).strftime("%d/%m/%Y %H:%M")
+
 
     def __str__(self):
         return (

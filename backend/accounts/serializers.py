@@ -44,8 +44,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        created_at = instance.created_at.strftime("%d/%m/%Y %H:%M")
-        representation['created_at'] = created_at
+        representation['created_at'] = instance.get_created_at_display()
         return representation
 
     def get_quoted_post(self, instance):
