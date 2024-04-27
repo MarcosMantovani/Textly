@@ -4,6 +4,8 @@
 ## Description
 This project is a text and image-based social network similar to Twitter. Users can create profiles, edit information such as name, username, profile picture, banner, and biography, follow other users, create posts with text and image, reply to posts, edit and delete their own posts, search for posts and users using keywords, and recover their password if forgotten. The project is a Full Stack application built with Python, utilizing TypeScript, React, ESLint, Prettier, Redux Thunk, and Styled Components on the frontend, and Django, Djoser for user authentication, and Django Rest Framework on the backend.
 
+## Access at https://textly.fly.dev/login
+
 ## Technologies Used
 ### Frontend
 - TypeScript
