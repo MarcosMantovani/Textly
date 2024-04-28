@@ -451,7 +451,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                 value={editedPostBody}
                 onChange={(e) => handleEditedPostBodyChange(e)}
                 minLength={3}
-                maxLength={200}
+                maxLength={300}
                 required
               />
               {editedPostImageUrl && (
@@ -585,7 +585,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                 value={postQuoteBody}
                 onChange={(e) => handleQuoteBodyChange(e)}
                 minLength={3}
-                maxLength={200}
+                maxLength={300}
                 required
               />
               {quotePostImage && (
