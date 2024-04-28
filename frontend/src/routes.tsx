@@ -11,6 +11,7 @@ import Profile from './pages/Profile'
 import Search from './pages/Search'
 import EditProfile from './pages/EditProfile'
 import Feed from './pages/Feed'
+import PageNotFound from './pages/PageNotFound'
 
 const connector = connect(null, {
   checkAuthenticated: checkAuthenticated,
@@ -44,6 +45,7 @@ const PageRoutes: React.FC<PropsFromRedux> = ({
       <Route path="/activate/:uid/:token" element={<ConfirmForm />} />
       <Route path="/search" element={<Search />} />
       <Route path="/edit-profile" element={<EditProfile />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   )
 }
