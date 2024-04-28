@@ -102,7 +102,11 @@ const Navbar = ({ profile, logout }: PropsFromRedux) => {
         active={isEditProfile}
       ></Button>
       <S.ProfilePhoto
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdmXbF5pzQLdDorqzEDnY7Gv8FTD0ymDXI0rXckeD-Vw&s"
+        src={
+          profile?.profile_photo
+            ? profile.profile_photo
+            : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
+        }
         onClick={redirectToUserProfile}
       />
     </S.Container>
