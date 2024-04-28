@@ -249,8 +249,9 @@ export const QuotePostForm = styled.form<QuotePostFormProps>`
   .quotePostImage {
     position: relative;
     background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     height: 300px;
 
     &:hover {
@@ -333,8 +334,9 @@ export const EditPostContainer = styled.form<EditPostContainerProps>`
   .editPostImage {
     position: relative;
     background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     height: 300px;
 
     &:hover {
