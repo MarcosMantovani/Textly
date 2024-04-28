@@ -64,7 +64,7 @@ class Post(models.Model):
         UserAccount, related_name="posts",
         on_delete=models.CASCADE
     )
-    body = models.CharField(max_length=200)
+    body = models.CharField(max_length=300)
     image = models.ImageField(null=True, blank=True, upload_to='images')
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(UserAccount, related_name="post_like", blank=True)
