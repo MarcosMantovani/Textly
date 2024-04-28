@@ -149,7 +149,7 @@ export const TextPost = styled.div`
     padding-bottom: 8px;
 
     .postImage {
-      object-fit: cover;
+      object-fit: contain;
       width: 100%;
       max-height: 300px;
       border-radius: 8px;
