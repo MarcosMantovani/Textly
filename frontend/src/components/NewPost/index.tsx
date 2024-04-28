@@ -104,7 +104,7 @@ const NewPost = ({ profilePhoto }: Props) => {
             value={postBody}
             onChange={(e) => handleBodyChange(e)}
             minLength={3}
-            maxLength={200}
+            maxLength={300}
             placeholder="Digite algo"
             required
           />
