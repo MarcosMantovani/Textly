@@ -29,7 +29,7 @@ def reduce_image_quality(image, max_size=(1024, 1024)):
     img_buffer = io.BytesIO()
 
     # Salvar a imagem redimensionada no buffer de bytes
-    img.save(img_buffer, format='JPEG')
+    img.save(img_buffer, format=img.format)
 
     # Mover o cursor do buffer de bytes para o início
     img_buffer.seek(0)
