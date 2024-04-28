@@ -82,7 +82,8 @@ export const TextPost = styled.div<TextPostProps>`
   .PostImage {
     position: relative;
     background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
     background-position: center;
     height: 300px;
 

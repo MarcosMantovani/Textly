@@ -590,7 +590,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
               />
               {quotePostImage && (
                 <>
-                  <div className="PostImage quotePostImage">
+                  <div className="postImage quotePostImage">
                     <TrashIcon
                       className="deleteQuotePostImage"
                       onClick={() => {

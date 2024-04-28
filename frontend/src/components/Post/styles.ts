@@ -149,7 +149,7 @@ export const TextPost = styled.div`
     padding-bottom: 8px;
 
     .postImage {
-      object-fit: cover;
+      object-fit: contain;
       width: 100%;
       max-height: 300px;
       border-radius: 8px;
@@ -249,8 +249,9 @@ export const QuotePostForm = styled.form<QuotePostFormProps>`
   .quotePostImage {
     position: relative;
     background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     height: 300px;
 
     &:hover {
@@ -333,8 +334,9 @@ export const EditPostContainer = styled.form<EditPostContainerProps>`
   .editPostImage {
     position: relative;
     background-image: ${({ $image }) => ($image ? `url(${$image})` : ``)};
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     height: 300px;
 
     &:hover {
