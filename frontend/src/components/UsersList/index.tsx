@@ -42,6 +42,8 @@ const UsersList = ({ users, profile }: Props) => {
           body,
           config
         )
+
+        setMessage('Usuário seguido com sucesso.')
       } catch (err) {
         setMessage('Houve um erro ao seguir o usuário. Recarregue a página.')
       }
@@ -70,6 +72,8 @@ const UsersList = ({ users, profile }: Props) => {
           body,
           config
         )
+
+        setMessage('Usuário deixado seguir com sucesso.')
       } catch (err) {
         setMessage('Houve um erro ao deixar de seguir o usuário')
       }
