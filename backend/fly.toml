@@ -25,7 +25,7 @@ console_command = '/code/manage.py shell'
 
 [[vm]]
   size = 'shared-cpu-1x'
-  memory = '2gb'
+  memory = '256mb'
   cpu_kind = 'shared'
   cpus = 1
 
