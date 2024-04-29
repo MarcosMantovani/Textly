@@ -10,6 +10,7 @@ import { ReactComponent as ImageIcon } from '../../assets/media/image-outline.sv
 import { ReactComponent as TrashIcon } from '../../assets/media/trash-2-outline.svg'
 
 import * as S from './styles'
+import Loader from '../Loader'
 
 type Props = {
   profilePhoto: string
@@ -20,8 +21,11 @@ const NewPost = ({ profilePhoto }: Props) => {
   const [postImage, setPostImage] = useState<File | null>(null)
   const [formCallback, setFormCallback] = useState<PostType[] | null>(null)
   const [message, setMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const createPost = async () => {
+    setIsLoading(true)
+
     if (localStorage.getItem('access')) {
       const formData = new FormData()
       formData.append('body', postBody)
@@ -54,6 +58,8 @@ const NewPost = ({ profilePhoto }: Props) => {
         setMessage('Post criado com sucesso!')
       } catch (err) {
         setMessage('Houve um erro ao criar o post. Recarregue a página.')
+      } finally {
+        setIsLoading(false)
       }
     } else {
       setMessage('Entre para criar posts')
@@ -77,6 +83,7 @@ const NewPost = ({ profilePhoto }: Props) => {
 
   return (
     <>
+      <Loader withBackground={false} active={isLoading} />
       <Message opened={message ? true : false} onClick={() => setMessage(null)}>
         {message}
       </Message>
