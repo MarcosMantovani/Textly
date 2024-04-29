@@ -26,7 +26,7 @@ class CustomUserSerializer(UserSerializer):
         fields = ('id', 'email', 'username', 'name', 'profile_photo', 'banner', 'follows', 'followed_by', 'date_modified', 'bio', 'post_count')
 
     def get_post_count(self, obj):
-        # Retorna a contagem de posts do usuário
+        # Returns the count of posts by the user
         return obj.posts.count()
 
 class PostUserSerializer(serializers.ModelSerializer):
@@ -48,7 +48,7 @@ class PostSerializer(serializers.ModelSerializer):
         return representation
 
     def get_quoted_post(self, instance):
-        # Retorna a representação do post citado
+        # Returns the representation of the mentioned post
         if instance.quoted_post:
             return {
                 "id": instance.quoted_post.id,
