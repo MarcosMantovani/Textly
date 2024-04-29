@@ -131,7 +131,7 @@ const LoginRegister: React.FC<PropsFromRedux> = ({
                 </a>
               </div> */}
             </S.SocialIcons>
-            <span>ou use seu nome de usuário e senha</span>
+            {/* <span>ou use seu nome de usuário e senha</span> */}
             <S.Input
               name="username"
               value={username}
