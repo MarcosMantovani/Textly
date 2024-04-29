@@ -97,7 +97,7 @@ const SignupForm: React.FC<PropsFromRedux> = ({ type, error, signup }) => {
           </a>
         </div> */}
       </SocialIcons>
-      <span>ou use seu e-mail para se registrar</span>
+      {/* <span>ou use seu e-mail para se registrar</span> */}
       <Input
         name="name"
         value={name}
