@@ -14,93 +14,93 @@ import io
 
 
 def reduce_image_quality(image, max_size=(1024, 1024)):
-    # Verificando o formato da imagem
+    # Checking the format of the image
     format_lower = image.name.lower()
     if not (format_lower.endswith('.jpg') or format_lower.endswith('.jpeg') or format_lower.endswith('.png')):
         raise ValueError("Unsupported image format. Only JPEG and PNG formats are supported.")
 
-    # Abrir a imagem usando o Pillow
+    # Open the image using Pillow
     img = Image.open(image)
 
     # Redimensionar a imagem mantendo a proporção original
     img.thumbnail(max_size)
 
-    # Criar um buffer de bytes para armazenar a imagem redimensionada
+    # Resize the image while maintaining the original aspect ratio
     img_buffer = io.BytesIO()
 
-    # Salvar a imagem redimensionada no buffer de bytes
+    # Save the resized image to the byte buffer
     img.save(img_buffer, format=img.format)
 
-    # Mover o cursor do buffer de bytes para o início
+    # Move the cursor of the byte buffer to the beginning
     img_buffer.seek(0)
 
     return img_buffer
 
 def resize_profile_photo(image):
-    # Abrir a imagem usando a Pillow
+    # Open the image using Pillow
     img = Image.open(image)
 
-    # Obtém as dimensões originais da imagem
+    # Get the original dimensions of the image
     width, height = img.size
 
-    # Calcula as dimensões finais da imagem redimensionada
+    # Calculate the final dimensions of the resized image
     if width > height:
-        # Se a largura for maior do que a altura, redimensiona a imagem para ter uma altura de 265px
+        # If the width is greater than the height, resize the image to have a height of 265px
         new_width = int((265 / height) * width)
         new_height = 265
     else:
-        # Se a altura for maior do que a largura, redimensiona a imagem para ter uma largura de 265px
+        # If the height is greater than the width, resize the image to have a width of 265px
         new_width = 265
         new_height = int((265 / width) * height)
 
-    # Redimensiona a imagem mantendo a proporção original
+    # Resize the image while maintaining the original aspect ratio
     resized_img = img.resize((new_width, new_height))
 
-    # Cria uma nova imagem de fundo branco com dimensões de 265x265 pixels
+    # Create a new image with a white background and dimensions of 265x265 pixels
     background = Image.new('RGB', (265, 265), (255, 255, 255))
 
-    # Calcula as coordenadas de centralização para colar a imagem redimensionada na imagem de fundo branco
+    # Calculate the centering coordinates to paste the resized image onto the white background image
     x_offset = (265 - new_width) // 2
     y_offset = (265 - new_height) // 2
 
-    # Cola a imagem redimensionada na imagem de fundo branco
+    # Paste the resized image onto the white background image
     background.paste(resized_img, (x_offset, y_offset))
 
     return background
 
 def resize_banner(image_file):
-    # Abrir a imagem usando o Pillow
+    # Open the image using Pillow
     img = Image.open(image_file)
 
-    # Calcula as proporções de largura e altura da imagem original
+    # Calculate the width and height proportions of the original image
     width_ratio = 1024 / img.width
     height_ratio = 512 / img.height
 
-    # Calcula o fator de escala máximo para garantir que o máximo de conteúdo seja preservado
+    # Calculate the maximum scale factor to ensure maximum content preservation
     scale_factor = max(width_ratio, height_ratio)
 
-    # Redimensiona a imagem de acordo com o fator de escala máximo
+    # Resize the image according to the maximum scale factor
     new_width = int(img.width * scale_factor)
     new_height = int(img.height * scale_factor)
     resized_img = img.resize((new_width, new_height))
 
-    # Cria uma nova imagem de fundo branco com dimensões de 1024x576 pixels
+    # Create a new image with a white background and dimensions of 1024x576 pixels
     background = Image.new('RGB', (1024, 512), (255, 255, 255))
 
-    # Calcula as coordenadas de centralização para colar a imagem redimensionada na imagem de fundo branco
+    # Calculate the centering coordinates to paste the resized image onto the white background image
     x_offset = (1024 - new_width) // 2
     y_offset = (512 - new_height) // 2
 
-    # Cola a imagem redimensionada na imagem de fundo branco
+    # Paste the resized image onto the white background image
     background.paste(resized_img, (x_offset, y_offset))
 
-    # Cria um buffer de bytes para armazenar a imagem resultante
+    # Create a byte buffer to store the resulting image
     output_buffer = io.BytesIO()
 
-    # Salva a imagem resultante no buffer de bytes
+    # Save the resulting image to the byte buffer
     background.save(output_buffer, format='JPEG')
 
-    # Move o cursor do buffer de bytes para o início
+    # Move the cursor of the byte buffer to the beginning
     output_buffer.seek(0)
 
     return output_buffer
@@ -116,22 +116,22 @@ class UserDetailView(RetrieveAPIView):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def follow_user(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user_to_follow = request.user
 
-    # Obtendo o ID do usuário a ser seguido do corpo da solicitação
+    # Getting the user ID to be followed from the request body
     user_to_be_followed_id = request.data.get('user_to_be_followed_id', None)
 
     if user_to_be_followed_id is None:
         return Response({"message": "The user ID to be followed was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Obtendo o usuário a ser seguido a partir do ID fornecido
+        # Getting the user to be followed from the provided ID
         user_to_be_followed = UserAccount.objects.get(id=user_to_be_followed_id)
     except UserAccount.DoesNotExist:
         return Response({"message": "User to be followed not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Adicionando o usuário a ser seguido ao campo follows do usuário que está seguindo
+    # Adding the user to be followed to the follows field of the following user
     user_to_follow.follows.add(user_to_be_followed)
 
     return Response({"message": "User followed successfully."}, status=status.HTTP_200_OK)
@@ -139,22 +139,22 @@ def follow_user(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def unfollow_user(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user_to_follow = request.user
 
-    # Obtendo o ID do usuário a parar de ser seguido do corpo da solicitação
+    # Getting the ID of the user to unfollow from the request body
     user_to_be_unfollowed_id = request.data.get('user_to_be_unfollowed_id', None)
 
     if user_to_be_unfollowed_id is None:
         return Response({"message": "The user ID to be unfollowed was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Obtendo o usuário a parar de ser seguido a partir do ID fornecido
+        # Getting the user to unfollow from the provided ID
         user_to_be_followed = UserAccount.objects.get(id=user_to_be_unfollowed_id)
     except UserAccount.DoesNotExist:
         return Response({"message": "User to be unfollowed not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Removendo o usuário a parar de ser seguido do campo follows do usuário que estava seguindo
+    # Removing the user to unfollow from the follows field of the following user
     user_to_follow.follows.remove(user_to_be_followed)
 
     return Response({"message": "User unfollowed successfully."}, status=status.HTTP_200_OK)
@@ -168,53 +168,53 @@ class PostPagination(PageNumberPagination):
 @permission_classes([IsAuthenticated])
 def get_posts(request, user_id=None):
     if user_id is not None:
-        # Se um ID de usuário foi fornecido na URL, filtrar os posts por esse usuário
+        # If a user ID is provided in the URL, filter the posts by that user
         posts = Post.objects.filter(user_id=user_id)
     else:
-        # Se nenhum ID de usuário foi fornecido na URL, retornar todos os posts
+        # If no user ID is provided in the URL, return all posts
         posts = Post.objects.all()
 
-    # Ordenar os posts do mais novo para o mais antigo
+    # Sort the posts from newest to oldest
     posts = posts.order_by('-created_at')
 
-    # Aplicar paginação aos resultados
+    # Apply pagination to the results
     paginator = PostPagination()
     result_page = paginator.paginate_queryset(posts, request)
 
-    # Serializando os posts
+    # Serializing the posts
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_followed_users_posts(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo os IDs dos usuários seguidos pelo usuário atual
+    # Getting the IDs of users followed by the current user
     followed_user_ids = user.follows.all().values_list('id', flat=True)
 
-    # Filtrando os posts dos usuários seguidos
+    # Filtering posts from followed users
     posts = Post.objects.filter(user_id__in=followed_user_ids)
 
-    # Ordenando os posts do mais novo para o mais antigo
+    # Sorting posts from newest to oldest
     posts = posts.order_by('-created_at')
 
-    # Aplicando paginação aos resultados
+    # Applying pagination to the results
     paginator = PostPagination()
     result_page = paginator.paginate_queryset(posts, request)
 
-    # Serializando os posts
+    # Serializing the posts
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_post(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo os dados do corpo da solicitação
+    # Getting data from the request body
     body = request.data.get('body', None)
     image = request.data.get('image', None)
     quoted_post_id = request.data.get('quoted_post_id', None)
@@ -222,7 +222,7 @@ def create_post(request):
     if body is None:
         return Response({"message": "The post body was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Criando o post
+    # Creating the post
     if quoted_post_id:
         try:
             quoted_post = Post.objects.get(id=quoted_post_id)
@@ -233,12 +233,12 @@ def create_post(request):
     else:
         post = Post.objects.create(user=user, body=body)
 
-    # Se uma imagem foi fornecida, atribua-a ao post
+    # If an image is provided, assign it to the post
     if image:
-        # Reduzindo a qualidade da imagem
+        # Reducing the image quality
         reduced_image = reduce_image_quality(image)
         
-        # Salvando a imagem processada no campo image do modelo Post
+        # Serializing the created post to return all information, including the quoted_post
         post.image.save(image.name, reduced_image, save=False)
         post.save()
 
@@ -250,23 +250,23 @@ def create_post(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_profile_photo(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Verificando se a solicitação inclui uma imagem
+    # Checking if the request includes an image
     if 'profile_photo' not in request.FILES:
         return Response({"message": "No profile photo provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Obtendo a imagem enviada
+    # Getting the uploaded image
     profile_photo = request.FILES['profile_photo']
 
-    # Reduzindo a qualidade da imagem
+    # Reducing the image quality
     reduced_image = reduce_image_quality(profile_photo)
 
-    # Cortando a imagem para torná-la quadrada
+    # Cropping the image to make it square
     cropped_image = resize_profile_photo(reduced_image)
 
-    # Salvando a imagem cortada em um arquivo temporário
+    # Saving the bytes from the temporary file to the profile_photo field
     temp_buffer = BytesIO()
     cropped_image.save(temp_buffer, format='JPEG')
     temp_buffer.seek(0)
@@ -279,23 +279,23 @@ def update_profile_photo(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_banner(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Verificando se a solicitação inclui uma imagem
+    # Checking if the request includes an image
     if 'banner' not in request.FILES:
         return Response({"message": "No banner provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Obtendo o arquivo de imagem do request
+    # Getting the image file from the request
     banner_file = request.FILES['banner']
 
-    # Reduzindo a qualidade da imagem
+    # Reducing the image quality
     reduced_image = reduce_image_quality(banner_file)
 
-    # Redimensionando o banner para 1024x576px
+    # Resizing the banner to 1024x576px
     resized_banner = resize_banner(reduced_image)
 
-    # Salvando a imagem redimensionada como banner do usuário
+    # Saving the resized image as the user's banner
     user.banner.save(banner_file.name, resized_banner, save=True)
 
     return Response({"message": "Banner updated successfully."}, status=status.HTTP_200_OK)
@@ -303,46 +303,46 @@ def update_banner(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def like_post(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo o ID do post a ser curtido ou descurtido do corpo da solicitação
+    # Getting the ID of the post to be liked or unliked from the request body
     post_id = request.data.get('post_id', None)
 
     if post_id is None:
         return Response({"message": "The post ID was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Obtendo o post pelo ID fornecido
+        # Getting the post by the provided ID
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         return Response({"message": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
     if user in post.likes.all():
-        # Se o usuário já curtiu o post, remova o like
+        # If the user has already liked the post, remove the like
         post.likes.remove(user)
         action = "unliked"
     else:
-        # Se o usuário não curtiu o post, adicione o like
+        # If the user hasn't liked the post, add the like
         post.likes.add(user)
         action = "liked"
 
-    # Retorna uma mensagem informando se o post foi curtido ou descurtido
+    # Return a message indicating whether the post was liked or unliked
     return Response({"message": f"Post {action} successfully."}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_bio(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo a nova bio do corpo da solicitação
+    # Getting the new bio from the request body
     new_bio = request.data.get('bio', None)
 
     if new_bio is None:
         return Response({"message": "The bio was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Atualizando a bio do usuário
+    # Updating the user's bio
     user.bio = new_bio
     user.save()
 
@@ -351,26 +351,26 @@ def update_bio(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def delete_post(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo o ID do post a ser deletado do corpo da solicitação
+    # Getting the ID of the post to be deleted from the request body
     post_id = request.data.get('post_id', None)
 
     if post_id is None:
         return Response({"message": "The post ID was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Obtendo o post pelo ID fornecido
+        # Getting the post by the provided ID
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         return Response({"message": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Verificando se o usuário tem permissão para deletar o post
+    # Checking if the user has permission to delete the post
     if user != post.user:
         return Response({"message": "You do not have permission to delete this post."}, status=status.HTTP_403_FORBIDDEN)
 
-    # Deletando o post
+    # Deleting the post
     post.delete()
 
     return Response({"message": "Post deleted successfully."}, status=status.HTTP_200_OK)
@@ -378,10 +378,10 @@ def delete_post(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def edit_post(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo os dados do corpo da solicitação
+    # Getting data from the request body
     post_id = request.data.get('post_id', None)
     body = request.data.get('body', None)
     image = request.data.get('image', None)
@@ -390,41 +390,41 @@ def edit_post(request):
         return Response({"message": "The post ID was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        # Obtendo o post pelo ID fornecido
+        # Getting the post by the provided ID
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         return Response({"message": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
 
-    # Verificando se o usuário é o autor do post
+    # Checking if the user is the author of the post
     if user != post.user:
         return Response({"message": "You do not have permission to edit this post."}, status=status.HTTP_403_FORBIDDEN)
 
-    # Atualizando os campos do post
+    # Updating the post fields
     if body:
         post.body = body
     if image == "same":
-        # Mantendo a mesma imagem do post
+        # Keeping the same post image
         pass
     elif image is not None:
-        # Reduzindo a qualidade da imagem
+        # Reducing the image quality
         reduced_image = reduce_image_quality(image)
         
-        # Salvando a imagem processada no campo image do modelo Post
+        # Saving the processed image to the image field of the Post model
         post.image.save(image.name, reduced_image, save=False)
     elif 'image' not in request.FILES:
-        # Se nenhum novo arquivo de imagem for enviado, remover a imagem existente do post
+        # If no new image file is sent, remove the existing image from the post
         post.image = None
 
-    # Marcando o post como editado
+    # Marking the post as edited
     post.edited = True
 
-    # Atualizando o timestamp de edição
+    # Updating the edit timestamp
     post.created_at = timezone.now()
 
-    # Salvando as alterações no post
+    # Saving the changes to the post
     post.save()
 
-    # Serializando o post atualizado
+    # Serializing the updated post
     serializer = PostSerializer(post)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
@@ -432,58 +432,58 @@ def edit_post(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_posts(request, search_text=None):
-    # Obtendo todos os posts
+    # Getting all posts
     posts = Post.objects.all()
 
     if search_text:
-        # Filtrando os posts pelo trecho de texto fornecido
+        # Filtering posts by the provided text snippet
         posts = posts.filter(body__icontains=search_text)
 
-    # Ordenando os posts do mais novo para o mais antigo
+    # Sorting posts from newest to oldest
     posts = posts.order_by('-created_at')
 
-    # Aplicar paginação aos resultados
+    # Applying pagination to the results
     paginator = PostPagination()
     result_page = paginator.paginate_queryset(posts, request)
 
-    # Serializando os posts
+    # Serializing the posts
     serializer = PostSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def search_users(request, search_text=None):
-    # Obtendo todos os usuários
+    # Getting all users
     users = UserAccount.objects.all()
 
     if search_text:
-        # Filtrando os usuários pelo nome de usuário e nome real
+        # Filtering users by username and real name
         users = users.filter(Q(username__icontains=search_text) | Q(name__icontains=search_text))
 
-    # Removendo usuários duplicados
+    # Removing duplicate users
     users = users.distinct()
 
-    # Aplicar paginação aos resultados
+    # Applying pagination to the results
     paginator = PostPagination()  # Aqui você precisa ajustar para a sua classe de paginação de usuário, se houver uma diferente.
     result_page = paginator.paginate_queryset(users, request)
 
-    # Serializando os usuários
+    # Serializing the users
     serializer = SearchedUsersSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def update_name(request):
-    # Obtendo o usuário atualmente autenticado
+    # Getting the currently authenticated user
     user = request.user
 
-    # Obtendo o novo nome do corpo da solicitação
+    # Getting the new name from the request body
     new_name = request.data.get('name', None)
 
     if new_name is None:
         return Response({"message": "The name was not provided."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Atualizando o nome do usuário
+    # Updating the user's name
     user.name = new_name
     user.save()
 

@@ -86,12 +86,12 @@ class Post(models.Model):
         }
 
     def get_created_at_display(self):
-        # Calcula a diferença entre o momento atual e o momento de criação do post
+        # Calculate the difference between the current time and the time the post was created
         time_difference = timezone.now() - self.created_at
 
-        # Verifica se o post foi criado há menos de um mês
+        # Check if the post was created less than a month ago
         if time_difference <= timedelta(days=30):
-            # Calcula as horas e minutos desde a criação do post
+            # Calculates the hours and minutes since the post was created
             days, seconds = divmod(time_difference.total_seconds(), 86400)
             hours, remainder = divmod(seconds, 3600)
             minutes, _ = divmod(remainder, 60)
@@ -102,7 +102,7 @@ class Post(models.Model):
             else:
                 return f"{int(minutes)}min atrás"
         else:
-            # Retorna a data e hora no horário de Brasília
+            # Returns the date and time in Brasília time zone
             return localtime(self.created_at).strftime("%d/%m/%Y %H:%M")
 
 

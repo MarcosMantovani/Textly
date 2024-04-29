@@ -52,13 +52,9 @@ const ConfirmForm: React.FC<PropsFromRedux> = ({
   useEffect(() => {
     if (type === 'PASSWORD_RESET_CONFIRM_FAIL') {
       setErrorMsg(error)
-      console.log('sim')
     } else if (type === 'PASSWORD_RESET_CONFIRM_SUCCESS') {
       setErrorMsg('Sua senha foi alterada com sucesso')
-      console.log('nao')
     }
-    console.log(error)
-    console.log(type)
   }, [error, type])
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
