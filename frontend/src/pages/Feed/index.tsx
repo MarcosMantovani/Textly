@@ -80,7 +80,7 @@ const Feed: React.FC<PropsFromRedux> = ({
 
         setHavePosts(response.data.next !== null)
       } catch (error) {
-        setMessage('Erro ao carregar posts')
+        // error
       } finally {
         setIsLoading(false)
       }
