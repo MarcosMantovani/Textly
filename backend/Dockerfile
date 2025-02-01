@@ -2,8 +2,8 @@ ARG PYTHON_VERSION=3.12-slim-bullseye
 
 FROM python:${PYTHON_VERSION}
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 # install psycopg2 dependencies.
 RUN apt-get update && apt-get install -y \
@@ -21,8 +21,9 @@ RUN poetry config virtualenvs.create false
 RUN poetry install --only main --no-root --no-interaction
 COPY . /code
 
-ENV SECRET_KEY "yC7TCjb3ZuihKf0LEDh9N66jK80aHqS77sIIHiOJx8CrCgYEXD"
+ENV SECRET_KEY="yC7TCjb3ZuihKf0LEDh9N66jK80aHqS77sIIHiOJx8CrCgYEXD"
 RUN python manage.py collectstatic --noinput
+RUN python manage.py makemigrations
 
 EXPOSE 8000
 

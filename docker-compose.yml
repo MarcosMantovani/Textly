@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: textly_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - django_network
+
+  web:
+    build: ./backend
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn --bind :8000 --workers 2 textly.wsgi"
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/textly_db
+      SECRET_KEY: "yC7TCjb3ZuihKf0LEDh9N66jK80aHqS77sIIHiOJx8CrCgYEXD"
+    networks:
+      - django_network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - web
+    networks:
+      - django_network
+
+volumes:
+  postgres_data:
+
+
+networks:
+  django_network:
+    driver: bridge
