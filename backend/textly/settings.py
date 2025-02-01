@@ -1,5 +1,6 @@
 import os
 import dj_database_url
+from urllib.parse import urlparse
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import timedelta
@@ -21,8 +22,34 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'textly.fly.dev']
-CSRF_TRUSTED_ORIGINS = ['https://textly.fly.dev']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'textly.fly.dev',
+    '144.22.141.225.sslip.io',
+    '.144.22.141.225.sslip.io',
+    '*',
+    ]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://textly.fly.dev',
+    'http://144.22.141.225.sslip.io',
+    'https://144.22.141.225.sslip.io',
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "http://gk0w4kww4g0wwgo8kcgsow00.144.22.141.225.sslip.io",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "https://textly.fly.dev",
+    "http://144.22.141.225.sslip.io",
+    "https://144.22.141.225.sslip.io",
+    "http://gk0w4kww4g0wwgo8kcgsow00.144.22.141.225.sslip.io",
+]
 
 
 # Application definition
@@ -38,12 +65,14 @@ INSTALLED_APPS = [
     "rest_framework",
     "djoser",
     "accounts",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -76,9 +105,31 @@ WSGI_APPLICATION = "textly.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # Development
-DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
-}
+# DATABASES = {
+#     'default': dj_database_url.config(default='sqlite:///' + os.path.join(BASE_DIR, 'db.sqlite3'))
+# }
+
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    db_info = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': db_info.path[1:],
+            'USER': db_info.username,
+            'PASSWORD': db_info.password,
+            'HOST': db_info.hostname,
+            'PORT': db_info.port,
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -177,3 +228,11 @@ DJOSER = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'accounts.UserAccount'
+
+CORS_ALLOW_CREDENTIALS = True
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+# if DEBUG:
+CORS_ALLOW_ALL_ORIGINS = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None

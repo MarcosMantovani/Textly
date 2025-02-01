@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.js": "/static/js/main.85d92cd9.js",
+    "static/js/787.cda612ba.chunk.js": "/static/js/787.cda612ba.chunk.js",
+    "static/media/message-circle-outline.svg": "/static/media/message-circle-outline.f05ab9445381adf1d6e1af527081f74f.svg",
+    "static/media/heart-outline.svg": "/static/media/heart-outline.4c415f43f3af782e4618793c9003f231.svg",
+    "static/media/image-outline.svg": "/static/media/image-outline.deb99645ad1ded863a6129f52374c616.svg",
+    "static/media/checkmark-outline.svg": "/static/media/checkmark-outline.4dbca705618afd8c2d53eca96f5fbc19.svg",
+    "static/media/email-outline.svg": "/static/media/email-outline.b23447a15e4de5015d63edfed6587c1f.svg",
+    "index.html": "/index.html",
+    "static/media/options-2-outline.svg": "/static/media/options-2-outline.6d7a13170b93971f7884df12f7448b26.svg",
+    "static/media/trash-2-outline.svg": "/static/media/trash-2-outline.184141400160f8a95b40afaea302a9b9.svg",
+    "static/media/person-done-outline.svg": "/static/media/person-done-outline.b78fbe317de88fe5620be8e3887cf550.svg",
+    "static/media/people-outline.svg": "/static/media/people-outline.dca53377c1268fda5322d1238b625bd9.svg",
+    "static/media/log-out-outline.svg": "/static/media/log-out-outline.a83bdfea8b400f858d44078c04b63bf1.svg",
+    "static/media/person-add-outline.svg": "/static/media/person-add-outline.5864236774ddac2731461e4819d9d192.svg",
+    "static/media/edit-outline.svg": "/static/media/edit-outline.0500a26b107cc7f19560cb2e9243dd3e.svg",
+    "static/media/corner-down-right-outline.svg": "/static/media/corner-down-right-outline.57fb9a5aa4c8dcc4061d87c977e8e9e7.svg",
+    "static/media/home-outline.svg": "/static/media/home-outline.46bd21c7e546059dcb874c927265f75b.svg",
+    "static/media/close-outline.svg": "/static/media/close-outline.2f83c18665dd37251d56cfd68dbe8a21.svg",
+    "static/media/search-outline.svg": "/static/media/search-outline.f8c9c1407e0e1d0b73868d3a3785df63.svg",
+    "static/media/person-outline.svg": "/static/media/person-outline.dc3c2cdf32139dee58c9a487ddf6e395.svg",
+    "main.85d92cd9.js.map": "/static/js/main.85d92cd9.js.map",
+    "787.cda612ba.chunk.js.map": "/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.85d92cd9.js"
+  ]
+}
