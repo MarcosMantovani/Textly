@@ -1,8 +1,0 @@
-fly.toml
-.git/
-*.sqlite3
-tmp
-.env
-.venv
-__pycache__/
-media

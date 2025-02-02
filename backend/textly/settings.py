@@ -1,5 +1,4 @@
 import os
-import dj_database_url
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 from pathlib import Path
@@ -23,22 +22,21 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG')
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
     'localhost',
+    '127.0.0.1',
     'textly.fly.dev',
     '144.22.141.225.sslip.io',
     '.144.22.141.225.sslip.io',
-    '*',
     ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://textly.fly.dev',
-    'http://144.22.141.225.sslip.io',
-    'https://144.22.141.225.sslip.io',
     "http://localhost:3000",
     "http://localhost:8000",
     "http://127.0.0.1:3000",
-    "http://gk0w4kww4g0wwgo8kcgsow00.144.22.141.225.sslip.io",
+    'https://textly.fly.dev',
+    'http://144.22.141.225.sslip.io',
+    'https://144.22.141.225.sslip.io',
+    "http://dgks0o0co8kwo440k4440sww.144.22.141.225.sslip.io",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -48,7 +46,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://textly.fly.dev",
     "http://144.22.141.225.sslip.io",
     "https://144.22.141.225.sslip.io",
-    "http://gk0w4kww4g0wwgo8kcgsow00.144.22.141.225.sslip.io",
+    "http://dgks0o0co8kwo440k4440sww.144.22.141.225.sslip.io",
+    "https://dgks0o0co8kwo440k4440sww.144.22.141.225.sslip.io",
 ]
 
 
@@ -60,19 +59,19 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "corsheaders",
     'whitenoise.runserver_nostatic',
     "django.contrib.staticfiles",
     "rest_framework",
     "djoser",
     "accounts",
-    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -199,6 +198,9 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
+DOMAIN = "dgks0o0co8kwo440k4440sww.144.22.141.225.sslip.io"
+SITE_NAME = "Textly"
+
 DJOSER = {
     'LOGIN_FIELD': 'username',
     'USER_CREATE_PASSWORD_RETYPE': True,
@@ -235,4 +237,3 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 # if DEBUG:
 CORS_ALLOW_ALL_ORIGINS = True
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
