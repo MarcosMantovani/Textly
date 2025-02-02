@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /code
+RUN mkdir /code
 
 WORKDIR /code
 
@@ -20,10 +20,6 @@ COPY pyproject.toml poetry.lock /code/
 RUN poetry config virtualenvs.create false
 RUN poetry install --only main --no-root --no-interaction
 COPY . /code
-
-ENV SECRET_KEY="yC7TCjb3ZuihKf0LEDh9N66jK80aHqS77sIIHiOJx8CrCgYEXD"
-RUN python manage.py collectstatic --noinput
-RUN python manage.py makemigrations
 
 EXPOSE 8000
 

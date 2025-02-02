@@ -398,7 +398,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
             <S.ProfilePhoto
               src={
                 postContent.user.profile_photo
-                  ? postContent.user.profile_photo
+                  ? `${process.env.REACT_APP_API_URL}${postContent.user.profile_photo}`
                   : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
               }
               alt="Profile Photo"
@@ -478,7 +478,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                         <S.QuotedProfilePhoto
                           src={
                             postContent.quoted_post.user.profile_photo
-                              ? postContent.quoted_post.user.profile_photo
+                              ? `${process.env.REACT_APP_API_URL}${postContent.quoted_post.user.profile_photo}`
                               : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
                           }
                           alt="Profile Photo"
@@ -509,7 +509,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                       {postContent.quoted_post.image && (
                         <img
                           className="postImage"
-                          src={postContent.quoted_post.image}
+                          src={`${process.env.REACT_APP_API_URL}${postContent.quoted_post.image}`}
                           alt="Post Image"
                         />
                       )}
@@ -540,7 +540,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
             <S.ProfilePhoto
               src={
                 profile.profile_photo
-                  ? profile.profile_photo
+                  ? `${process.env.REACT_APP_API_URL}${profile.profile_photo}`
                   : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
               }
               alt="Profile Photo"
@@ -610,7 +610,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                       <S.QuotedProfilePhoto
                         src={
                           postContent.user.profile_photo
-                            ? postContent.user.profile_photo
+                            ? `${process.env.REACT_APP_API_URL}${postContent.user.profile_photo}`
                             : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
                         }
                         alt="Profile Photo"
@@ -635,7 +635,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                     {postContent.image && (
                       <img
                         className="postImage"
-                        src={postContent.image}
+                        src={`${process.env.REACT_APP_API_URL}${postContent.image}`}
                         alt="Post Image"
                       />
                     )}
@@ -670,7 +670,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
           <S.ProfilePhoto
             src={
               postContent.user.profile_photo
-                ? postContent.user.profile_photo
+                ? `${process.env.REACT_APP_API_URL}${postContent.user.profile_photo}`
                 : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
             }
             alt="Profile Photo"
@@ -744,7 +744,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
             {editedPostImageUrl && (
               <img
                 className="postImage"
-                src={editedPostImageUrl}
+                src={`${process.env.REACT_APP_API_URL}${editedPostImageUrl}`}
                 alt="Post Image"
               />
             )}
@@ -759,7 +759,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                       <S.QuotedProfilePhoto
                         src={
                           postContent.quoted_post.user.profile_photo
-                            ? postContent.quoted_post.user.profile_photo
+                            ? `${process.env.REACT_APP_API_URL}${postContent.quoted_post.user.profile_photo}`
                             : `${process.env.REACT_APP_API_URL}/media/images/no-profile-photo.png`
                         }
                         alt="Profile Photo"
@@ -789,7 +789,7 @@ const Post = ({ postContent, profile }: CombinedProps) => {
                     {postContent.quoted_post.image && (
                       <img
                         className="postImage"
-                        src={postContent.quoted_post.image}
+                        src={`${process.env.REACT_APP_API_URL}${postContent.quoted_post.image}`}
                         alt="Post Image"
                       />
                     )}

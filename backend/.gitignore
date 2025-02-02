@@ -4,7 +4,9 @@ __pycache__/
 
 .env
 fly.toml
-poetry.lock
-pyproject.toml
 
-!build/
+build
+
+*.sqlite3
+
+requirements.txt
