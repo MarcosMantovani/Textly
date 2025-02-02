@@ -198,7 +198,7 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
-DOMAIN = "bwwos4gckss8ss4wos4cs4gc.144.22.141.225.sslip.io"
+DOMAIN = "y8040kkksw88c8ogs0wgck0w.144.22.141.225.sslip.io"
 SITE_NAME = "Textly"
 
 DJOSER = {
